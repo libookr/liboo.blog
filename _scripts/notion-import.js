@@ -49,7 +49,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         database_id: databaseId,
         filter: {
             property: "상태",
-            checkbox: {
+            select: {
                 equals: "작성 완료",
             },
         },
