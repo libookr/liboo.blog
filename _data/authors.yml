@@ -1,6 +1,6 @@
-ghost:
-  username: ghost
-  name: Ghost
+"영길 김":
+  username: HOEH
+  name: hoeeeeeh
   url_full: http://jekyllt.github.io/jasper2/
   url: jekyllt.github.io/jasper2
   bio: The professional publishing platform
@@ -8,9 +8,10 @@ ghost:
   facebook: ghost
   twitter: tryghost
   cover: False
-hannah:
-  username: hannah
-  name: Hannah Wolfe
+
+gominzip:
+  username: gominzip
+  name: gominzip
   location: London, UK
   url_full: http://hannah.wf/
   url: hannah.wf
@@ -19,9 +20,10 @@ hannah:
   facebook: False
   twitter: erisds
   cover: assets/images/hannah-cover.jpg
-john:
-  username: john
-  name: John O'Nolan
+
+Jisukim:
+  username: Jisukim
+  name: Jisukim
   location: On a plane
   url_full: http://john.onolan.org/
   url: john.onolan.org
@@ -30,9 +32,10 @@ john:
   facebook: False
   twitter: False
   cover: False
-lewis:
-  username: lewis
-  name: Lewis Carroll
+
+"홍창현":
+  username: 홍창현
+  name: 홍창현
   location: Cheshire, England
   url_full: False
   url: False
@@ -41,36 +44,15 @@ lewis:
   facebook: False
   twitter: False
   cover: False
-abraham:
-  username: abraham
-  name: Abraham Lincoln
+
+"김준서":
+  username: 김준서
+  name: 김준서
   location: Kentucky, USA
   url_full: False
   url: False
   bio: I was the 16th president of the USA until I was assassinated in April of 1865. I led the US through its Civil War - its bloodiest and greatest moral, constitutional and political crisis.
   picture: assets/images/abraham.jpg
-  facebook: False
-  twitter: False
-  cover: False
-edgar:
-  username: edgar
-  name: Edgar Rice Burroughs
-  location: Chicago, Illinois
-  url_full: False
-  url: False
-  bio: I'm an American novelist, best known for my work writing about a brave jungle hero called Tarzan and his muse, Jane.
-  picture: assets/images/edgar.gif
-  facebook: False
-  twitter: False
-  cover: False
-martin:
-  username: martin
-  name: Martin Luther King
-  location: Memphis, Tennessee
-  url_full: False
-  url: False
-  bio: An American pastor, activist, humanitarian. People know me for leading the African-American Civil Rights movement using nonviolent civil disobedience.
-  picture: assets/images/martin.jpg
   facebook: False
   twitter: False
   cover: False
