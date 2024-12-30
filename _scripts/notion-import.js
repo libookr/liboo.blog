@@ -74,7 +74,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
     for (const r of pages) {
         const id = r.id;
         // date
-        let date = moment(r.created_time).format("YYYY-MM-DD hh:mm:ss");
+        let date = moment(r.created_time).format("YYYY-MM-DD");
         let pdate = r.properties?.["날짜"]?.["date"]?.["start"];
         if (pdate) {
             date = moment(pdate).format("YYYY-MM-DD");
@@ -88,6 +88,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         // tags
         let tags = [];
         let ptags = r.properties?.["태그"]?.["multi_select"];
+        console.log(ptags);
         for (const t of ptags) {
             const n = t?.["name"];
             if (n) {
@@ -98,6 +99,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         // categories
         let cats = [];
         let pcats = r.properties?.["카테고리"]?.["multi_select"];
+        console.log(pcats);
         for (const t of pcats) {
             const n = t?.["name"];
             if (n) {
@@ -111,13 +113,20 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         // frontmatter
         let fmtags = "";
         let fmcats = "";
-        let fmassrtmnt = "";
         if (tags.length > 0) {
             fmtags += "[";
             for (const t of tags) {
                 fmtags += t + ", ";
             }
             fmtags += "]";
+        }
+
+        if (cats.length > 0) {
+            fmcats += "[";
+            for (const t of cats) {
+                fmcats += t + ", ";
+            }
+            fmcats += "]";
         }
         const fm = `---
 layout: post
