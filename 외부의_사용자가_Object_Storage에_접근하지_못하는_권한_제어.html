@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="The professional publishing platform" />
+<link rel="shortcut icon" href="https://blog.liboo.kr//assets/images/favicon.png" type="image/png" />
+<link rel="canonical" href="https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Liboo.blog" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어" />
+    <meta property="og:description" content="문제 상황 Ncloude의 Object Stroage를 사용하는 과정에 있어, 업로드 된 파일이 임의의 다른 유저가 다운로드하지 못하는 오류를 맞닥뜨렸다. 이 문서에서는 해당 오류를 맞이한 과정부터 시작해, 어떻게 해결했는지 서술해보고자 한다. 해결 과정 1. 업로드된 파일에 접근 할 시 Access Denine이 발생하는 문제 HLS 스트림 데이터를 온라인 상에서 송수신하기 위해, 우선적으로 object" />
+    <meta property="og:url" content="https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4" />
+    <meta property="og:image" content="https://blog.liboo.kr/assets/images/writing.jpg" />
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta property="article:author" content="https://www.facebook.com/ghost" />
+    <meta property="article:published_time" content="2024-11-08T12:01:00+00:00" />
+    <meta property="article:modified_time" content="2024-11-08T12:01:00+00:00" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어" />
+    <meta name="twitter:description" content="문제 상황 Ncloude의 Object Stroage를 사용하는 과정에 있어, 업로드 된 파일이 임의의 다른 유저가 다운로드하지 못하는 오류를 맞닥뜨렸다. 이 문서에서는 해당 오류를 맞이한 과정부터 시작해, 어떻게 해결했는지 서술해보고자 한다. 해결 과정 1. 업로드된 파일에 접근 할 시 Access Denine이 발생하는 문제 HLS 스트림 데이터를 온라인 상에서 송수신하기 위해, 우선적으로 object" />
+    <meta name="twitter:url" content="https://blog.liboo.kr/" />
+    <meta name="twitter:image" content="https://blog.liboo.kr/assets/images/writing.jpg" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Liboo.blog" />
+    <meta name="twitter:site" content="@tryghost" />
+    <meta name="twitter:creator" content="@tryghost" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Liboo.blog",
+        "logo": "https://blog.liboo.kr/assets/images/blog-icon.png"
+    },
+    "url": "https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://blog.liboo.kr/assets/images/writing.jpg",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4"
+    },
+    "description": "문제 상황 Ncloude의 Object Stroage를 사용하는 과정에 있어, 업로드 된 파일이 임의의 다른 유저가 다운로드하지 못하는 오류를 맞닥뜨렸다. 이 문서에서는 해당 오류를 맞이한 과정부터 시작해, 어떻게 해결했는지 서술해보고자 한다. 해결 과정 1. 업로드된 파일에 접근 할 시 Access Denine이 발생하는 문제 HLS 스트림 데이터를 온라인 상에서 송수신하기 위해, 우선적으로 object"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+                <a class="site-nav-logo" href="https://blog.liboo.kr/"><img src="/assets/images/blog-icon.png" alt="Liboo.blog" /></a>
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/getting-started/">Getting Started</a></li>
+    <li class="nav-try-ghost" role="menuitem"><a href="https://ghost.org">Try Ghost</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+                <a class="social-link social-link-fb" href="https://facebook.com/ghost" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+</a>
+            
+            
+                <a class="social-link social-link-tw" href="https://twitter.com/tryghost" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a>
+            
+        </div>
+        
+            <a class="subscribe-button" href="#subscribe">Subscribe</a>
+        
+    </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime=" 8 November 2024"> 8 November 2024</time>
+                    
+                </section>
+                <h1 class="post-full-title">외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어</h1>
+            </header>
+
+            
+            <figure class="post-full-image" style="background-image: url(/assets/images/writing.jpg)">
+            </figure>
+            
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><br /><br /></p>
+
+<h2 id="문제-상황">문제 상황</h2>
+
+<p>Ncloude의 Object Stroage를 사용하는 과정에 있어, 업로드 된 파일이 임의의 다른 유저가 다운로드하지 못하는 오류를 맞닥뜨렸다.</p>
+
+<p>이 문서에서는 해당 오류를 맞이한 과정부터 시작해, 어떻게 해결했는지 서술해보고자 한다.</p>
+
+<h2 id="해결-과정">해결 과정</h2>
+
+<h3 id="1-업로드된-파일에-접근-할-시-access-denine이-발생하는-문제">1. 업로드된 파일에 접근 할 시 Access Denine이 발생하는 문제</h3>
+
+<p><img src="/upload/2024-11-08-외부의_사용자가_Object_Storage에_접근하지_못하는_권한_제어.md/0.png" alt="0" /></p>
+
+<p>HLS 스트림 데이터를 온라인 상에서 송수신하기 위해, 우선적으로 object storage의 bucket에 파일을 업로드했다.</p>
+
+<p>외부의 사용자가 접근할 수 있도록 권한까지 공개로 설정한 뒤 다운로드 테스트를 위해 파일의 URL에 접속해보았다.</p>
+
+<p><img src="/upload/2024-11-08-외부의_사용자가_Object_Storage에_접근하지_못하는_권한_제어.md/1.png" alt="1" /></p>
+
+<p>그러자 위와 같은 결과를 반환하며 bucket에 올라가 있는 파일에는 접근을 할 수 없었다.</p>
+
+<p>웹 브라우저를 통한 오류일까싶어 curl을 통해 cli 환경에서도 파일을 끌어왔지만 위와 동일한 에러만 발생할 뿐이었다.</p>
+
+<p>이 문제는 bucket의 접근 제어 기능으로 발생한 문제였는데, bucket의 접근 제어 기능이란 해당 bucket에 접근할 수 있는 VPC, ACL을 작성해 정해진 네트워크에서만 bucket에 접근을 할 수 있도록 설정하는 기능이다.</p>
+
+<p>문제가 발생하는 원인을 찾고 난 뒤 bucket의 접근 제어 기능을 비활성화 한 뒤 파일에 접근하니 정상적으로 다운로드가 되는 모습을 볼 수 있었다.</p>
+
+<p><img src="/upload/2024-11-08-외부의_사용자가_Object_Storage에_접근하지_못하는_권한_제어.md/2.png" alt="2" /></p>
+
+<p><img src="/upload/2024-11-08-외부의_사용자가_Object_Storage에_접근하지_못하는_권한_제어.md/3.png" alt="3" /></p>
+
+<h3 id="2-cors-접근-오류">2. CORS 접근 오류</h3>
+
+<p>bucket에 올라간 파일에 대해 <a href="https://livepush.io/hls-player/index.html">https://livepush.io/hls-player/index.html</a> 사이트에서 영상 플레이 테스트를 진행해보았다.</p>
+
+<p>그러나 브라우저의 console에서는 지속적으로 cors 에러를 발생 시킨 채 파일들을 불러오지 못하는 문제가 발생했다.</p>
+
+<p>cors는 서로 다른 호스트의 주소에서 리소스에 대한 요청을 막는 정책으로 후에 조금 더 자세하게 서술하고자 한다.</p>
+
+<p>우선 이 cors 문제를 해결하기 위해 몇가지 솔루션을 찾아본 결과 bucket 자체의 cors 정책을 변경해서 cors 오류를 피할 수 있는 방법을 찾았다.</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">aws configure</code>를 통해 object storage의 키와 region을 설정한다
+    <ul>
+      <li>object storage는 aws s3가 사용하는 대부분의 기능을 사용 가능</li>
+    </ul>
+  </li>
+  <li>다음의 내용을 파일로 작성해준다.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>markdown
+	// cors-config.json
+	{
+	    "CORSRules": [
+	        {
+	            "AllowedOrigins": ["*"],
+	            "AllowedMethods": ["GET", "POST", "PUT"],
+	            "AllowedHeaders": ["*"],
+	            "ExposeHeaders": [],
+	            "MaxAgeSeconds": 3000
+	        }
+	    ]
+	}
+	
+</code></pre></div></div>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">aws --endpoint-url=https://kr.object.ncloudstorage.com s3api put-bucket-cors --bucket {bucket_name} --cors-configuration filt://{config_경로}</code> 에서 { } 안을 환경에 맞게 설정한 뒤 위에서 작성한 config를 업로드 해준다.</li>
+</ol>
+
+<p>위의 과정을 거치면 bucket으로 오는 GET, POST, PUT 요청에 대해 cors 검증 없이 데이터를 요청할 수 있다.</p>
+
+<h2 id="결론">결론</h2>
+
+<p>그러나 이러한 cors, 접근 제어를 전부 풀어버리면 악의적인 유저의 접근으로 대량의 트래픽이 발생할 수 있으므로 좀 더 자세한 정책의 수정이 필요하다.</p>
+
+<details>
+  <summary>추신</summary>
+
+
+<CORSConfiguration>
+<CORSRule>
+<AllowedOrigin>[https://yourdomain.com](https://yourdomain.com/)</AllowedOrigin>
+<AllowedMethod>GET</AllowedMethod>
+<AllowedMethod>PUT</AllowedMethod>
+<AllowedMethod>POST</AllowedMethod>
+<AllowedMethod>DELETE</AllowedMethod>
+<AllowedHeader>*</AllowedHeader>
+<ExposeHeader>ETag</ExposeHeader>
+<MaxAgeSeconds>3000</MaxAgeSeconds>
+</CORSRule>
+</CORSConfiguration>
+
+
+추후에 도메인을 연결하면 Allowed Origin 에 [liboo.kr](http://liboo.kr/) 을 해놓으면 좋을 것 같습니다!
+
+
+
+  </details>
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+                <section class="subscribe-form">
+                    <h3 class="subscribe-form-title">Subscribe to Liboo.blog</h3>
+                    <p>Get the latest posts delivered right to your inbox</p>
+                    <form method="post" action="/subscribe/" class="">
+    <input class="confirm" type="hidden" name="confirm"  /><input class="location" type="hidden" name="location"  /><input class="referrer" type="hidden" name="referrer"  />
+
+    <div class="form-group">
+        <input class="subscribe-email" type="email" name="email"  placeholder="youremail@example.com" />
+    </div>
+    <button class="" type="submit" disabled><span>Subscribe</span></button>
+    <script type="text/javascript">(function(g,h,o,s,t){h[o]('.location')[s]=h[o]('.location')[s] || g.location.href;h[o]('.referrer')[s]=h[o]('.referrer')[s] || h.referrer;})(window,document,'querySelector','value');</script>
+</form>
+
+                </section>
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+                <!-- #author-->
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <!-- /author  -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+<!-- Links to Previous/Next posts -->
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+
+            <!-- If there's a next post, display it using the same markup included from - partials/post-card.hbs -->
+            
+                
+
+    <article class="post-card post-template">
+        
+            <a class="post-card-image-link" href="/docker-_%EC%9D%B8%ED%94%84%EB%9D%BC_%EA%B0%90%EC%9E%90%EC%9D%98_Docker_%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC">
+                <div class="post-card-image" style="background-image: url(/assets/images/writing.jpg)"></div>
+            </a>
+        
+        <div class="post-card-content">
+            <a class="post-card-content-link" href="/docker-_%EC%9D%B8%ED%94%84%EB%9D%BC_%EA%B0%90%EC%9E%90%EC%9D%98_Docker_%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC">
+                <header class="post-card-header">
+                    
+
+                    <h2 class="post-card-title">[docker] 인프라 감자의 Docker 튜토리얼</h2>
+                </header>
+                <section class="post-card-excerpt">
+                    
+                        <p>
+
+</p>
+                    
+                </section>
+            </a>
+            <footer class="post-card-meta">
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <span class="reading-time">
+                    
+                    
+                      7 min read
+                    
+                </span>
+            </footer>
+        </div>
+    </article>
+
+            
+
+            <!-- If there's a previous post, display it using the same markup included from - partials/post-card.hbs -->
+            
+                
+
+    <article class="post-card post-template">
+        
+            <a class="post-card-image-link" href="/_%EC%BB%A4%EC%8A%A4%ED%85%80_react_%EC%8A%A4%EB%8B%88%ED%8E%AB_%EB%A7%8C%EB%93%A4%EA%B8%B0">
+                <div class="post-card-image" style="background-image: url(/assets/images/writing.jpg)"></div>
+            </a>
+        
+        <div class="post-card-content">
+            <a class="post-card-content-link" href="/_%EC%BB%A4%EC%8A%A4%ED%85%80_react_%EC%8A%A4%EB%8B%88%ED%8E%AB_%EB%A7%8C%EB%93%A4%EA%B8%B0">
+                <header class="post-card-header">
+                    
+
+                    <h2 class="post-card-title"> 커스텀 react 스니펫 만들기</h2>
+                </header>
+                <section class="post-card-excerpt">
+                    
+                        <p>
+
+</p>
+                    
+                </section>
+            </a>
+            <footer class="post-card-meta">
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <span class="reading-time">
+                    
+                    
+                      1 min read
+                    
+                </span>
+            </footer>
+        </div>
+    </article>
+
+            
+
+        </div>
+    </div>
+</aside>
+
+<!-- Floating header which appears on-scroll, included from includes/floating-header.hbs -->
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="https://blog.liboo.kr/">
+            
+                <img src="/assets/images/favicon.png" alt="Liboo.blog icon" />
+            
+            <span>Liboo.blog</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어</div>
+    <div class="floating-header-share">
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
+</svg>
+</div>
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=%EC%99%B8%EB%B6%80%EC%9D%98+%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80+Object+Storage%EC%97%90+%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80+%EB%AA%BB%ED%95%98%EB%8A%94+%EA%B6%8C%ED%95%9C+%EC%A0%9C%EC%96%B4&amp;url=https://jekyllt.github.io/jasper2/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4"
+            onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+        </a>
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://jekyllt.github.io/jasper2/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4"
+            onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+
+        </a>
+    </div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+<!-- /post -->
+
+<!-- The #contentFor helper here will send everything inside it up to the matching #block helper found in default.hbs -->
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://blog.liboo.kr/">Liboo.blog</a> &copy; 2024</section>
+                <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> &
+                    <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> using
+                    <a href="https://github.com/jekyllt/jasper2" target="_blank" rel="noopener">Jasper2</a></section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                    <a href="https://facebook.com/ghost" target="_blank" rel="noopener">Facebook</a>
+                    <a href="https://twitter.com/tryghost" target="_blank" rel="noopener">Twitter</a>
+                    <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+                </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+        <div id="subscribe" class="subscribe-overlay">
+            <a class="subscribe-overlay-close" href="#"></a>
+            <div class="subscribe-overlay-content">
+                
+                    <img class="subscribe-overlay-logo" src="/assets/images/blog-icon.png" alt="Liboo.blog" />
+                
+                <h1 class="subscribe-overlay-title">Subscribe to Liboo.blog</h1>
+                <p class="subscribe-overlay-description">Stay up to date! Get all the latest &amp; greatest posts delivered straight to your inbox</p>
+                <form method="post" action="/subscribe/" class="">
+    <input class="confirm" type="hidden" name="confirm"  /><input class="location" type="hidden" name="location"  /><input class="referrer" type="hidden" name="referrer"  />
+
+    <div class="form-group">
+        <input class="subscribe-email" type="email" name="email"  placeholder="youremail@example.com" />
+    </div>
+    <button class="" type="submit" disabled><span>Subscribe</span></button>
+    <script type="text/javascript">(function(g,h,o,s,t){h[o]('.location')[s]=h[o]('.location')[s] || g.location.href;h[o]('.referrer')[s]=h[o]('.referrer')[s] || h.referrer;})(window,document,'querySelector','value');</script>
+</form>
+
+            </div>
+        </div>
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-69281367-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>

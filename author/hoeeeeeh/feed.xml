@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom" >
+  <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
+  <link href="https://blog.liboo.kr/author/hoeeeeeh/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://blog.liboo.kr/" rel="alternate" type="text/html" />
+  <updated>2024-12-30T19:47:26+00:00</updated>
+  <id>https://blog.liboo.kr/author/hoeeeeeh/feed.xml</id>
+
+  
+  
+  
+
+  
+    <title type="html">Liboo.blog | </title>
+  
+
+  
+    <subtitle>The professional publishing platform</subtitle>
+  
+
+  
+
+  
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+  
+  
+
+  
+    <entry>
+      <title type="html">채팅 서버에 Redis 를 쓴 이유</title>
+      <link href="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%EC%97%90_Redis_%EB%A5%BC_%EC%93%B4_%EC%9D%B4%EC%9C%A0" rel="alternate" type="text/html" title="채팅 서버에 Redis 를 쓴 이유" />
+      <published>2024-12-04T05:36:00+00:00</published>
+      <updated>2024-12-04T05:36:00+00:00</updated>
+      <id>https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%EC%97%90_Redis_%EB%A5%BC_%EC%93%B4_%EC%9D%B4%EC%9C%A0</id>
+      <content type="html" xml:base="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%EC%97%90_Redis_%EB%A5%BC_%EC%93%B4_%EC%9D%B4%EC%9C%A0">&lt;h1 id=&quot;초기-설계&quot;&gt;초기 설계&lt;/h1&gt;
+
+&lt;p&gt;초기의 채팅 서버 설계는 굉장히 직관적인 설계를 가졌습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-채팅_서버에_Redis_를_쓴_이유.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;초기 채팅 서버 설계&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://socket.io/&quot;&gt;socket.io&lt;/a&gt; 와 nest.js 를 활용해서 채팅 서버를 작성했고, 1대의 채팅 서버가 유저의 모든 메세지 이벤트를 받아, 같은 방에 있는 모든 클라이언트에게 메세지 이벤트를 emit 하는 구조였습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;초기-설계에서의-단순-수평-확장&quot;&gt;초기 설계에서의 단순 수평 확장&lt;/h1&gt;
+
+&lt;p&gt;초기의 단순한 설계에서 부하가 없을 때는 큰 문제를 느끼지 못했습니다. 그러나 과도한 부하가 걸리는 상황에는 채팅 서버의 확장이 필요해졌습니다.&lt;/p&gt;
+
+&lt;p&gt;프론트엔드 분들이 SharedWorker 소켓을 도입함으로써 서버의 부하를 줄였다면, 서버는 수평적 확장을 통해서 부하를 컨트롤 하는 것을 시도해봤습니다.&lt;/p&gt;
+
+&lt;p&gt;하지만 단순히 새로운 채팅 서버 컨테이너를 하나 더 띄워서 서비스를 사용해보면 문제가 발생합니다.&lt;/p&gt;
+
+&lt;p&gt;우선 유저들간 채팅의 동기화가 이루어지지 않습니다. 누군가 보낸 채팅을 다른 누군가는 보기도 하고, 못 보기도 합니다.
+정확히는 같은 채팅 서버에 있는 유저는 볼 수 있고, 다른 채팅 서버에 있는 유저는 볼 수 없습니다.&lt;/p&gt;
+
+&lt;p&gt;또한 서버에서도 유저를 차단하려고 했을 때, 어느 서버에서 데이터를 가져와야 할 지 모르기 때문에 모든 서버에 해당 유저의 정보가 존재하는지 요청을 보내야 합니다.&lt;/p&gt;
+
+&lt;p&gt;이처럼 채팅 서버를 수평 확장했을 때, 채팅 서버간 데이터 공유를 할 수 있어야 한다는 문제점이 발생하게 되었습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-채팅_서버에_Redis_를_쓴_이유.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;단순하게 수평 확장한 구조&lt;/em&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;수평-확장을-고려한-구조-재설계&quot;&gt;수평 확장을 고려한 구조 재설계&lt;/h1&gt;
+
+&lt;p&gt;저희는 이런 문제를 해결하기 위해서 redis pub/sub 구조를 활용했습니다.
+채팅 서버 A 의 ‘liboo’ 라는 room 으로 메세지가 온다면, 채팅 서버 A 는 redis pub/sub 구조를 통해서 다른 채팅 서버 B/C 로도 메세지를 전파할 수 있습니다.
+채팅 서버 B, C 는 레디스로부터 받은 이벤트를 기반으로 해당 채팅 서버에 있는 클라이언트에게 메세지를 emit 합니다.&lt;/p&gt;
+
+&lt;p&gt;또한, 채팅 서버를 수평 확장하더라도 redis 인스턴스가 하나라면 같은 문제가 반복된다고 생각했습니다.
+따라서 redis 인스턴스도 확장이 가능하도록 redis-cluster 로 구축했습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-채팅_서버에_Redis_를_쓴_이유.md/2.png&quot; alt=&quot;2&quot; /&gt;&lt;em&gt;redis pub/sub 을 활용한 구조 재설계&lt;/em&gt;&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;hoeeeeeh&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+
+      
+        <summary type="html">초기 설계</summary>
+      
+
+      
+      
+    </entry>
+  
+</feed>
