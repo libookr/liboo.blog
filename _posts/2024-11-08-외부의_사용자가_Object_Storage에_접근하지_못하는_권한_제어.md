@@ -13,7 +13,7 @@ author: 김준서
 categories:
     - [트러블슈팅, ]
 ---
-<br><br>
+
 
 ## 문제 상황
 

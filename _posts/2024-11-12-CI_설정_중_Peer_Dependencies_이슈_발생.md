@@ -13,7 +13,7 @@ author: gominzip
 categories:
     - [트러블슈팅, ]
 ---
-<br><br>
+
 
 ## 문제 상황
 

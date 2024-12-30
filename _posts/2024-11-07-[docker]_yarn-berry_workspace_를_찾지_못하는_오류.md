@@ -13,7 +13,6 @@ author: 영길 김
 categories:
     - [트러블슈팅, ]
 ---
-<br><br>
 
 패키지매니저를 yarn-berry 로 쓰고 dockerfile 을 아래와 같이 작성했는데
 

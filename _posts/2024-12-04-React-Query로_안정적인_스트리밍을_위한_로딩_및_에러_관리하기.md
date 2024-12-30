@@ -13,7 +13,7 @@ author: 홍창현
 categories:
     - [과정/근거, ]
 ---
-<br><br>
+
 
 ## 🚨 문제 인식
 
