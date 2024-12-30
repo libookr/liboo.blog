@@ -198,5 +198,14 @@ categories:
                 console.log(err);
             }
         });
+
+        await notion.pages.update({
+            page_id: id,
+            properties: {
+                status: {
+                    status: "배포 완료", // 새로운 상태값
+                },
+            },
+        });
     }
 })();
