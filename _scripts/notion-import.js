@@ -49,7 +49,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         database_id: databaseId,
         filter: {
             property: "상태",
-            select: {
+            status: {
                 equals: "작성 완료",
             },
         },
@@ -63,7 +63,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
             start_cursor: nextCursor,
             filter: {
                 property: "상태",
-                select: {
+                status: {
                     equals: "작성 완료",
                 },
             },
