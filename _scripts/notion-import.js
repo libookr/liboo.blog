@@ -50,8 +50,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         filter: {
             property: "상태",
             status: {
-                // equals: "작성 완료",
-                equals: "테스트",
+                equals: "작성 완료",
             },
         },
     });
@@ -65,8 +64,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
             filter: {
                 property: "상태",
                 status: {
-                    // equals: "작성 완료",
-                    equals: "테스트",
+                    equals: "작성 완료",
                 },
             },
         });

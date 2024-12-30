@@ -29,7 +29,6 @@ jobs:
                   rm -rf "$file"
               fi
           done
-          rm -rf _posts/*
 
       - uses: actions/setup-node@v3
         with:
