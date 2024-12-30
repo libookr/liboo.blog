@@ -202,7 +202,7 @@ categories:
         await notion.pages.update({
             page_id: id,
             properties: {
-                status: {
+                "상태": {
                     status: "배포 완료", // 새로운 상태값
                 },
             },
