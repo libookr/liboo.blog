@@ -106,7 +106,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         }
 
         // author
-        let author = r.properties?.["작성자"];
+        let author = r.properties?.["작성자"]?.["people"];
 
         // frontmatter
         let fmtags = "";
