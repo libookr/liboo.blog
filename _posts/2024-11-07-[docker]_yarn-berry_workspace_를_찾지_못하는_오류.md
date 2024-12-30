@@ -9,7 +9,7 @@ tags:
     - [docker, ]
 class: post-template
 subclass: 'post'
-author: 영길 김
+author: hoeeeeeh
 categories:
     - [트러블슈팅, ]
 ---

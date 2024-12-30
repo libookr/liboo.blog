@@ -9,7 +9,7 @@ tags:
     - 
 class: post-template
 subclass: 'post'
-author: 영길 김
+author: hoeeeeeh
 categories:
     - [과정/근거, ]
 ---
