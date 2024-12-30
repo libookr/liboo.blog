@@ -116,7 +116,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         // frontmatter
         let fmtags = "";
         let fmcats = "";
-        let fmauthors = "";
+        let fmauthors = "\n";
 
         if (tags.length > 0) {
             fmtags += "[";
@@ -135,11 +135,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         }
 
         if (authors.length > 0) {
-            fmauthors += "[";
-            for (const t of authors) {
-                fmauthors += t + ", ";
-            }
-            fmauthors += "]";
+            fmauthors += fmauthors.map((name) => `  - "${name}"`).join("\n");
         }
 
         const fm = `---
@@ -153,8 +149,7 @@ tags:
     - ${fmtags}
 class: post-template
 subclass: 'post'
-author: 
-    - ${fmauthors}
+author: ${fmauthors}
 categories:
     - ${fmcats}
 ---
