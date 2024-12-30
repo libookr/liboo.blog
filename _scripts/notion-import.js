@@ -50,7 +50,8 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         filter: {
             property: "상태",
             status: {
-                equals: "작성 완료",
+                // equals: "작성 완료",
+                equals: "테스트",
             },
         },
     });
@@ -64,7 +65,8 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
             filter: {
                 property: "상태",
                 status: {
-                    equals: "작성 완료",
+                    // equals: "작성 완료",
+                    equals: "테스트",
                 },
             },
         });
@@ -74,14 +76,16 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
     for (const r of pages) {
         const id = r.id;
         // date
-        let date = moment(r.created_time).format("YYYY-MM-DD");
+        let fdate = moment(r.created_time).format("YYYY-MM-DD");
+        let date = moment(r.created_time).format("YYYY-MM-DD hh:mm:ss");
+
         let pdate = r.properties?.["날짜"]?.["date"]?.["start"];
         if (pdate) {
             date = moment(pdate).format("YYYY-MM-DD");
         }
         // title
         let title = id;
-        let ptitle = r.properties?.["게시물"]?.["title"];
+        let ptitle = r.properties?.["title"]?.["title"];
         if (ptitle?.length > 0) {
             title = ptitle[0]?.["plain_text"];
         }
@@ -131,15 +135,15 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         const fm = `---
 layout: post
 current: post
-cover: 'assets/images/piano.jpg'
-navigation: true
-title: "${title}"
+cover: assets/images/piano.jpg
+navigation: True
+title: ${title}
 date: ${date}
 tags:
     - ${fmtags}
 class: post-template
 subclass: 'post'
-author: "${author}"
+author: ${author}
 categories:
     - ${fmcats}
 ---
@@ -153,7 +157,7 @@ categories:
         body = escapeCodeBlock(body);
         body = replaceTitleOutsideRawBlocks(body);
 
-        const ftitle = `${date}-${title.replaceAll(" ", "_")}.md`;
+        const ftitle = `${fdate}-${title.replaceAll(" ", "_")}.md`;
 
         let index = 0;
         let edited_md = body.replace(
