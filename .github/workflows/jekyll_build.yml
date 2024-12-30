@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - main # `main` 브랜치에 푸시될 때 트리거
-
+  workflow_run:
+    workflows: ["Build and Deploy"]
+    types:
+      - completed
 jobs:
   build:
     runs-on: ubuntu-latest
