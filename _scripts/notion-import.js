@@ -85,8 +85,8 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         }
         // title
         let title = id;
-        let ptitle = r.properties?.["title"]?.["title"];
-        console.log(ptitle, r.properties?.["title"], r.properties);
+        let ptitle = r.properties?.["제목"]?.["title"];
+        console.log(ptitle, r.properties?.["제목"]?.["id"], r.properties);
         if (ptitle?.length > 0) {
             title = ptitle[0]?.["plain_text"];
         }
@@ -136,7 +136,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         const fm = `---
 layout: post
 current: post
-cover: assets/images/piano.jpg
+cover: assets/images/writing.jpg
 navigation: True
 title: ${title}
 date: ${date}
