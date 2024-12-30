@@ -41,7 +41,7 @@
         "@types/node-fetch": "^2.6.2",
         "moment": "^2.29.2",
         "node-fetch": "^2.6.7",
-        "notion-to-md": "^2.5.5",
+        "notion-to-md": "^3.1.1",
         "axios": "^1.4.0",
         "autoprefixer": "6.3.6",
         "cssnano": "3.7.1",

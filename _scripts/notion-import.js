@@ -158,7 +158,6 @@ author:
 categories:
     - ${fmcats}
 ---
-<br><br>
 `;
         const mdblocks = await n2m.pageToMarkdown(id);
         let body = n2m.toMarkdownString(mdblocks)["parent"];
