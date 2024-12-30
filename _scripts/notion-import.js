@@ -111,11 +111,13 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         }
 
         // author
-        let author = r.properties?.["작성자"]?.["people"].map((m) => m["name"]);
+        let authors = r.properties?.["작성자"]?.["people"].map((m) => m["name"]);
 
         // frontmatter
         let fmtags = "";
         let fmcats = "";
+        let fmauthors = "";
+
         if (tags.length > 0) {
             fmtags += "[";
             for (const t of tags) {
@@ -131,6 +133,15 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
             }
             fmcats += "]";
         }
+
+        if (authors.length > 0) {
+            fmauthors += "[";
+            for (const t of authors) {
+                fmauthors += t + ", ";
+            }
+            fmauthors += "]";
+        }
+
         const fm = `---
 layout: post
 current: post
@@ -142,7 +153,8 @@ tags:
     - ${fmtags}
 class: post-template
 subclass: 'post'
-author: ${author}
+author: 
+    - ${fmauthors}
 categories:
     - ${fmcats}
 ---
