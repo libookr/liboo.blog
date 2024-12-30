@@ -473,7 +473,7 @@ The knock-on effect of this is ugly browser-scroll bars at the bottom, so 80px o
 
 .post-card-author-meta {
     display: inline-block;
-    padding: 5px;
+    padding: 0 5px 5px 5px;
 }
 
 .reading-time {
