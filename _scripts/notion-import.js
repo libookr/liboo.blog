@@ -86,6 +86,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         // title
         let title = id;
         let ptitle = r.properties?.["title"]?.["title"];
+        console.log(ptitle, r.properties?.["title"], r.properties);
         if (ptitle?.length > 0) {
             title = ptitle[0]?.["plain_text"];
         }
