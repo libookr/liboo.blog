@@ -119,14 +119,6 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
             }
             fmtags += "]";
         }
-
-        if (assrtmnt.length > 0) {
-            fmassrtmnt += "[";
-            for (const t of assrtmnt) {
-                fmassrtmnt += t ;
-            }
-            fmassrtmnt += "]";
-        }
         const fm = `---
 layout: post
 current: post
