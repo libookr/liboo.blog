@@ -135,7 +135,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         }
 
         if (authors.length > 0) {
-            fmauthors += fmauthors.map((name) => `  - "${name}"`).join("\n");
+            fmauthors += authors.map((name) => `  - "${name}"`).join("\n");
         }
 
         const fm = `---
