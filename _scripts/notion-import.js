@@ -136,7 +136,7 @@ layout: post
 current: post
 cover: assets/images/writing.jpg
 navigation: True
-title: ${title}
+title: "${title}"
 date: ${date}
 tags:
     - ${fmtags}
