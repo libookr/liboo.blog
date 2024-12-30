@@ -63,7 +63,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
             start_cursor: nextCursor,
             filter: {
                 property: "상태",
-                checkbox: {
+                select: {
                     equals: "작성 완료",
                 },
             },
