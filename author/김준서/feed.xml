@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
   <link href="https://blog.liboo.kr/author/%EA%B9%80%EC%A4%80%EC%84%9C/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://blog.liboo.kr/" rel="alternate" type="text/html" />
-  <updated>2024-12-30T19:51:57+00:00</updated>
+  <updated>2024-12-30T20:04:36+00:00</updated>
   <id>https://blog.liboo.kr/author/%EA%B9%80%EC%A4%80%EC%84%9C/feed.xml</id>
 
   
@@ -38,5 +38,2321 @@
   
   
 
+  
+    <entry>
+      <title type="html">4.5.1 버전에서 ts, yarn.lock 에러</title>
+      <link href="https://blog.liboo.kr/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC" rel="alternate" type="text/html" title="4.5.1 버전에서 ts, yarn.lock 에러" />
+      <published>2024-11-28T11:56:00+00:00</published>
+      <updated>2024-11-28T11:56:00+00:00</updated>
+      <id>https://blog.liboo.kr/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC</id>
+      <content type="html" xml:base="https://blog.liboo.kr/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC">&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+&lt;p&gt;백엔드 작업 내용과 프론트 작업 내용을 합치는 과정에서 yarn install로 의존성 패키지들을 설치하면, @nestjs가 비정상적으로 동작하는 문제를 발견했습니다&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-28-4.5.1_버전에서_ts,_yarn.lock_에러.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;해결-과정&quot;&gt;🏃 해결 과정&lt;/h2&gt;
+
+&lt;p&gt;yarn set version berry를 통해 레포지토리의 yarn 버전을 4.5.1에서 4.5.3으로 업데이트하니까 버그가 해결되었습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-28-4.5.1_버전에서_ts,_yarn.lock_에러.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;문제-해결&quot;&gt;✅ 문제 해결&lt;/h2&gt;
+
+&lt;p&gt;그런데 아직까지 정확하게 왜 4.5.1 버전에서 에러가 발생하는 지와 4.5.3 버전으로 업데이트 했을 때 오류가 해결되는지 원인을 찾지 못했습니다.&lt;/p&gt;
+
+&lt;p&gt;추후에 yarn에 대해 더 학습해보면서 원인에 대해 학습해볼 예정입니다.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;김준서&quot;, &quot;hoeeeeeh&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+
+      
+        <summary type="html">🚨 문제 상황</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">다시보기를 위한 Node-Media-Server, FFMpeg 분석</title>
+      <link href="https://blog.liboo.kr/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D" rel="alternate" type="text/html" title="다시보기를 위한 Node-Media-Server, FFMpeg 분석" />
+      <published>2024-11-23T06:55:00+00:00</published>
+      <updated>2024-11-23T06:55:00+00:00</updated>
+      <id>https://blog.liboo.kr/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D</id>
+      <content type="html" xml:base="https://blog.liboo.kr/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D">&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;실시간 스트리밍 서비스에서 HLS(HLS, HTTP Live Streaming)는 널리 사용되는 프로토콜입니다. 그러나 다시보기 기능을 구현하기 위해서는 전체 m3u8 플레이리스트가 필요하며, 이는 세그먼트 파일이 분할되어 있는 기존 구조에서는 추가적인 처리가 필요합니다. 이번 글에서는 Node-Media-Server와 FFmpeg를 활용하여 이러한 문제를 해결하고, 세그먼트 길이를 고정하여 다시보기용 m3u8 파일을 생성하는 방법에 대해 다뤄보겠습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;본론&quot;&gt;본론&lt;/h2&gt;
+
+&lt;h3 id=&quot;문제점-분석&quot;&gt;문제점 분석&lt;/h3&gt;
+
+&lt;p&gt;기존 구조에서는 세그먼트 별로 재생 시간이 일정하지 않아 다시보기용 m3u8 파일을 생성하는 데 어려움이 있었습니다. 세그먼트 길이가 불규칙하면 클라이언트 측에서 이를 처리하기 위한 복잡한 로직이 필요하며, 이는 서비스의 안정성과 성능에 영향을 줄 수 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;ffmpeg-인코딩-옵션-탐구&quot;&gt;FFmpeg 인코딩 옵션 탐구&lt;/h3&gt;
+
+&lt;p&gt;세그먼트 길이를 일정하게 유지하기 위해 FFmpeg의 비디오 코덱 옵션인 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vcParam&lt;/code&gt;을 활용할 수 있습니다. 주요 옵션은 다음과 같습니다:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g&lt;/code&gt;: 최대 GOP(Group of Pictures) 크기를 설정합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sc_threshold&lt;/code&gt;: 씬 변경 감도를 감지하는 임계값을 설정합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;keyint_min&lt;/code&gt;: 최소 GOP 크기를 설정합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;force_key_frames&lt;/code&gt;: 키 프레임을 특정 시간 간격으로 강제로 삽입합니다. 예를 들어, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;expr:gte(t,n_forced*2)&lt;/code&gt;는 2초마다 키 프레임을 삽입합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이러한 옵션을 조합하여 세그먼트 길이를 고정하면, 재생 시간의 일관성을 유지할 수 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;두-가지-접근-방법&quot;&gt;두 가지 접근 방법&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;키 프레임 고정 및 시작/종료 세그먼트 관리&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;키 프레임 간격과 GOP 크기를 고정하여 세그먼트 길이를 일정하게 유지합니다. 방송 시작과 종료 시점의 세그먼트 번호를 저장하여, 방송 종료 시 다시보기용 m3u8 파일을 생성하고 스토리지에 저장합니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;유동적인 키 프레임 설정 및 별도 플레이리스트 관리&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;키 프레임을 유동적으로 설정하고, 라이브용과 다시보기용 m3u8 파일을 별도로 생성합니다. 다시보기용 m3u8 파일은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index{번호}.m3u8&lt;/code&gt; 형태로 분리되며, 클라이언트 측에서 이를 처리하는 로직이 필요합니다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;성능-및-품질-고려사항&quot;&gt;성능 및 품질 고려사항&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;인코딩 부하&lt;/strong&gt;: 화면 전환 감지를 활성화하면 인코딩 부하가 증가합니다. 이는 서버 자원에 부담을 줄 수 있습니다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;영상 품질&lt;/strong&gt;: 키 프레임을 강제로 고정하면 씬 변경 시 화질 저하가 발생할 수 있습니다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;세그먼트 일정성&lt;/strong&gt;: 세그먼트 길이가 일정하면 클라이언트 측에서의 처리 로직이 단순해집니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;프로젝트의 요구사항과 서버의 성능을 고려하여 적절한 방법을 선택하는 것이 중요합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;최종-결정-및-구현-방안&quot;&gt;최종 결정 및 구현 방안&lt;/h3&gt;
+
+&lt;p&gt;화면 전환 감지 기능을 비활성화하고, GOP 크기를 조정하여 프레임 시간을 고정하는 방안을 선택했습니다. 이를 통해 세그먼트 길이를 일정하게 유지하면서 인코딩 부하는 최소화할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;구현 단계는 다음과 같습니다:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;GOP 설정을 통한 키 프레임 간격 고정&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;FFmpeg에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-g&lt;/code&gt; 옵션을 사용하여 원하는 키 프레임 간격을 설정합니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;세그먼트 번호 기반의 다시보기 m3u8 파일 생성&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;처음 생성되는 세그먼트(번호 0)부터 현재 스토리지에 저장된 마지막 세그먼트까지의 정보를 사용하여 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replay.m3u8&lt;/code&gt; 파일을 생성하고 업로드합니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;메인 서버에서 m3u8 정보 관리&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;RTMP 서버에서 세그먼트 파일만 처리하고, 메인 서버가 인메모리로 현재 방송의 m3u8 정보를 관리하여 클라이언트에게 제공합니다. 이를 통해 파일 입출력으로 인한 성능 저하를 방지할 수 있습니다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;세그먼트 길이를 일정하게 유지하는 것은 다시보기 기능 구현과 클라이언트 측의 처리 로직 단순화에 큰 도움이 됩니다. 화면 전환 감지 기능을 비활성화하고 GOP 설정을 조정함으로써 인코딩 부하를 최소화하면서 원하는 목표를 달성할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;이번 접근 방법은 서버 자원의 효율적인 활용과 서비스 품질 향상에 기여할 것으로 기대됩니다. 앞으로도 지속적인 모니터링과 최적화를 통해 더욱 안정적인 스트리밍 서비스를 제공하도록 노력하겠습니다.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;참고 자료&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.ktword.co.kr/test/view/view.php?no=3145&quot;&gt;KTword - GOP 관련 용어&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;FFmpeg 공식 문서 및 관련 기술 블로그&lt;/li&gt;
+&lt;/ul&gt;
+&lt;details&gt;
+&lt;summary&gt;기존 정리&lt;/summary&gt;
+
+## 서론
+
+
+기존에는 실시간으로 m3u8, hls 세그먼트 파일을 사용
+
+
+다시보기를 위해서는 전체 m3u8이 필요
+
+- 아니면 나눠진 m3u8을 클라이언트가 받아올 필요성이 있음
+
+이를 해결하기 위해 기존 node-media-server와 ffmpeg 탐구 start
+
+
+## 본론
+
+
+기존에는 다시보기용 m3u8을 만들기 어려웠음
+
+- 왜 why? 세그먼트 별로 플레이 시간이 달랐기 때문
+
+그래서 좀 찾아보니 vcParam으로 비디오 코덱에 줄 수 있는 4가지 옵션 발견
+
+- vcParam 사용법 - [ {옵션 1}, {값 1}, {옵션 2}, {값 2}, … ]
+- g - 최대 GOP를 설정할 수 있는 옵션
+	- GOP 관련 / [http://www.ktword.co.kr/test/view/view.php?no=3145](http://www.ktword.co.kr/test/view/view.php?no=3145) - 이거 공부하면 영상 처리 고도화 가능할듯
+- sc_threshold - 씬 변경 감도를 감지하는threshold
+- keyint_min - 최소 GOP를 설정할 수 있는 옵션
+- force_key_frames - 키 프레임 시간을 고정할 수 있는 옵션
+	- expr:gte(t,n_forced*{N}) - N초 만큼 키 프레임을 강제로 고정
+
+위의 옵션을 잘 이리저리하면 세그먼트 길이 고정이 가능
+
+- 그런데 영길님이랑 얘기해보니 강제로 키프레임 고정 하는게 괜찮나 생각이 듦
+	- 왜 와이 → 그만큼 프레임 처리가 많아 질 것 같다, 렌더링도 많이 될 것 같다.
+- 일단 아이디어는 확인했으니 차차 생각해볼 예정
+
+위의 조사를 토대로 작성한 다시보기 데이터 생성 플로우
+
+1. 키프레임을 고정하고, 방송의 시작/종료 세그먼트 번호를 저장한다.
+	- 이를 통해 방송이 종료될 때 다시보기용 m3u8을 만들어서 스토리지에 저장
+2. 키프레임을 유동적으로 설정하고 라이브용 m3u8, 다시보기용 m3u8을 만든다.
+	- 이 때 다시보기용 m3u8은 index{번호}.m3u8로 분리
+	- 프론트에서 이 데이터를 처리하는 로직이 추가적으로 필요할 것 같음
+- GPT 왈
+	- **첫 번째 방법**은 키프레임 간격과 GOP 크기를 고정하여 세그먼트 길이를 일정하게 유지하고 인코딩 부하를 줄이는 데 효과적입니다. 하지만 씬 변경 시 품질 저하가 발생할 수 있습니다.
+	- **두 번째 방법**은 강제 키프레임 삽입과 씬 변경 감지를 통해 영상 품질을 향상시키지만, 인코딩 부하가 증가하고 세그먼트 길이가 변동될 수 있습니다.
+
+**따라서** 프로젝트의 요구 사항과 서버의 성능, 네트워크 환경, 영상 품질의 중요도 등을 고려하여 적절한 방법을 선택하시길 권장합니다.
+
+
+아마 둘중 하나로 결정될 것 같은데 각 기능들이 서버에 주는 부하가 얼마나 될지 확인해보고 결정하는 게 좋을 듯
+
+
+근데 생각해보면 화면 전환을 감지하는 게 더 리소스를 많이 먹는 작업이지 않나..?
+
+- 이건 진짜 모르겠음
+- GPT왈왈
+	- **부하 측면에서**: 화면 전환 감지를 사용하는 것이 고정 키프레임을 사용하는 것보다 더 많은 **인코딩 부하**를 발생시킵니다.
+	- **선택의 기준**: 인코딩 부하와 영상 품질, 압축 효율, 세그먼트 일정성 등 **프로젝트의 우선순위와 서버 자원**을 고려하여 적절한 방법을 선택하시기 바랍니다.
+
+
+만약 영상 키프레임 고정이 가능하다면 rtmp 서버에서 m3u8을 계속 읽어서 오브젝트 스토리지로 안 보내도 될듯
+
+- 멘토님께 여쭤보니 파일 읽고 쓰는건 생각 이상으로 비싼 작업이라서 뺄 수 있으면 좋다.
+- 그래서 그냥 rtmp 서버는 세그먼트만 읽어서 보내고, 차라리 메인서버가 인메모리로 현재 방송의 m3u8 정보를 계속 들고 있다가 쏴주는 방식은 어떨까
+
+## 결론
+
+
+&amp;gt; 참고자료  
+&amp;gt; 
+
+
+&lt;/details&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;김준서&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+
+      
+        <summary type="html">서론</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">NestJS를 통한 일관적인 시스템 설계</title>
+      <link href="https://blog.liboo.kr/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84" rel="alternate" type="text/html" title="NestJS를 통한 일관적인 시스템 설계" />
+      <published>2024-11-23T04:11:00+00:00</published>
+      <updated>2024-11-23T04:11:00+00:00</updated>
+      <id>https://blog.liboo.kr/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84</id>
+      <content type="html" xml:base="https://blog.liboo.kr/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84">&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;기존의 API 서버를 만들면서 기능 구현에만 급급하다 보니 제대로된 코드 분리나 정리를 따로 하지 않았습니다.&lt;/p&gt;
+
+&lt;p&gt;앞으로의 확장성과 유지보수성을 위해 NestJS가 기본적으로 가지고 있는 의존성 주입 패턴과 주로 사용되는 디자인 패턴들에 대해 학습해보고자 합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;본론&quot;&gt;본론&lt;/h2&gt;
+
+&lt;h3 id=&quot;nestjs의-dependency-injection&quot;&gt;NestJS의 Dependency Injection&lt;/h3&gt;
+
+&lt;p&gt;기본적으로 NestJS는 의존성 주입을 따르는 디자인 패턴으로 만들어져 있습니다.&lt;/p&gt;
+
+&lt;p&gt;의존성 주입은 특정한 클라이언트가 외부로 부터 의존성을 주입 받고, 그렇게 받아온 의존성을 통해서 외부의 서비스에 접근하는 방식을 의미합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-23-NestJS를_통한_일관적인_시스템_설계.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;이를 통해 각 코드별 결합도가 감소하며, mock과 같은 데이터를 주입해서 테스트를 쉽게 진행할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;나아가 서비스를 외부에서 주입 받기에 같은 서비스를 여러 코드에서 재활용할 수 있고 수정 및 유지보수성도 확장됩니다.&lt;/p&gt;
+
+&lt;p&gt;의존성 주입을 하는 방식은 크게 아래와 같습니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Initializer - 초기화 시 의존성 주입&lt;/li&gt;
+  &lt;li&gt;Setter - Setter를 통해서 의존성 주입&lt;/li&gt;
+  &lt;li&gt;Interface - 의존성 Interface를 채택해서 의존성 주입&lt;/li&gt;
+  &lt;li&gt;DI Container - 의존성 관리를 위한 외부의 의존성 컨테이너로 의존성 주입&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;NestJS는 이런 DI 패턴이 적용되어 설계 됐습니다. Module에서 의존성을 주입 받을 서비스를 providers로 등록하고, 컨트롤러를 등록하면 해당 모듈에 주입된 서비스들을 내부 컨트롤러에서 활용할 수 있게됩니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Controller에서 constructor의 매개변수로 서비스를 불러오면 의존성을 주입 받아 사용할 수 있습니다,
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;constructor(private readonly {${이름}: ${서비스}) {}&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이렇게 서비스, 컨트롤러를 하나의 모듈로 묶을 수 있고, 모듈을 서로 다른 모듈에서 imports를 통해 불러와 사용할 수 있게 됩니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;Nest를 통해 보다 분리된 서비스를 구축하고, DDD를 편하게 적용할 수 있음을 파악할 수 있었습니다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;참고자료&lt;br /&gt;
+&lt;a href=&quot;https://roothyo.tistory.com/56?category=1034781&quot;&gt;https://roothyo.tistory.com/56?category=1034781&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://roothyo.tistory.com/57&quot;&gt;https://roothyo.tistory.com/57&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://velog.io/@jeon0976/%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-DIDependency-Injection-Pattern-2-DI-Pattern-%EC%82%AC%EC%9A%A9%EB%B2%95&quot;&gt;https://velog.io/@jeon0976/%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-DIDependency-Injection-Pattern-2-DI-Pattern-%EC%82%AC%EC%9A%A9%EB%B2%95&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://velog.io/@zvoniti/NestJS-Design-Pattern&quot;&gt;https://velog.io/@zvoniti/NestJS-Design-Pattern&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://medium.com/@jang.wangsu/di-dependency-injection-%EC%9D%B4%EB%9E%80-1b12fdefec4f&quot;&gt;https://medium.com/@jang.wangsu/di-dependency-injection-%EC%9D%B4%EB%9E%80-1b12fdefec4f&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;김준서&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+
+      
+        <summary type="html">서론</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">nestjs에서 swagger 사용해보기</title>
+      <link href="https://blog.liboo.kr/nestjs%EC%97%90%EC%84%9C_swagger_%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0" rel="alternate" type="text/html" title="nestjs에서 swagger 사용해보기" />
+      <published>2024-11-13T11:34:00+00:00</published>
+      <updated>2024-11-13T11:34:00+00:00</updated>
+      <id>https://blog.liboo.kr/nestjs%EC%97%90%EC%84%9C_swagger_%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0</id>
+      <content type="html" xml:base="https://blog.liboo.kr/nestjs%EC%97%90%EC%84%9C_swagger_%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0">&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;앞으로 프 - 백 협업 작업을 함에 있어, 백엔드에서 발행되는 api의 명세는 프론트에 필수라고 생각합니다.&lt;/p&gt;
+
+&lt;p&gt;노션으로 api 명세를 작성해서 공유하는 방식도 있지만, 앞으로의 작업 효율을 위해 swagger를 사용해보고자 합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;본론&quot;&gt;본론&lt;/h2&gt;
+
+&lt;p&gt;swagger은 API 문서 자동화 도구로써 api 명세를 공유하는데 많은 효율을 볼 수 있다.&lt;/p&gt;
+
+&lt;p&gt;또한 swagger를 통해 api까지 테스트 해 볼 수 있는 편리한 도구다.&lt;/p&gt;
+
+&lt;p&gt;yarn 환경에서 swagger를 설치하는 방법은 다음과 같다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;json
+yarn add -D @nestjs/swagger swagger-ui-express
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;nestjs가 설치되어 있다는 환경에서 swagger는 간단한 setup 작업으로 손쉽게 사용할 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;javascript
+// INestApplication은 NestJS의 NestFactory로 만들어진 app
+export function setupSwagger(app: INestApplication): void {
+	// Swagger 모듈 config builder
+  const options = new DocumentBuilder()
+    .setTitle(&apos;NestJS Study API Docs&apos;)
+    .setDescription(&apos;NestJS Study API description&apos;)
+    .setVersion(&apos;1.0.0&apos;)
+    .build();
+
+	// 위에서 만든 설정을 적용한 document를 /api-docs로 연결
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup(&apos;api-docs&apos;, app, document);
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+import { NestFactory } from &apos;@nestjs/core&apos;;
+import { AppModule } from &apos;./app.module.js&apos;;
+import { setupSwagger } from &apos;./util/swagger.js&apos;; // 사전에 작성한 swagger setup
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  setupSwagger(app); // 인자로 app을 넣어주기만 하면 설정 끝
+  await app.listen(process.env.PORT ?? 3000);
+}
+bootstrap();
+
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;또한 nestjs에서 사용하는 swagger은 데코레이터를 통해 간단하게 api의 명세 설정이 가능하다.&lt;/p&gt;
+
+&lt;p&gt;자주 사용하는 데코레이터는 아래와 같으며, 더욱 자세한 내용은 nestjs 공식 문서에 나와있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.nestjs.com/openapi/decorators&quot;&gt;https://docs.nestjs.com/openapi/decorators&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;@ApiTags - Method / Controller
+    &lt;ul&gt;
+      &lt;li&gt;api에 tag를 달아준다.&lt;/li&gt;
+      &lt;li&gt;controller에 tag를 달 경우 하위 api를 하나로 묶어서 표현해준다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;@ApiOperation - Method
+    &lt;ul&gt;
+      &lt;li&gt;api에 설명을 추가한다.&lt;/li&gt;
+      &lt;li&gt;속성
+        &lt;ul&gt;
+          &lt;li&gt;summary - api 이름&lt;/li&gt;
+          &lt;li&gt;description - api 설명&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;@ApiResponse - Method / Controller
+    &lt;ul&gt;
+      &lt;li&gt;api의 반환 값에 대한 설명을 추가한다.&lt;/li&gt;
+      &lt;li&gt;기존에 정해져 있는 code들에 대한 데코레이터들이 별도로 존재 ( Ex. 201 - ApiCreatedResponse)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;@ApiProperty - Model
+    &lt;ul&gt;
+      &lt;li&gt;api dto에 대해 설명을 추가한다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;이와 같이 swagger를 통해서 간단하게 프론트 - 백 간의 API 명세를 작성할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;아직 처음 써보는 기능이라 데코레이터와 태그들이 익숙하지는 않지만 계속 사용해보면서 지속적으로 학습할 계획이다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;참고자료&lt;br /&gt;
+&lt;a href=&quot;https://jhyeok.com/nestjs-swagger/&quot;&gt;https://jhyeok.com/nestjs-swagger/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://any-ting.tistory.com/122&quot;&gt;https://any-ting.tistory.com/122&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://docs.nestjs.com/openapi/decorators&quot;&gt;https://docs.nestjs.com/openapi/decorators&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;김준서&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+
+      
+        <summary type="html">서론</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어</title>
+      <link href="https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4" rel="alternate" type="text/html" title="외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어" />
+      <published>2024-11-08T12:01:00+00:00</published>
+      <updated>2024-11-08T12:01:00+00:00</updated>
+      <id>https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4</id>
+      <content type="html" xml:base="https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4">&lt;h2 id=&quot;문제-상황&quot;&gt;문제 상황&lt;/h2&gt;
+
+&lt;p&gt;Ncloude의 Object Stroage를 사용하는 과정에 있어, 업로드 된 파일이 임의의 다른 유저가 다운로드하지 못하는 오류를 맞닥뜨렸다.&lt;/p&gt;
+
+&lt;p&gt;이 문서에서는 해당 오류를 맞이한 과정부터 시작해, 어떻게 해결했는지 서술해보고자 한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;해결-과정&quot;&gt;해결 과정&lt;/h2&gt;
+
+&lt;h3 id=&quot;1-업로드된-파일에-접근-할-시-access-denine이-발생하는-문제&quot;&gt;1. 업로드된 파일에 접근 할 시 Access Denine이 발생하는 문제&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-08-외부의_사용자가_Object_Storage에_접근하지_못하는_권한_제어.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;HLS 스트림 데이터를 온라인 상에서 송수신하기 위해, 우선적으로 object storage의 bucket에 파일을 업로드했다.&lt;/p&gt;
+
+&lt;p&gt;외부의 사용자가 접근할 수 있도록 권한까지 공개로 설정한 뒤 다운로드 테스트를 위해 파일의 URL에 접속해보았다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-08-외부의_사용자가_Object_Storage에_접근하지_못하는_권한_제어.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;그러자 위와 같은 결과를 반환하며 bucket에 올라가 있는 파일에는 접근을 할 수 없었다.&lt;/p&gt;
+
+&lt;p&gt;웹 브라우저를 통한 오류일까싶어 curl을 통해 cli 환경에서도 파일을 끌어왔지만 위와 동일한 에러만 발생할 뿐이었다.&lt;/p&gt;
+
+&lt;p&gt;이 문제는 bucket의 접근 제어 기능으로 발생한 문제였는데, bucket의 접근 제어 기능이란 해당 bucket에 접근할 수 있는 VPC, ACL을 작성해 정해진 네트워크에서만 bucket에 접근을 할 수 있도록 설정하는 기능이다.&lt;/p&gt;
+
+&lt;p&gt;문제가 발생하는 원인을 찾고 난 뒤 bucket의 접근 제어 기능을 비활성화 한 뒤 파일에 접근하니 정상적으로 다운로드가 되는 모습을 볼 수 있었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-08-외부의_사용자가_Object_Storage에_접근하지_못하는_권한_제어.md/2.png&quot; alt=&quot;2&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-08-외부의_사용자가_Object_Storage에_접근하지_못하는_권한_제어.md/3.png&quot; alt=&quot;3&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;2-cors-접근-오류&quot;&gt;2. CORS 접근 오류&lt;/h3&gt;
+
+&lt;p&gt;bucket에 올라간 파일에 대해 &lt;a href=&quot;https://livepush.io/hls-player/index.html&quot;&gt;https://livepush.io/hls-player/index.html&lt;/a&gt; 사이트에서 영상 플레이 테스트를 진행해보았다.&lt;/p&gt;
+
+&lt;p&gt;그러나 브라우저의 console에서는 지속적으로 cors 에러를 발생 시킨 채 파일들을 불러오지 못하는 문제가 발생했다.&lt;/p&gt;
+
+&lt;p&gt;cors는 서로 다른 호스트의 주소에서 리소스에 대한 요청을 막는 정책으로 후에 조금 더 자세하게 서술하고자 한다.&lt;/p&gt;
+
+&lt;p&gt;우선 이 cors 문제를 해결하기 위해 몇가지 솔루션을 찾아본 결과 bucket 자체의 cors 정책을 변경해서 cors 오류를 피할 수 있는 방법을 찾았다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aws configure&lt;/code&gt;를 통해 object storage의 키와 region을 설정한다
+    &lt;ul&gt;
+      &lt;li&gt;object storage는 aws s3가 사용하는 대부분의 기능을 사용 가능&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;다음의 내용을 파일로 작성해준다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;markdown
+	// cors-config.json
+	{
+	    &quot;CORSRules&quot;: [
+	        {
+	            &quot;AllowedOrigins&quot;: [&quot;*&quot;],
+	            &quot;AllowedMethods&quot;: [&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;],
+	            &quot;AllowedHeaders&quot;: [&quot;*&quot;],
+	            &quot;ExposeHeaders&quot;: [],
+	            &quot;MaxAgeSeconds&quot;: 3000
+	        }
+	    ]
+	}
+	
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aws --endpoint-url=https://kr.object.ncloudstorage.com s3api put-bucket-cors --bucket {bucket_name} --cors-configuration filt://{config_경로}&lt;/code&gt; 에서 { } 안을 환경에 맞게 설정한 뒤 위에서 작성한 config를 업로드 해준다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;위의 과정을 거치면 bucket으로 오는 GET, POST, PUT 요청에 대해 cors 검증 없이 데이터를 요청할 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;그러나 이러한 cors, 접근 제어를 전부 풀어버리면 악의적인 유저의 접근으로 대량의 트래픽이 발생할 수 있으므로 좀 더 자세한 정책의 수정이 필요하다.&lt;/p&gt;
+
+&lt;details&gt;
+&lt;summary&gt;추신&lt;/summary&gt;
+
+&lt;CORSConfiguration&gt;
+&lt;CORSRule&gt;
+&lt;AllowedOrigin&gt;[https://yourdomain.com](https://yourdomain.com/)&lt;/AllowedOrigin&gt;
+&lt;AllowedMethod&gt;GET&lt;/AllowedMethod&gt;
+&lt;AllowedMethod&gt;PUT&lt;/AllowedMethod&gt;
+&lt;AllowedMethod&gt;POST&lt;/AllowedMethod&gt;
+&lt;AllowedMethod&gt;DELETE&lt;/AllowedMethod&gt;
+&lt;AllowedHeader&gt;*&lt;/AllowedHeader&gt;
+&lt;ExposeHeader&gt;ETag&lt;/ExposeHeader&gt;
+&lt;MaxAgeSeconds&gt;3000&lt;/MaxAgeSeconds&gt;
+&lt;/CORSRule&gt;
+&lt;/CORSConfiguration&gt;
+
+
+추후에 도메인을 연결하면 Allowed Origin 에 [liboo.kr](http://liboo.kr/) 을 해놓으면 좋을 것 같습니다!
+
+
+&lt;/details&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;김준서&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+
+      
+        <summary type="html">문제 상황</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">동영상 스트리밍 처리 프로토콜을 알아보자</title>
+      <link href="https://blog.liboo.kr/%EB%8F%99%EC%98%81%EC%83%81_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D_%EC%B2%98%EB%A6%AC_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C%EC%9D%84_%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90" rel="alternate" type="text/html" title="동영상 스트리밍 처리 프로토콜을 알아보자" />
+      <published>2024-10-28T02:40:00+00:00</published>
+      <updated>2024-10-28T02:40:00+00:00</updated>
+      <id>https://blog.liboo.kr/%EB%8F%99%EC%98%81%EC%83%81_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D_%EC%B2%98%EB%A6%AC_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C%EC%9D%84_%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90</id>
+      <content type="html" xml:base="https://blog.liboo.kr/%EB%8F%99%EC%98%81%EC%83%81_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D_%EC%B2%98%EB%A6%AC_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C%EC%9D%84_%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90">&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;목차&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;학습-이유&quot;&gt;🤔 학습 이유&lt;/h1&gt;
+
+&lt;p&gt;서비스의 레퍼런스로 Zoom과 치지직 등 여러 스트리밍 서비스의 동작원리를 조사하던 중, 각 서비스별로 서로 다른 프로토콜을 사용하는 것을 발견할 수 있었다.&lt;/p&gt;
+
+&lt;p&gt;영상 송출에 사용되는 프로토콜을 조사하고 우리 서비스에 적합한 프로토콜을 선정하고자 한다!&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;동영상 스트리밍 처리 프로토콜
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;HLS&lt;/strong&gt; &lt;strong&gt;- 지연시간이 높지만 호환성이 좋음 (치지직) - 민지, 영길&lt;/strong&gt;
+        &lt;ul&gt;
+          &lt;li&gt;왜 다른 프로토콜에 비해 지연시간이 길까?&lt;/li&gt;
+          &lt;li&gt;어떻게 지연시간을 낮출 수 있을까?&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;WebRTC - 지연시간이 낮지만 P2P에 적합 (구글미트) - 창현&lt;/strong&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;RTMP - 지연시간 낮음 (트위치) - 준서, 지수&lt;/strong&gt;&lt;/li&gt;
+      &lt;li&gt;Dynamic Adapltive Streaming over HTTP&lt;/li&gt;
+      &lt;li&gt;SRT&lt;/li&gt;
+      &lt;li&gt;RTSP&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1️⃣rtsp-real-time-streaming-protocol&quot;&gt;1️⃣ RTSP &lt;strong&gt;(Real Time Streaming Protocol)&lt;/strong&gt;&lt;/h1&gt;
+
+&lt;p&gt;스트리밍의 시작이라고 말할 수 있다. 1996년 등장하였으며 RTSP가 등장 전 영상, 음악 등 멀티미디어 정보를 완전히 다운로드한 후 시청할 수 있었음.&lt;/p&gt;
+
+&lt;p&gt;다만 오래된 기술이라 화질 저하, 미디어 서버 운영에 대한 높은 난이도 등으로 도태되고 있는 실정.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;애플은 HLS가 개발되기 이전에 &lt;strong&gt;RTSP&lt;/strong&gt; 기반의 QTSS로 비디오와 오디오를 처리했었음
+    &lt;ul&gt;
+      &lt;li&gt;하지만 QTSS가 애플 생태계에서만 최적화가 되어있었기 때문에 호환성 이유가 있었음&lt;/li&gt;
+      &lt;li&gt;RTSP는 HTTP 기반이 아닌 TCP, UDP 사용 
+  → 네트워크 상태나 방화벽 문제로 인해 HTTP보다 호환성 낮음&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CCTV에서 사용하고 있는 프로토콜&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;스트리머 → rtmp → 서버 → hls → 클라이언트&lt;/p&gt;
+
+&lt;h1 id=&quot;2️⃣hls-hypertext-live-streaming&quot;&gt;2️⃣ HLS (Hypertext Live Streaming)&lt;/h1&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;참고자료&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[https://medium.com/@cwh./%EB%8F%99%EC%98%81%EC%83%81-%EC%95%88%EB%81%8A%EA%B8%B0%EA%B3%A0-%EB%B3%B4%EB%8A%94%EB%B2%95-feat-ll-hls-a6a0c453b21f](https://medium.com/@cwh./%EB%8F%99%EC%98%81%EC%83%81-%EC%95%88%EB%81%8A%EA%B8%B0%EA%B3%A0-%EB%B3%B4%EB%8A%94%EB%B2%95-feat-ll-hls-a6a0c453b21f)
+
+
+[https://medium.com/@delivalue100/hls-http-live-streaming-4fb1d2992d57](https://medium.com/@delivalue100/hls-http-live-streaming-4fb1d2992d57)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;왜-만들어졌을까-feat-rtsp&quot;&gt;왜 만들어졌을까? feat. RTSP&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RTSP는 고정된 비트레이트로 콘텐츠 스트리밍에 최적화
+    &lt;ul&gt;
+      &lt;li&gt;고정 비트레이트의 경우 한가지 속도로만 데이터를 전송하다 보니 네트워크 상태가 변할 때에도 동일한 비트레이트로 스트리밍을 유지해야한다는 문제가 있음&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;⇒ 따라서 호환성이 높은 HTTP를 기반으로, &lt;strong&gt;네트워크 상태에 따라 비디오 품질을 실시간으로 조정&lt;/strong&gt; 가능한 &lt;strong&gt;가변 비트레이트&lt;/strong&gt; 기능까지 도입된 것이 &lt;strong&gt;HLS&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;동작-원리-이해하기&quot;&gt;동작 원리 이해하기&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;HTTP기반의 단방향 미디어 스트리밍 프로토콜&lt;/li&gt;
+  &lt;li&gt;일반 웹서버 + CDN을 활용해 콘텐츠 배포&lt;/li&gt;
+  &lt;li&gt;[비디오 → HTTP 파일 조각으로 나눔 → 전송 →] 재생&lt;/li&gt;
+  &lt;li&gt;HTTP 파일로 나누기 때문에 별도의 전용 서버가 필요하지 않다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;m3u8 : 메타데이터
+    &lt;ul&gt;
+      &lt;li&gt;시작 태그&lt;/li&gt;
+      &lt;li&gt;hls 프로토콜 버전&lt;/li&gt;
+      &lt;li&gt;세그먼트의 최대 길이&lt;/li&gt;
+      &lt;li&gt;첫 번째 세그먼트의 시퀀스 번호&lt;/li&gt;
+      &lt;li&gt;실제 세그먼트의 길이, 다음 세그먼트 인덱스&lt;/li&gt;
+      &lt;li&gt;종료 태그&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ts : 실제 비디오의 조각들을 담고 있는 컨테이너&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;왜-다른-프로토콜에-비해-지연시간이-길까&quot;&gt;왜 다른 프로토콜에 비해 지연시간이 길까?&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/2.png&quot; alt=&quot;2&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;지연시간이 긴 것에는 다양한 원인이 있었음&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;UDP 를 사용하는 다른 프로토콜들과 달리 HLS 는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TCP&lt;/code&gt; 를 사용한다.&lt;/li&gt;
+  &lt;li&gt;HLS 는 오히려 실시간에 집중하기 보다는 데이터의 신뢰성과 효율성에 집중한 프로토콜이다.&lt;/li&gt;
+  &lt;li&gt;동작 방식으로 인한 지연
+    &lt;ol&gt;
+      &lt;li&gt;서버에서 스트리밍할 비디오 파일을 짧은 세그먼트(2~10초)로 분할 
+ → 재생을 시작하기 위해선 &lt;strong&gt;적어도 몇 개의 세그먼트가 필요해 초기 버퍼링 시간이 길어짐&lt;/strong&gt; (세그먼트 길이가 길수록 지연이 커질 수 있음)
+ ⇒ CDN으로 세그먼트 캐싱해서 데이터 전송 시간을 개선하려함&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;HTTP 기반 요청-응답 지연
+    &lt;ol&gt;
+      &lt;li&gt;HTTP 기반이므로 &lt;strong&gt;각 세그먼트 마다 서버에 요청을 보내고 응답을 기다리는 시간&lt;/strong&gt;이 필요. 네트워크의 상태나 응답 속도에 종속&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;가변 비트레이트 지연
+    &lt;ol&gt;
+      &lt;li&gt;네트워크 상태에 따라 &lt;strong&gt;최적의 비트레이트를 선택하기 위한 모니터링&lt;/strong&gt; 진행 
+ → 이 과정에서 비트레이트를 전환하며 지연이 발생함 
+ ⇒ 지연이 시청 환경을 개선하지만 실시간성에서는 불리함!&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CDN 캐싱과 서버 최적화 이슈
+    &lt;ol&gt;
+      &lt;li&gt;세그먼트 파일이 여러 서버에 캐시되어도 여전히 HTTP 기반으로 동작해 추가적인 통신과정 필요&lt;/li&gt;
+      &lt;li&gt;특히 사용자 많은 라이브방송에서는 CDN이 적절히 분배되지 않으면 지연 발생&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;⇒ 따라서 HLS는 라이브 스트리밍보다는 정적 비디오 플레이어에 더 적합&lt;/p&gt;
+
+&lt;h3 id=&quot;치지직에서의-hls-사용법&quot;&gt;치지직에서의 HLS 사용법&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/3.png&quot; alt=&quot;3&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;⇒ 결국 클라이언트가 플레이리스트의 미디어 세그먼트들을 순차적으로 GET하고 마지막쯤에 새로운 세그먼트를 요청하는 흐름이기 때문에 &lt;strong&gt;단방향 통신으로 동작한다.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;+) 뒤로 돌려보기 안되는 이유..? 돌려보기 자체에 리소스 소모가 큰듯. 그냥 방송 종료 후 다시보기 기능을 넣는게 이득&lt;/p&gt;
+
+&lt;h3 id=&quot;지연시간-어떻게-개선할-수-있을까&quot;&gt;지연시간 어떻게 개선할 수 있을까?&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cdnetworks.com/ko/blog/media-delivery/http-live-streaming/&quot;&gt;https://www.cdnetworks.com/ko/blog/media-delivery/http-live-streaming/&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;세그먼트 길이 단축
+    &lt;ol&gt;
+      &lt;li&gt;6초 이상의 기본적인 세그먼트 길이를 2~1초로 줄이기
+        &lt;ol&gt;
+          &lt;li&gt;짧아질수록 서버와 클라이언트 사이에 요청이 많아 부하가 생길 수 있으니 균형점을 찾아야함&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;LL-HLS 도입
+    &lt;ol&gt;
+      &lt;li&gt;애플이 개발한 HLS의 초저지연 버전&lt;/li&gt;
+      &lt;li&gt;세그먼트 내에서 더 작은 단위인 파트로 나눠 전송하며, 세그먼트가 완전히 준비되지 않아도 일부를 먼저 전송함&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;세그먼트 프리페칭
+    &lt;ol&gt;
+      &lt;li&gt;클라이언트가 다음 세그먼트를 미리 예측하고 사전 다운로드&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;송출 환경 최적화
+    &lt;ol&gt;
+      &lt;li&gt;치지직 공지사항을 보니 송출 프로그램을 최적화하는 방법도..&lt;/li&gt;
+      &lt;li&gt;스트리머가 키프레임 간격을 너무 짧게 설정 →세그먼트가 너무 짧아짐, 서버 부하 ⇒ 버퍼링 많아짐 이슈인듯
+        &lt;ol&gt;
+          &lt;li&gt;&lt;a href=&quot;https://help.naver.com/notice/noticeView.help?noticeNo=17188&amp;amp;serviceNo=23946&amp;amp;lang=ko&quot;&gt;https://help.naver.com/notice/noticeView.help?noticeNo=17188&amp;amp;serviceNo=23946&amp;amp;lang=ko&lt;/a&gt;&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;비트레이트와-세그먼트&quot;&gt;비트레이트와 세그먼트&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;비트레이트&lt;/strong&gt;
+    &lt;ol&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;m3u8&lt;/code&gt; 플레이리스트 파일 수정
+        &lt;ol&gt;
+          &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EXT-X-STREAM-INF&lt;/code&gt; 태그를 사용하여 비트레이트를 설정&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;text
+			#EXTM3U
+			#EXT-X-VERSION:3
+			
+			#EXT-X-STREAM-INF:BANDWIDTH=1500000
+			# 이 스트림에 대한 메타데이터를 정의
+			# BANDWIDTH=1500000은 이 스트림의 대역폭 요구 사항이 1,500,000 비트(1.5 Mbps)임을 나타냄
+			
+			stream_1500.m3u8
+			
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	2. 추가적인 태그 설명
+		- **#EXT-X-DISCONTINUITY**: 이전 세그먼트와의 **연속성이 끊어짐**을 표시합니다. 이는 광고와 같은 **다른 유형의 미디어를 삽입**할 때 사용됩니다.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;text
+				m3u8
+				#EXT-X-DISCONTINUITY
+				
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;			- **예시**: 이 태그 뒤에 오는 세그먼트는 이전 미디어와는 다르게 인코딩되었거나 다른 타입의 미디어임을 의미합니다.
+		- **#EXT-X-STREAM-INF**: **다중 비트레이트 스트림** 또는 **적응형 스트리밍**을 위해 사용됩니다. 여러 비트레이트를 가진 대체 스트림이 있을 때, 클라이언트가 네트워크 상태에 따라 적절한 스트림을 선택할 수 있도록 합니다.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;text
+				m3u8
+				#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360
+				low.m3u8
+				#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720
+				medium.m3u8
+				
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;			- **예시**: 800kbps, 1500kbps로 각각 다른 해상도의 스트림을 제공합니다. 클라이언트는 네트워크 상황에 따라 적절한 `m3u8` 파일을 선택하게 됩니다.
+		- **#EXT-X-KEY**: 세그먼트의 **암호화 키 정보**를 제공합니다. HLS에서는 콘텐츠 보호를 위해 **AES-128 암호화**를 사용하여 세그먼트를 암호화할 수 있습니다.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;text
+				m3u8
+				#EXT-X-KEY:METHOD=AES-128,URI=&quot;https://example.com/key&quot;
+				
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;			- **예시**: 세그먼트를 AES-128로 암호화하며, 암호화 키를 가져올 위치는 `https://example.com/key`입니다. 2. **세그먼트**
+1. FFmpeg로 비디오를 여러 해상도로 인코딩할 때 `-hls_time`을 사용하여 세그먼트의 길이를 설정 (기본 10초)
+2. [https://frontdev.tistory.com/entry/ffmpeg%EB%A1%9C-hls-%EB%A7%8C%EB%93%A4%EA%B8%B0-%EC%98%B5%EC%85%98%EC%A0%95%EB%A6%AC](https://frontdev.tistory.com/entry/ffmpeg%EB%A1%9C-hls-%EB%A7%8C%EB%93%A4%EA%B8%B0-%EC%98%B5%EC%85%98%EC%A0%95%EB%A6%AC)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;text
+		- ffmpeg -i hasashin.mp4 -b:v 1M -g 60 -hls_time 2 -hls_list_size 0 -hls_segment_size 500000 output.m3u8
+		출처: https://frontdev.tistory.com/entry/ffmpeg로-hls-만들기-옵션정리 [Front End Develop:티스토리]
+		
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;결론
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;높은 비트레이트와 긴 세그먼트&lt;/strong&gt;: 높은 비트레이트를 사용하면서 긴 세그먼트를 전송할 경우, 네트워크 대역폭을 효율적으로 사용할 수 있지만, 지연 시간이 증가. 특히 불안정한 네트워크에서는 재생 품질이 저하됨.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;낮은 비트레이트와 짧은 세그먼트&lt;/strong&gt;: 낮은 비트레이트와 짧은 세그먼트를 조합하면, 재생 안정성이 높아지고 지연 시간 감소, 비디오 품질은 저하. ⇒ 이게 우리서비스에 적합하지 않을까?&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;ll-hls의-지연시간-개선-방법&quot;&gt;LL-HLS의 지연시간 개선 방법&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/4.png&quot; alt=&quot;4&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;하나당 10초 정도인 ts 가 아닌 1초 이하 정도의 CMAF 컨테이너에 담아서 생성 즉시 전송한다.&lt;/li&gt;
+  &lt;li&gt;또한 m3u8 파일에 추가적인 메타데이터가 들어간다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ll-hls-관련-메타데이터&quot;&gt;LL-HLS 관련 메타데이터&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;#EXT-X-PART-INF&lt;/strong&gt;: &lt;strong&gt;저지연 HLS&lt;/strong&gt;에서 사용되는 태그로, 세그먼트가 &lt;strong&gt;파편(chunk)&lt;/strong&gt;으로 나뉘어 전송되는 경우 각 파편의 정보를 포함합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;text
+	m3u8
+	#EXT-X-PART-INF:PART-TARGET=1.0
+	
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- **예시**: 각 파편의 타겟 길이가 **1초**임을 의미합니다. - **#EXT-X-PRELOAD-HINT**: LL-HLS에서 아직 완료되지 않은 세그먼트나 파편에 대해 **미리 가져올 힌트**를 제공합니다. 이를 통해 클라이언트가 지연 시간을 줄이기 위해 미리 준비할 수 있습니다.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;text
+	m3u8
+	#EXT-X-PRELOAD-HINT:TYPE=PART,URI=&quot;segment3_part1.ts&quot;
+	
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- **예시**: `segment3_part1.ts` 파편을 미리 로드할 힌트입니다.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;응답-지연&quot;&gt;응답 지연&lt;/h2&gt;
+
+&lt;p&gt;저번 금요일에 회고 시간에,  Short Polling, Long Polling 이 나왔던 적이 있었는데 이와 비슷한 방식으로 지연 시간을 줄였다고 보면 쉬울 것 같다.&lt;/p&gt;
+
+&lt;p&gt;Short Polling 은 주기적으로 서버에 요청을 보내서 업데이트 된 사항이 있는지를 체크한다. 만약 업데이트된 사항이 없다면 서버는 304(Not Modified), 200 를 반환한다.&lt;/p&gt;
+
+&lt;p&gt;이때 클라이언트는 업데이트된 사항이 있을 때 까지 또 요청을 보낸다.&lt;/p&gt;
+
+&lt;p&gt;Long Polling (200) 은 클라이언트가 서버에 요청을 보냈을 때, 업데이트가 되기 전까지는 서버가 응답을 되돌려주지 않고 연결을 유지(지연)하다가, 업데이트가 된 순간 응답을 보낸다.&lt;/p&gt;
+
+&lt;p&gt;기존 HLS는 메타데이터(플레이리스트) 인 .m3u8 파일을 지속적으로 서버에 요청해서 .m3u8 을 토대로 세그먼트를 재생하는 방식인데, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;지속적으로 서버에 요청&lt;/code&gt; 이 과정이 지연시간의 주범이다. 이 시간 동안 클라이언트는 세그먼트를 받는게 아니라 대기를 해버리기 때문에, 실제 동영상 파일인 세그먼트를 업데이트가 되고 나서야 받을 수 있다.&lt;/p&gt;
+
+&lt;p&gt;기존 HLS 는 HTTP 요청을 주기적으로 보내서 .m3u8 이 업데이트가 되었는지 확인을 한다. 만약 업데이트가 되지 않았다면 또 서버에 요청을 보내고, 업데이트가 되었다는 응답을 받고 나서야 실제 스트리밍 데이터인 세그먼트를 받아온다.&lt;/p&gt;
+
+&lt;p&gt;LL-HLS 는&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;클라이언트의 플레이리스트 요청&lt;/strong&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;클라이언트가 서버에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.m3u8&lt;/code&gt; &lt;strong&gt;플레이리스트&lt;/strong&gt;를 요청합니다. 이때 클라이언트는 &lt;strong&gt;최신 세그먼트&lt;/strong&gt;를 가져오기를 원합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;서버의 요청 지연(Blocking)&lt;/strong&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;만약 서버에 &lt;strong&gt;새로운 세그먼트&lt;/strong&gt;가 아직 생성되지 않은 경우, 서버는 즉시 응답을 하지 않고 요청을 &lt;strong&gt;일정 시간 동안 대기(Blocking)&lt;/strong&gt; 시킵니다. 이 대기 시간 동안 서버는 새로운 세그먼트가 생성되기를 기다립니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;새로운 세그먼트 생성 시 응답&lt;/strong&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;새로운 세그먼트가 생성되면 서버는 대기 중인 클라이언트의 요청에 응답하여 &lt;strong&gt;최신 플레이리스트&lt;/strong&gt;를 반환합니다. 클라이언트는 이를 통해 바로 다음 세그먼트를 가져가 재생을 시작할 수 있습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;업데이트 주기 단축&lt;/strong&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;이러한 방식은 기존의 주기적인 폴링 방식보다 &lt;strong&gt;지연 시간&lt;/strong&gt;을 훨씬 줄일 수 있습니다. 즉, 클라이언트가 계속해서 플레이리스트를 요청하여 최신 정보를 받기 위해 대기하지 않도록 하여 지연 시간을 줄입니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;서버의-부하&quot;&gt;서버의 부하&lt;/h2&gt;
+
+&lt;p&gt;LL-HLS 는 세그먼트를 더 짧게 생성하기 때문에 당연히 세그먼트를 더 자주 생성하게 되고, m3u8 의 업데이트도 더 많이 일어난다. 따라서 서버의 부담이 증가하게 된다.&lt;/p&gt;
+
+&lt;p&gt;서버의 부담을 줄이는 방법은 있을까?&lt;/p&gt;
+
+&lt;h3 id=&quot;서버-부하를-줄이기-위한-방안&quot;&gt;서버 부하를 줄이기 위한 방안&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;CDN(Content Delivery Network) 사용&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;LL-HLS&lt;/strong&gt;에서 서버 부하를 줄이기 위해 가장 많이 사용되는 방법 중 하나는 &lt;strong&gt;CDN&lt;/strong&gt;을 사용하는 것입니다. CDN은 스트리밍 콘텐츠를 여러 지점에 &lt;strong&gt;캐시&lt;/strong&gt;하고, 지리적으로 가까운 사용자에게 콘텐츠를 제공함으로써 &lt;strong&gt;서버의 부하를 분산&lt;/strong&gt;시킵니다.&lt;/li&gt;
+      &lt;li&gt;CDN을 사용하면 클라이언트가 직접 서버에 연결하는 대신 CDN에서 콘텐츠를 받아가므로, &lt;strong&gt;서버의 직접적인 요청 수&lt;/strong&gt;를 줄일 수 있습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;효율적인 세그먼트 생성 및 캐싱&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;서버는 세그먼트를 효율적으로 생성하고, &lt;strong&gt;재사용 가능한 세그먼트를 캐싱&lt;/strong&gt;함으로써 부하를 줄일 수 있습니다. 특히, 플레이리스트와 세그먼트가 자주 변경되기 때문에, 이를 적절히 캐싱하여 동일한 콘텐츠를 여러 클라이언트가 요청하는 경우 서버에서 재생성할 필요가 없도록 해야 합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;최적의 플레이리스트 및 세그먼트 길이 조정&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;LL-HLS에서는 지연 시간을 줄이기 위해 세그먼트를 작은 크기로 나누지만, &lt;strong&gt;너무 작은 단위의 세그먼트&lt;/strong&gt;는 서버 부하를 크게 증가시킬 수 있습니다. 따라서 &lt;strong&gt;적절한 세그먼트 길이&lt;/strong&gt;와 &lt;strong&gt;플레이리스트 갱신 주기&lt;/strong&gt;를 설정하여 서버 부하와 지연 시간을 균형 있게 맞추는 것이 중요합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;대신 safari 를 제외한 브라우저에서는 &lt;video&gt; 태그만으로는 재생이 불가능하다. HLS 스트림 변환이 필요하다.&lt;/video&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;hls.js → hls 스트림을 브라우저가 이해할 수 있는 포맷으로 변환하여 &lt;video&gt; 요소에 전달하는 라이브러리&lt;/video&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;3️⃣webrtc-web-real-time-communication&quot;&gt;3️⃣ WebRTC (Web Real-Time Communication)&lt;/h1&gt;
+
+&lt;p&gt;웹 브라우저 간에 플러그인의 도움 없이 서로 통신할 수 있도록 설계된 &lt;strong&gt;Javascript API&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;→ 별다른 소프트웨어 없이 카메라, 마이크 등을 사용하여 실시간 커뮤니케이션을 제공&lt;/p&gt;
+
+&lt;p&gt;음성 통화, 영상 통화, P2P 파일 공유 등으로 활용됨&lt;/p&gt;
+
+&lt;h2 id=&quot;webrtc의-장점&quot;&gt;WebRTC의 장점&lt;/h2&gt;
+
+&lt;h3 id=&quot;webrtc는-낮은-latency를-갖는다&quot;&gt;WebRTC는 낮은 Latency를 갖는다&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;WebRTC는 &lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;P2P(peer-to-peer)방식&lt;/code&gt;&lt;/strong&gt;으로 데이터를 전송
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;P2P&lt;/strong&gt;는 &lt;strong&gt;중간 서버&lt;/strong&gt;를 거치지 않음&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;WebRTC는 &lt;strong&gt;UDP 기반&lt;/strong&gt;으로 작동하여 신속하게 패킷을 전송
+    &lt;ul&gt;
+      &lt;li&gt;HLS와 RTMP는 &lt;strong&gt;TCP 기반&lt;/strong&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;webrtc는-호환성이-높다&quot;&gt;WebRTC는 호환성이 높다&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/5.png&quot; alt=&quot;5&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;webrtc의-단점&quot;&gt;WebRTC의 단점&lt;/h2&gt;
+
+&lt;h3 id=&quot;많은-사용자가-사용할-수-없다-스케일링-문제&quot;&gt;많은 사용자가 사용할 수 없다 (스케일링 문제)&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;WebRTC는 P2P(peer-to-peer) 구조로 작동하기 때문에 각 사용자 간의 직접적인 연결을 설정&lt;/li&gt;
+  &lt;li&gt;사용자가 많아질수록 필요한 연결 수가 &lt;strong&gt;기하급수적으로 증가&lt;/strong&gt;함&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/6.png&quot; alt=&quot;6&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;N명의 사용자가 있을 때 사용자 한명이 추가되면 N개의 연결이 필요
+    &lt;ul&gt;
+      &lt;li&gt;서버와 클라이언트 모두에 큰 부담&lt;/li&gt;
+      &lt;li&gt;네트워크 대역폭과 성능 저하 초래&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;화질-문제-성능문제&quot;&gt;화질 문제 (성능문제)&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;실시간 비디오와 오디오 스트리밍을 위해 상당한 대역폭을 소모&lt;/li&gt;
+  &lt;li&gt;특히 고화질 비디오 스트림은 많은 대역폭을 요구&lt;/li&gt;
+  &lt;li&gt;대역폭이 제한된 환경에서는 &lt;strong&gt;패킷 손실&lt;/strong&gt;이 발생할 수 있으며, 이는 전체 스트림의 품질 저하로 이어짐
+    &lt;ul&gt;
+      &lt;li&gt;WebRTC는 &lt;strong&gt;UDP 기반&lt;/strong&gt;이므로 패킷 손실이 일어날 수 있음&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;다수의 사용자가 동시에 스트리밍을 시도하면 &lt;strong&gt;대역폭이 고갈&lt;/strong&gt;될 위험&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;대규모-라이브-방송에-불완전함&quot;&gt;대규모 라이브 방송에 불완전함&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;예측 불가능한 대역폭 소모&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;HLS나 RTMP&lt;/strong&gt;의 예측 가능한 방식
+        &lt;ul&gt;
+          &lt;li&gt;HLS나 RTMP는 중앙 서버에서 스트리밍을 관리하고 일반적으로 미리 인코딩된 비디오 조각을 전송&lt;/li&gt;
+          &lt;li&gt;스케일링 가능 : 수많은 사용자에게 콘텐츠를 효율적으로 배포할 수 있음&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;WebRTC&lt;/strong&gt;는 미리 인코딩된 스트림을 사용하지 않기 때문에 대역폭이 비디오 품질과 사용자 수에 따라 즉각적으로 변동함&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;webrtc보다-빠른-기술이-있을까&quot;&gt;WebRTC보다 빠른 기술이 있을까?&lt;/h2&gt;
+
+&lt;h3 id=&quot;webtransport&quot;&gt;&lt;strong&gt;WebTransport&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;WebTransport는 UDP 기반으로 통신&lt;/li&gt;
+  &lt;li&gt;WebRTC의 signaling 없이도 서버와의 실시간 데이터 교환 가능&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;그러나 WebTransport는 아직 개발 단계이며, 안정적인 표준화가 이루어지지 않아 모든 브라우저에서의 지원이 불확실&lt;/p&gt;
+
+&lt;p&gt;WebRTC처럼 실시간 오디오와 비디오 전송을 위한 최적화가 충분하지 않음&lt;/p&gt;
+
+&lt;h3 id=&quot;hls-vs-webrtc-비교&quot;&gt;HLS vs WebRTC 비교&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;**HLS**(HTTP Live Streaming)와 **WebRTC**는 모두 실시간 스트리밍을 위한 기술이지만, **사용 목적**, **지연 시간**, **보안** 및 **호환성** 측면에서 큰 차이가 있습니다. 사용하려는 애플리케이션의 유형에 따라 각 기술의 장단점을 비교해보고 어떤 것이 더 적합한지 선택해야 합니다. 아래는 HLS와 WebRTC를 실시간 스트리밍 웹 서비스의 관점에서 비교한 것입니다.
+
+
+### 1. 지연 시간
+
+- **HLS**:
+	- **지연 시간**: HLS는 HTTP 기반 프로토콜로 설계되어 있으며, **10~30초**의 지연 시간이 발생하는 것이 일반적입니다. 심지어 **저지연 HLS(LL-HLS)**를 사용하더라도 2~5초 정도의 지연 시간이 존재할 수 있습니다.
+	- **용도**: 따라서 HLS는 실시간성이 요구되지 않는 스트리밍에 적합합니다. 예를 들어, 뉴스 방송, 스포츠 경기, 강의 등의 상황에서 몇 초 정도의 지연이 큰 문제가 되지 않는다면 HLS가 적합합니다.
+- **WebRTC**:
+	- **지연 시간**: WebRTC는 **1초 미만의 매우 낮은 지연 시간**을 목표로 설계되어, 실시간 인터랙티브한 통신에 적합합니다.
+	- **용도**: 화상 회의, 게임 스트리밍, 실시간 원격 조작 등 **매우 빠른 반응**이 필요한 애플리케이션에 적합합니다. WebRTC의 P2P 연결 방식 덕분에 지연 시간을 최소화할 수 있습니다.
+
+### 2. 사용 사례
+
+- **HLS**:
+	- **주로 대규모 시청자 대상의 스트리밍**: HLS는 대규모 스트리밍 서비스(예: YouTube, Twitch 등)에서 매우 효과적입니다. HTTP 기반이라 기존 **CDN(Content Delivery Network)** 인프라를 활용해 손쉽게 콘텐츠를 전송할 수 있으며, 수천에서 수백만 명의 시청자가 동시에 스트리밍을 보는 데 적합합니다.
+	- **적응형 스트리밍**: 네트워크 상태에 따라 비디오 품질을 조정하는 **적응형 스트리밍**을 기본적으로 제공하므로, 시청자의 네트워크 환경에 맞춰 끊김 없이 서비스를 제공합니다.
+- **WebRTC**:
+	- **1:1 혹은 소규모 그룹 통신**: WebRTC는 **화상 통화**, **화상 회의**, **온라인 협업 툴** 등 소규모 실시간 커뮤니케이션에 최적화되어 있습니다. 또한, 게임 스트리밍과 같은 실시간 반응이 중요한 상황에도 적합합니다.
+	- **P2P 연결**: WebRTC는 주로 **P2P 연결**을 통해 데이터를 직접 전송하므로 서버의 부하를 줄일 수 있지만, 대규모 시청자를 대상으로 하기에 효율적이지 않을 수 있습니다.
+
+### 3. 확장성
+
+- **HLS**:
+	- **대규모 스트리밍에 최적**: HLS는 HTTP 기반이기 때문에 **CDN**을 사용하여 확장성을 쉽게 확보할 수 있습니다. 수천 명 이상의 사용자가 동시에 스트리밍을 소비할 수 있으며, 서버 부담을 덜 수 있습니다.
+- **WebRTC**:
+	- **제한된 확장성**: WebRTC는 브라우저 간 **P2P 연결**을 사용하므로, 직접 연결의 수가 증가할수록 확장성이 제한됩니다. 예를 들어, 많은 참가자 간의 연결이 필요하면 각 클라이언트의 네트워크 및 CPU 자원이 급격히 소모됩니다.
+	- **SFU 사용**: 확장성을 늘리기 위해 **SFU(Selective Forwarding Unit)**를 도입하여 각 클라이언트가 모든 참가자와 직접 연결하지 않고 중앙 서버를 통해 연결을 관리할 수 있도록 할 수 있습니다. 이를 통해 약 100명 이상의 사용자까지 확장 가능합니다.
+
+### 4. 네트워크 호환성 및 안정성
+
+- **HLS**:
+	- **HTTP 기반 전송**: HLS는 HTTP 기반이기 때문에, 대부분의 방화벽을 통과하고 네트워크 호환성이 매우 뛰어납니다.
+	- **안정적**: HTTP와 TCP를 사용하여 데이터 전송이 신뢰적이며, 중간에 발생하는 패킷 손실을 재전송하는 메커니즘이 있어 안정적인 스트리밍을 제공합니다.
+- **WebRTC**:
+	- **NAT Traversal**: WebRTC는 P2P 연결을 위해 **STUN** 및 **TURN** 서버를 사용하여 NAT 뒤에 있는 클라이언트를 연결합니다. 하지만 네트워크 환경에 따라 연결 설정이 복잡해지거나 문제가 발생할 수 있습니다.
+	- **UDP 기반 전송**: 주로 **UDP**를 사용하여 낮은 지연 시간을 제공하지만, 패킷 손실 시 재전송을 보장하지 않아 네트워크 상태가 좋지 않을 때 품질 저하가 발생할 수 있습니다.
+
+### 5. 보안
+
+- **HLS**:
+	- **HTTPS와 함께 사용**: HLS는 HTTP 기반으로, **HTTPS**를 사용해 데이터를 암호화할 수 있습니다. 또한, **DRM(디지털 권리 관리)**과 함께 사용해 콘텐츠 보호를 구현할 수 있습니다.
+- **WebRTC**:
+	- **기본적으로 암호화된 통신**: WebRTC는 모든 오디오, 비디오, 데이터 스트림을 **DTLS**(Datagram Transport Layer Security)와 **SRTP**(Secure Real-Time Transport Protocol)를 사용해 암호화합니다. 기본적으로 강력한 보안이 내장되어 있습니다.
+
+### 6. 브라우저 지원
+
+- **HLS**:
+	- **Safari와 iOS 네이티브 지원**: Apple 기기와 Safari 브라우저에서 기본적으로 지원하지만, Chrome, Firefox 등 다른 브라우저에서는 JavaScript 라이브러리(**hls.js**)가 필요합니다.
+- **WebRTC**:
+	- **모든 최신 브라우저 지원**: WebRTC는 **Chrome**, **Firefox**, **Safari**, **Edge** 등 대부분의 최신 브라우저에서 네이티브로 지원됩니다. 추가적인 플러그인이 필요 없이 실시간 통신 기능을 사용할 수 있습니다.
+
+### 결론
+
+- **HLS**는 **대규모 스트리밍**에 적합하며, 상대적으로 긴 지연 시간을 허용할 수 있는 **방송, 교육, 엔터테인먼트**와 같은 서비스에서 주로 사용됩니다. **HTTP 기반**이므로 네트워크 호환성이 높고, 기존 CDN 인프라를 활용할 수 있는 장점이 있습니다.
+- **WebRTC**는 **즉각적인 반응이 필요한 실시간 인터랙티브 애플리케이션**에 적합합니다. **낮은 지연 시간**과 **보안성**을 갖추고 있어 **화상 회의, 실시간 통신, 온라인 협업 도구** 등에 적합하며, 브라우저에서 네이티브로 지원되는 장점이 있습니다. 다만, **확장성** 측면에서는 SFU와 같은 구조적 보완이 필요합니다.
+
+따라서, **대규모 시청자와의 방송**에는 HLS가 적합하고, **소규모 실시간 상호작용**이나 **낮은 지연 시간이 필요한 서비스**에는 WebRTC가 더 나은 선택이 될 것입니다.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;3️⃣rtmp-real-time-messaging-protocol&quot;&gt;3️⃣ RTMP (Real-Time Messaging Protocol)&lt;/h1&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;참고자료&lt;br /&gt;
+&lt;a href=&quot;https://www.cdnetworks.com/ko/blog/media-delivery/what-is-rtmp-ingest/&quot;&gt;https://www.cdnetworks.com/ko/blog/media-delivery/what-is-rtmp-ingest/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://ossrs.net/lts/en-us/docs/v6/doc/flv&quot;&gt;https://ossrs.net/lts/en-us/docs/v6/doc/flv&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://growthvalue.tistory.com/178&quot;&gt;https://growthvalue.tistory.com/178&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://ossrs.net/lts/en-us/docs/v4/doc/delivery-http-flv&quot;&gt;https://ossrs.net/lts/en-us/docs/v4/doc/delivery-http-flv&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://medium.com/@delivalue100/rtmp-realtime-messaging-protocol-c4474e464ffd&quot;&gt;https://medium.com/@delivalue100/rtmp-realtime-messaging-protocol-c4474e464ffd&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://obsproject.com/forum/whats-new/posts/2763754/&quot;&gt;https://obsproject.com/forum/whats-new/posts/2763754/&lt;/a&gt; - OBS 포럼 &lt;br /&gt;
+&lt;a href=&quot;https://devocean.sk.com/blog/techBoardDetail.do?ID=164296&quot;&gt;https://devocean.sk.com/blog/techBoardDetail.do?ID=164296&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://blog.naver.com/mingyo01/222050438291&quot;&gt;https://blog.naver.com/mingyo01/222050438291&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://velog.io/@chosj1526/%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8A%B8%EC%9C%84%EC%B9%98-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%94%94%EC%9E%90%EC%9D%B8&quot;&gt;https://velog.io/@chosj1526/%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8A%B8%EC%9C%84%EC%B9%98-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%94%94%EC%9E%90%EC%9D%B8&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;개요&quot;&gt;&lt;strong&gt;개요&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/7.png&quot; alt=&quot;7&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/8.png&quot; alt=&quot;8&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;개발자:&lt;/strong&gt; Adobe Systems (원래 Macromedia가 개발)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;출시 시기:&lt;/strong&gt; 2003년&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;주요 용도:&lt;/strong&gt; 실시간 비디오 및 오디오 스트리밍, 특히 라이브 방송&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;특징:&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;어도브에서 규정한 만큼 기존에는 Flash Player을 지원하기 위해 작성된 기술이었다.&lt;/p&gt;
+
+    &lt;p&gt;그러나 최근 어도브에서 Flash Player의 지원을 중단한 만큼 점차 사용률이 저조해지고 있다.&lt;/p&gt;
+
+    &lt;p&gt;하지만 이는 클라이언트 단에서의 문제점이고, 영상 데이터를 서버로 옮기고 저장하는 데에 있어서는 높은 지연 시간과 효율을 가지고 있기에, HLS, MPEG-DASH, HTTP-FLV와 같은 기술과 함께 사용된다.&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;저지연 스트리밍:&lt;/strong&gt; 실시간 스트리밍에 적합한 낮은 지연 시간&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;양방향 통신:&lt;/strong&gt; 클라이언트와 서버 간의 실시간 데이터 전송 가능&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;유연성:&lt;/strong&gt; 비디오, 오디오, 데이터 스트림을 동시에 전송&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;지연시간이-빠른-이유&quot;&gt;지연시간이 빠른 이유&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;지속적인 연결 유지&lt;/strong&gt;: RTMP는 클라이언트와 서버 간에 &lt;strong&gt;지속적인 TCP 연결&lt;/strong&gt;을 유지합니다. 이는 데이터 전송 시마다 새로운 연결을 설정할 필요가 없기 때문에 &lt;strong&gt;연결 설정에 따른 오버헤드&lt;/strong&gt;를 줄여줍니다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;작은 청크(chunk) 단위 전송&lt;/strong&gt;: 데이터를 &lt;strong&gt;작은 청크로 분할하여 전송&lt;/strong&gt;함으로써, 데이터가 준비되는 즉시 전송할 수 있습니다. 이는 &lt;strong&gt;버퍼링 시간을 최소화&lt;/strong&gt;하고, 실시간 성능을 향상시킵니다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;트위치의 경우 스트리머 → Ingest → Transcode → Replication → Edge → 시청자를 거치며 스트리밍 데이터를 전송&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/9.png&quot; alt=&quot;9&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Ingest - 스트리머의 비디오 영상이 트위치 데이터 센터로 가는 것&lt;/li&gt;
+  &lt;li&gt;Transcode - 비디오 형식을 바꾸는 것&lt;/li&gt;
+  &lt;li&gt;Replication - 복사. 안정성을 위해&lt;/li&gt;
+  &lt;li&gt;Edge - CDN이라고도 부름&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/10.png&quot; alt=&quot;10&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/11.png&quot; alt=&quot;11&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;한계점&quot;&gt;&lt;strong&gt;한계점&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;보안:&lt;/strong&gt; 기본적으로 보안 기능이 내장되어 있지 않아 데이터 암호화가 필요할 경우 추가 설정이 필요함&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;방화벽 문제:&lt;/strong&gt; 전용 포트(기본적으로 1935)를 사용하므로 일부 네트워크 환경에서는 차단될 수 있음&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;모바일 지원 부족:&lt;/strong&gt; HTTP 기반 스트리밍 프로토콜(HLS, MPEG-DASH)에 비해 모바일 기기에서의 지원이 제한적&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;확장성:&lt;/strong&gt; 대규모&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;4️⃣srt-secure-reliable-transport&quot;&gt;&lt;strong&gt;4️⃣ SRT (Secure Reliable Transport)&lt;/strong&gt;&lt;/h1&gt;
+
+&lt;p&gt;OBS 사용&lt;/p&gt;
+
+&lt;h2 id=&quot;개요-1&quot;&gt;&lt;strong&gt;개요&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;개발자:&lt;/strong&gt; Haivision&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;출시 시기:&lt;/strong&gt; 2017년&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;주요 용도:&lt;/strong&gt; 불안정한 네트워크 환경에서도 안정적이고 보안이 강화된 비디오 스트리밍&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;특징:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;보안 강화:&lt;/strong&gt; AES 암호화를 통해 데이터 전송 시 보안을 보장&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;신뢰성:&lt;/strong&gt; 패킷 손실, 지연, 네트워크 변동성에 강한 내성을 가짐&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;적응성:&lt;/strong&gt; 다양한 네트워크 조건에 맞춰 동적으로 조정&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;오픈 소스:&lt;/strong&gt; SRT는 오픈 소스 프로젝트로, 다양한 플랫폼과 쉽게 통합 가능&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;srt의-주요-기능&quot;&gt;&lt;strong&gt;SRT의 주요 기능&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;암호화:&lt;/strong&gt; 전송 중인 데이터를 암호화하여 도청 및 데이터 변조를 방지&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;재전송 메커니즘:&lt;/strong&gt; 패킷 손실 시 재전송을 통해 데이터의 완전성을 유지&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;동적 비트레이트 조정:&lt;/strong&gt; 네트워크 상태에 따라 비트레이트를 자동으로 조정하여 스트리밍 품질을 최적화&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;방화벽 우회:&lt;/strong&gt; UDP 기반이지만, NAT 및 방화벽 환경에서도 안정적으로 동작&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;장점&quot;&gt;&lt;strong&gt;장점&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;보안:&lt;/strong&gt; RTMP와 달리 기본적으로 데이터 암호화를 지원하여 보안성이 뛰어남&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;신뢰성:&lt;/strong&gt; 불안정한 네트워크 환경에서도 안정적인 데이터 전송을 보장&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;유연성:&lt;/strong&gt; 다양한 네트워크 조건에 적응하여 최적의 스트리밍 품질 제공&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;확장성:&lt;/strong&gt; 대규모 스트리밍 환경에서도 효율적으로 확장 가능&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;오픈 소스:&lt;/strong&gt; 무료로 사용 가능하며, 커뮤니티 지원을 통해 지속적으로 개선됨&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;단점&quot;&gt;&lt;strong&gt;단점&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;채택률:&lt;/strong&gt; RTMP에 비해 상대적으로 최근에 등장한 프로토콜로, 기존 인프라와의 호환성 문제 발생 가능&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;설정 복잡성:&lt;/strong&gt; 초기 설정과 최적화를 위해 기술적인 지식이 필요할 수 있음&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;rtmp와-srt의-비교&quot;&gt;&lt;strong&gt;RTMP와 SRT의 비교&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;strong&gt;특징&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;RTMP&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;SRT&lt;/strong&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;보안&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;기본적으로 보안 기능 없음 (RTMPS로 보안 강화 가능)&lt;/td&gt;
+      &lt;td&gt;AES 암호화 내장, 기본적으로 보안 강화&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;전송 프로토콜&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;TCP 기반&lt;/td&gt;
+      &lt;td&gt;UDP 기반&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;신뢰성&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;TCP의 신뢰성 제공, 그러나 네트워크 변동성에 취약&lt;/td&gt;
+      &lt;td&gt;패킷 손실 복구, 네트워크 변동성에 강한 내성&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;지연 시간&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;낮음&lt;/td&gt;
+      &lt;td&gt;낮음&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;방화벽 우회&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;전용 포트 사용, 방화벽 문제 발생 가능&lt;/td&gt;
+      &lt;td&gt;NAT 및 방화벽 환경에서도 안정적 동작&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;확장성&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;대규모 분산 환경에서 추가 설정 필요&lt;/td&gt;
+      &lt;td&gt;대규모 스트리밍 환경에서 효율적으로 확장 가능&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;오픈 소스&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;아니오&lt;/td&gt;
+      &lt;td&gt;예 (오픈 소스 프로젝트)&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h1 id=&quot;5️⃣mpeg-dash-dynamic-adaptive-streaming-over-http&quot;&gt;&lt;strong&gt;5️⃣ MPEG-DASH (Dynamic Adaptive Streaming over HTTP)&lt;/strong&gt;&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;설명:&lt;/strong&gt; ISO 표준의 HTTP 기반 스트리밍 프로토콜로, 적응형 비트레이트를 지원하며 다양한 미디어 형식을 지원합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;특징:&lt;/strong&gt; 개방형 표준, 다양한 플랫폼과 호환.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;details&gt;
+&lt;summary&gt;정리글 원본&lt;/summary&gt;
+
+## 고민지
+
+	- **HLS** **- 지연시간이 높지만 호환성이 좋음 (치지직)**
+		- 왜 다른 프로토콜에 비해 지연시간이 길까?
+		- 어떻게 지연시간을 낮출 수 있을까?
+
+	### 왜 만들어졌을까? feat. RTSP
+
+	- RTSP는 고정된 비트레이트로 콘텐츠 스트리밍에 최적화
+		- 고정 비트레이트의 경우 한가지 속도로만 데이터를 전송하다 보니 네트워크 상태가 변할 때에도 동일한 비트레이트로 스트리밍을 유지해야한다는 문제가 있음
+
+		⇒ 따라서 호환성이 높은 HTTP를 기반으로, **네트워크 상태에 따라 비디오 품질을 실시간으로 조정** 가능한 **가변 비트레이트** 기능까지 도입된 것이 **HLS**
+
+
+	### HLS(Hypertext Live Streaming)
+
+	- HTTP기반의 단방향 미디어 스트리밍 프로토콜
+	- 일반 웹서버 + CDN을 활용해 콘텐츠 배포
+
+	### 왜 다른 프로토콜에 비해 지연시간이 길까?
+
+
+	![12](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/12.png)_image.png_
+
+
+	지연시간이 긴 것에는 다양한 원인이 있었음
+
+	1. 동작 방식으로 인한 지연
+		1. 서버에서 스트리밍할 비디오 파일을 짧은 세그먼트(2~10초)로 분할 
+		→ 재생을 시작하기 위해선 **적어도 몇 개의 세그먼트가 필요해 초기 버퍼링 시간이 길어짐** (세그먼트 길이가 길수록 지연이 커질 수 있음)
+		⇒ CDN으로 세그먼트 캐싱해서 데이터 전송 시간을 개선하려함
+	2. HTTP 기반 요청-응답 지연
+		1. HTTP 기반이므로 **각 세그먼트 마다 서버에 요청을 보내고 응답을 기다리는 시간**이 필요. 네트워크의 상태나 응답 속도에 종속
+	3. 가변 비트레이트 지연
+		1. 네트워크 상태에 따라 **최적의 비트레이트를 선택하기 위한 모니터링** 진행 
+		→ 이 과정에서 비트레이트를 전환하며 지연이 발생함 
+		⇒ 지연이 시청 환경을 개선하지만 실시간성에서는 불리함!
+	4. CDN 캐싱과 서버 최적화 이슈
+		1. 세그먼트 파일이 여러 서버에 캐시되어도 여전히 HTTP 기반으로 동작해 추가적인 통신과정 필요
+		2. 특히 사용자 많은 라이브방송에서는 CDN이 적절히 분배되지 않으면 지연 발생
+
+	⇒ 따라서 HLS는 라이브 스트리밍보다는 정적 비디오 플레이어에 더 적합
+
+
+	### 치지직에서의 HLS 사용법
+
+
+	[https://medium.com/@delivalue100/hls-http-live-streaming-4fb1d2992d57](https://medium.com/@delivalue100/hls-http-live-streaming-4fb1d2992d57)
+
+
+	![13](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/13.png)_image.png_
+
+
+	⇒ 결국 클라이언트가 플레이리스트의 미디어 세그먼트들을 순차적으로 GET하고 마지막쯤에 새로운 세그먼트를 요청하는 흐름이기 때문에 **단방향 통신으로 동작한다.**
+
+
+	+) 뒤로 돌려보기 안되는 이유..? 돌려보기 자체에 리소스 소모가 큰듯. 그냥 방송 종료 후 다시보기 기능을 넣는게 이득
+
+
+	### 지연시간 어떻게 개선할 수 있을까?
+
+
+	[https://www.cdnetworks.com/ko/blog/media-delivery/http-live-streaming/](https://www.cdnetworks.com/ko/blog/media-delivery/http-live-streaming/)
+
+	1. 세그먼트 길이 단축
+		1. 6초 이상의 기본적인 세그먼트 길이를 2~1초로 줄이기
+			1. 짧아질수록 서버와 클라이언트 사이에 요청이 많아 부하가 생길 수 있으니 균형점을 찾아야함
+	2. LL-HLS 도입
+		1. 애플이 개발한 HLS의 초저지연 버전
+		2. 세그먼트 내에서 더 작은 단위인 파트로 나눠 전송하며, 세그먼트가 완전히 준비되지 않아도 일부를 먼저 전송함
+	3. 세그먼트 프리페칭
+		1. 클라이언트가 다음 세그먼트를 미리 예측하고 사전 다운로드
+	4. 송출 환경 최적화
+		1. 치지직 공지사항을 보니 송출 프로그램을 최적화하는 방법도..
+		2. 스트리머가 키프레임 간격을 너무 짧게 설정 →세그먼트가 너무 짧아짐, 서버 부하 ⇒ 버퍼링 많아짐 이슈인듯
+			1. [https://help.naver.com/notice/noticeView.help?noticeNo=17188&amp;amp;serviceNo=23946&amp;amp;lang=ko](https://help.naver.com/notice/noticeView.help?noticeNo=17188&amp;amp;serviceNo=23946&amp;amp;lang=ko)
+
+	### 치지직의 경우
+
+
+	기존에 화질이 깨지는 문제 → 서버 부하 이슈로 움직임이 적은 장면에서는 낮은 비트레이트, 빠르게 변하는 장면에서는 높은 비트레이트를 사용해 빠르게 변하는 장면에서 품질이 저하되도록 함.
+
+
+	⇒ 이후에 서버 장비 도입으로 화질 제한을 풀고 원본 화질에 가깝게 (OBS로 스트리머가 송출하는 화질) 비디오를 전송
+
+
+	여기서 든 생각 → 어차피 우리의 타겟은 컨퍼런스 발표임, 정적인 장면이 많은 콘텐츠. 초기 치지직 방식대로 낮은 비트레이트를 유지해도 화질 문제는 없을 것 같음. 프레임율 낮추고..
+
+
+	### 결론
+
+	- **높은 비트레이트와 긴 세그먼트**: 높은 비트레이트를 사용하면서 긴 세그먼트를 전송할 경우, 네트워크 대역폭을 효율적으로 사용할 수 있지만, 지연 시간이 증가. 특히 불안정한 네트워크에서는 재생 품질이 저하됨.
+	- **낮은 비트레이트와 짧은 세그먼트**: 낮은 비트레이트와 짧은 세그먼트를 조합하면, 재생 안정성이 높아지고 지연 시간 감소, 비디오 품질은 저하. ⇒ 이게 우리서비스에 적합하지 않을까?
+
+	### 비트레이트랑 세그먼트 조정 어케함?
+
+	1. 비트레이트
+		1. `m3u8` 플레이리스트 파일 수정
+			1. `EXT-X-STREAM-INF` 태그를 사용하여 비트레이트를 설정
+
+			
+```
+text
+			#EXTM3U
+			#EXT-X-VERSION:3
+			
+			#EXT-X-STREAM-INF:BANDWIDTH=1500000
+			# 이 스트림에 대한 메타데이터를 정의
+			# BANDWIDTH=1500000은 이 스트림의 대역폭 요구 사항이 1,500,000 비트(1.5 Mbps)임을 나타냄
+			
+			stream_1500.m3u8
+			
+```
+
+
+	2. 세그먼트
+		1. FFmpeg로 비디오를 여러 해상도로 인코딩할 때 `-hls_time`을 사용하여 세그먼트의 길이를 설정 (기본 10초)
+		2. [https://frontdev.tistory.com/entry/ffmpeg%EB%A1%9C-hls-%EB%A7%8C%EB%93%A4%EA%B8%B0-%EC%98%B5%EC%85%98%EC%A0%95%EB%A6%AC](https://frontdev.tistory.com/entry/ffmpeg%EB%A1%9C-hls-%EB%A7%8C%EB%93%A4%EA%B8%B0-%EC%98%B5%EC%85%98%EC%A0%95%EB%A6%AC)
+
+			
+```
+text
+			- ffmpeg -i hasashin.mp4 -b:v 1M -g 60 -hls_time 2 -hls_list_size 0 -hls_segment_size 500000 output.m3u8
+			출처: https://frontdev.tistory.com/entry/ffmpeg로-hls-만들기-옵션정리 [Front End Develop:티스토리]
+			
+```
+
+
+
+## 김영길
+
+
+	[https://velog.io/@devstefancho/obs-RTMP-%EC%84%9C%EB%B2%84%EB%A1%9C-Live-Streaming](https://velog.io/@devstefancho/obs-RTMP-%EC%84%9C%EB%B2%84%EB%A1%9C-Live-Streaming)
+
+
+	[https://www.cloudflare.com/ko-kr/learning/video/what-is-http-live-streaming/](https://www.cloudflare.com/ko-kr/learning/video/what-is-http-live-streaming/)
+
+
+	HLS 는 apple 의 기술이라서 apple 기기에 전부 호환
+
+
+	반대로 안드로이드나 윈도우에서는 추가적인 로직 필요
+
+
+	[비디오 → HTTP 파일 조각으로 나눔 → 전송 →] 재생
+
+
+	HTTP 파일로 나누기 때문에 별도의 전용 서버가 필요하지 않다.
+
+
+	![14](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/14.png)_image.png_
+
+
+	![15](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/15.png)_image.png_
+
+	- m3u8 : 메타데이터
+		- 시작 태그
+		- hls 프로토콜 버전
+		- 세그먼트의 최대 길이
+		- 첫 번째 세그먼트의 시퀀스 번호
+		- 실제 세그먼트의 길이, 다음 세그먼트 인덱스
+		- 종료 태그
+	- ts : 실제 비디오의 조각들을 담고 있는 컨테이너
+
+	LL-HLS : 저지연
+
+
+	어떻게 지연 속도를 줄였나
+
+
+	###  `세그먼트를 또 나누기 -&amp;gt; chunk`
+
+
+	![16](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/16.png)_image.png_
+
+	- 하나당 10초 정도인 ts 가 아닌 1초 이하 정도의 CMAF 컨테이너에 담아서 생성 즉시 전송한다.
+
+	ㅅ또한 m3u8 파일에 추가적인 메타데이터가 들어간다.
+
+
+	### 2.1 미디어 변경 또는 광고
+
+	- **#EXT-X-DISCONTINUITY**: 이전 세그먼트와의 **연속성이 끊어짐**을 표시합니다. 이는 광고와 같은 **다른 유형의 미디어를 삽입**할 때 사용됩니다.
+
+		
+```
+text
+		m3u8
+		#EXT-X-DISCONTINUITY
+		
+```
+
+
+		- **예시**: 이 태그 뒤에 오는 세그먼트는 이전 미디어와는 다르게 인코딩되었거나 다른 타입의 미디어임을 의미합니다.
+
+	### 2.2 변수 비트레이트 및 다중 스트림
+
+	- **#EXT-X-STREAM-INF**: **다중 비트레이트 스트림** 또는 **적응형 스트리밍**을 위해 사용됩니다. 여러 비트레이트를 가진 대체 스트림이 있을 때, 클라이언트가 네트워크 상태에 따라 적절한 스트림을 선택할 수 있도록 합니다.
+
+		
+```
+text
+		m3u8
+		#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360
+		low.m3u8
+		#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720
+		medium.m3u8
+		
+```
+
+
+		- **예시**: 800kbps, 1500kbps로 각각 다른 해상도의 스트림을 제공합니다. 클라이언트는 네트워크 상황에 따라 적절한 `m3u8` 파일을 선택하게 됩니다.
+
+	### 2.3 키 프레임 및 암호화
+
+	- **#EXT-X-KEY**: 세그먼트의 **암호화 키 정보**를 제공합니다. HLS에서는 콘텐츠 보호를 위해 **AES-128 암호화**를 사용하여 세그먼트를 암호화할 수 있습니다.
+
+		
+```
+text
+		m3u8
+		#EXT-X-KEY:METHOD=AES-128,URI=&quot;https://example.com/key&quot;
+		
+```
+
+
+		- **예시**: 세그먼트를 AES-128로 암호화하며, 암호화 키를 가져올 위치는 `https://example.com/key`입니다.
+
+	### 2.4 LL-HLS 관련 메타데이터
+
+	- **#EXT-X-PART-INF**: **저지연 HLS**에서 사용되는 태그로, 세그먼트가 **파편(chunk)**으로 나뉘어 전송되는 경우 각 파편의 정보를 포함합니다.
+
+		
+```
+text
+		m3u8
+		#EXT-X-PART-INF:PART-TARGET=1.0
+		
+```
+
+
+		- **예시**: 각 파편의 타겟 길이가 **1초**임을 의미합니다.
+	- **#EXT-X-PRELOAD-HINT**: LL-HLS에서 아직 완료되지 않은 세그먼트나 파편에 대해 **미리 가져올 힌트**를 제공합니다. 이를 통해 클라이언트가 지연 시간을 줄이기 위해 미리 준비할 수 있습니다.
+
+		
+```
+text
+		m3u8
+		#EXT-X-PRELOAD-HINT:TYPE=PART,URI=&quot;segment3_part1.ts&quot;
+		
+```
+
+
+		- **예시**: `segment3_part1.ts` 파편을 미리 로드할 힌트입니다.
+
+	### `응답 지연`
+
+
+	저번 금요일에 회고 시간에,  Short Polling, Long Polling 이 나왔던 적이 있었는데 이와 비슷한 방식으로 지연 시간을 줄였다고 보면 쉬울 것 같다.
+
+
+	Short Polling 은 주기적으로 서버에 요청을 보내서 업데이트 된 사항이 있는지를 체크한다. 만약 업데이트된 사항이 없다면 서버는 304(Not Modified), 200 를 반환한다.
+
+
+	이때 클라이언트는 업데이트된 사항이 있을 때 까지 또 요청을 보낸다.
+
+
+	Long Polling (200) 은 클라이언트가 서버에 요청을 보냈을 때, 업데이트가 되기 전까지는 서버가 응답을 되돌려주지 않고 연결을 유지(지연)하다가, 업데이트가 된 순간 응답을 보낸다. 
+
+
+	기존 HLS는 메타데이터(플레이리스트) 인 .m3u8 파일을 지속적으로 서버에 요청해서 .m3u8 을 토대로 세그먼트를 재생하는 방식인데, `지속적으로 서버에 요청` 이 과정이 지연시간의 주범이다. 이 시간 동안 클라이언트는 세그먼트를 받는게 아니라 대기를 해버리기 때문에, 실제 동영상 파일인 세그먼트를 업데이트가 되고 나서야 받을 수 있다.
+
+
+	기존 HLS 는 HTTP 요청을 주기적으로 보내서 .m3u8 이 업데이트가 되었는지 확인을 한다. 만약 업데이트가 되지 않았다면 또 서버에 요청을 보내고, 업데이트가 되었다는 응답을 받고 나서야 실제 스트리밍 데이터인 세그먼트를 받아온다. 
+
+
+	LL-HLS 는 
+
+	- **클라이언트의 플레이리스트 요청**:
+		- 클라이언트가 서버에 `.m3u8` **플레이리스트**를 요청합니다. 이때 클라이언트는 **최신 세그먼트**를 가져오기를 원합니다.
+	- **서버의 요청 지연(Blocking)**:
+		- 만약 서버에 **새로운 세그먼트**가 아직 생성되지 않은 경우, 서버는 즉시 응답을 하지 않고 요청을 **일정 시간 동안 대기(Blocking)** 시킵니다. 이 대기 시간 동안 서버는 새로운 세그먼트가 생성되기를 기다립니다.
+	- **새로운 세그먼트 생성 시 응답**:
+		- 새로운 세그먼트가 생성되면 서버는 대기 중인 클라이언트의 요청에 응답하여 **최신 플레이리스트**를 반환합니다. 클라이언트는 이를 통해 바로 다음 세그먼트를 가져가 재생을 시작할 수 있습니다.
+	- **업데이트 주기 단축**:
+		- 이러한 방식은 기존의 주기적인 폴링 방식보다 **지연 시간**을 훨씬 줄일 수 있습니다. 즉, 클라이언트가 계속해서 플레이리스트를 요청하여 최신 정보를 받기 위해 대기하지 않도록 하여 지연 시간을 줄입니다.
+
+	### `서버의 부하`
+
+
+	LL-HLS 는 세그먼트를 더 짧게 생성하기 때문에 당연히 세그먼트를 더 자주 생성하게 되고, m3u8 의 업데이트도 더 많이 일어난다. 따라서 서버의 부담이 증가하게 된다.
+
+
+	서버의 부담을 줄이는 방법은 있을까?
+
+
+	### 2. 서버 부하를 줄이기 위한 방안
+
+	1. **CDN(Content Delivery Network) 사용**
+		- **LL-HLS**에서 서버 부하를 줄이기 위해 가장 많이 사용되는 방법 중 하나는 **CDN**을 사용하는 것입니다. CDN은 스트리밍 콘텐츠를 여러 지점에 **캐시**하고, 지리적으로 가까운 사용자에게 콘텐츠를 제공함으로써 **서버의 부하를 분산**시킵니다.
+		- CDN을 사용하면 클라이언트가 직접 서버에 연결하는 대신 CDN에서 콘텐츠를 받아가므로, **서버의 직접적인 요청 수**를 줄일 수 있습니다.
+	2. **효율적인 세그먼트 생성 및 캐싱**
+		- 서버는 세그먼트를 효율적으로 생성하고, **재사용 가능한 세그먼트를 캐싱**함으로써 부하를 줄일 수 있습니다. 특히, 플레이리스트와 세그먼트가 자주 변경되기 때문에, 이를 적절히 캐싱하여 동일한 콘텐츠를 여러 클라이언트가 요청하는 경우 서버에서 재생성할 필요가 없도록 해야 합니다.
+	3. **최적의 플레이리스트 및 세그먼트 길이 조정**
+		- LL-HLS에서는 지연 시간을 줄이기 위해 세그먼트를 작은 크기로 나누지만, **너무 작은 단위의 세그먼트**는 서버 부하를 크게 증가시킬 수 있습니다. 따라서 **적절한 세그먼트 길이**와 **플레이리스트 갱신 주기**를 설정하여 서버 부하와 지연 시간을 균형 있게 맞추는 것이 중요합니다.
+
+	대신 safari 를 제외한 브라우저에서는 &lt;video&gt; 태그만으로는 재생이 불가능하다. HLS 스트림 변환이 필요하다.
+
+	- hls.js → hls 스트림을 브라우저가 이해할 수 있는 포맷으로 변환하여 &lt;video&gt; 요소에 전달하는 라이브러리
+	- 지연시간이 왜 많이 생기는가?
+		- UDP 를 사용하는 다른 프로토콜들과 달리 HLS 는 `TCP` 를 사용한다.
+		- HLS 는 오히려 실시간에 집중하기 보다는 데이터의 신뢰성과 효율성에 집중한 프로토콜이다.
+	- **저지연 HLS(LL-HLS)**
+	- [https://medium.com/@cwh./%EB%8F%99%EC%98%81%EC%83%81-%EC%95%88%EB%81%8A%EA%B8%B0%EA%B3%A0-%EB%B3%B4%EB%8A%94%EB%B2%95-feat-ll-hls-a6a0c453b21f](https://medium.com/@cwh./%EB%8F%99%EC%98%81%EC%83%81-%EC%95%88%EB%81%8A%EA%B8%B0%EA%B3%A0-%EB%B3%B4%EB%8A%94%EB%B2%95-feat-ll-hls-a6a0c453b21f)
+&lt;details&gt;
+&lt;summary&gt;HLS vs WebRTC&lt;/summary&gt;
+
+**HLS**(HTTP Live Streaming)와 **WebRTC**는 모두 실시간 스트리밍을 위한 기술이지만, **사용 목적**, **지연 시간**, **보안** 및 **호환성** 측면에서 큰 차이가 있습니다. 사용하려는 애플리케이션의 유형에 따라 각 기술의 장단점을 비교해보고 어떤 것이 더 적합한지 선택해야 합니다. 아래는 HLS와 WebRTC를 실시간 스트리밍 웹 서비스의 관점에서 비교한 것입니다.
+
+
+### 1. 지연 시간
+
+- **HLS**:
+	- **지연 시간**: HLS는 HTTP 기반 프로토콜로 설계되어 있으며, **10~30초**의 지연 시간이 발생하는 것이 일반적입니다. 심지어 **저지연 HLS(LL-HLS)**를 사용하더라도 2~5초 정도의 지연 시간이 존재할 수 있습니다.
+	- **용도**: 따라서 HLS는 실시간성이 요구되지 않는 스트리밍에 적합합니다. 예를 들어, 뉴스 방송, 스포츠 경기, 강의 등의 상황에서 몇 초 정도의 지연이 큰 문제가 되지 않는다면 HLS가 적합합니다.
+- **WebRTC**:
+	- **지연 시간**: WebRTC는 **1초 미만의 매우 낮은 지연 시간**을 목표로 설계되어, 실시간 인터랙티브한 통신에 적합합니다.
+	- **용도**: 화상 회의, 게임 스트리밍, 실시간 원격 조작 등 **매우 빠른 반응**이 필요한 애플리케이션에 적합합니다. WebRTC의 P2P 연결 방식 덕분에 지연 시간을 최소화할 수 있습니다.
+
+### 2. 사용 사례
+
+- **HLS**:
+	- **주로 대규모 시청자 대상의 스트리밍**: HLS는 대규모 스트리밍 서비스(예: YouTube, Twitch 등)에서 매우 효과적입니다. HTTP 기반이라 기존 **CDN(Content Delivery Network)** 인프라를 활용해 손쉽게 콘텐츠를 전송할 수 있으며, 수천에서 수백만 명의 시청자가 동시에 스트리밍을 보는 데 적합합니다.
+	- **적응형 스트리밍**: 네트워크 상태에 따라 비디오 품질을 조정하는 **적응형 스트리밍**을 기본적으로 제공하므로, 시청자의 네트워크 환경에 맞춰 끊김 없이 서비스를 제공합니다.
+- **WebRTC**:
+	- **1:1 혹은 소규모 그룹 통신**: WebRTC는 **화상 통화**, **화상 회의**, **온라인 협업 툴** 등 소규모 실시간 커뮤니케이션에 최적화되어 있습니다. 또한, 게임 스트리밍과 같은 실시간 반응이 중요한 상황에도 적합합니다.
+	- **P2P 연결**: WebRTC는 주로 **P2P 연결**을 통해 데이터를 직접 전송하므로 서버의 부하를 줄일 수 있지만, 대규모 시청자를 대상으로 하기에 효율적이지 않을 수 있습니다.
+
+### 3. 확장성
+
+- **HLS**:
+	- **대규모 스트리밍에 최적**: HLS는 HTTP 기반이기 때문에 **CDN**을 사용하여 확장성을 쉽게 확보할 수 있습니다. 수천 명 이상의 사용자가 동시에 스트리밍을 소비할 수 있으며, 서버 부담을 덜 수 있습니다.
+- **WebRTC**:
+	- **제한된 확장성**: WebRTC는 브라우저 간 **P2P 연결**을 사용하므로, 직접 연결의 수가 증가할수록 확장성이 제한됩니다. 예를 들어, 많은 참가자 간의 연결이 필요하면 각 클라이언트의 네트워크 및 CPU 자원이 급격히 소모됩니다.
+	- **SFU 사용**: 확장성을 늘리기 위해 **SFU(Selective Forwarding Unit)**를 도입하여 각 클라이언트가 모든 참가자와 직접 연결하지 않고 중앙 서버를 통해 연결을 관리할 수 있도록 할 수 있습니다. 이를 통해 약 100명 이상의 사용자까지 확장 가능합니다.
+
+### 4. 네트워크 호환성 및 안정성
+
+- **HLS**:
+	- **HTTP 기반 전송**: HLS는 HTTP 기반이기 때문에, 대부분의 방화벽을 통과하고 네트워크 호환성이 매우 뛰어납니다.
+	- **안정적**: HTTP와 TCP를 사용하여 데이터 전송이 신뢰적이며, 중간에 발생하는 패킷 손실을 재전송하는 메커니즘이 있어 안정적인 스트리밍을 제공합니다.
+- **WebRTC**:
+	- **NAT Traversal**: WebRTC는 P2P 연결을 위해 **STUN** 및 **TURN** 서버를 사용하여 NAT 뒤에 있는 클라이언트를 연결합니다. 하지만 네트워크 환경에 따라 연결 설정이 복잡해지거나 문제가 발생할 수 있습니다.
+	- **UDP 기반 전송**: 주로 **UDP**를 사용하여 낮은 지연 시간을 제공하지만, 패킷 손실 시 재전송을 보장하지 않아 네트워크 상태가 좋지 않을 때 품질 저하가 발생할 수 있습니다.
+
+### 5. 보안
+
+- **HLS**:
+	- **HTTPS와 함께 사용**: HLS는 HTTP 기반으로, **HTTPS**를 사용해 데이터를 암호화할 수 있습니다. 또한, **DRM(디지털 권리 관리)**과 함께 사용해 콘텐츠 보호를 구현할 수 있습니다.
+- **WebRTC**:
+	- **기본적으로 암호화된 통신**: WebRTC는 모든 오디오, 비디오, 데이터 스트림을 **DTLS**(Datagram Transport Layer Security)와 **SRTP**(Secure Real-Time Transport Protocol)를 사용해 암호화합니다. 기본적으로 강력한 보안이 내장되어 있습니다.
+
+### 6. 브라우저 지원
+
+- **HLS**:
+	- **Safari와 iOS 네이티브 지원**: Apple 기기와 Safari 브라우저에서 기본적으로 지원하지만, Chrome, Firefox 등 다른 브라우저에서는 JavaScript 라이브러리(**hls.js**)가 필요합니다.
+- **WebRTC**:
+	- **모든 최신 브라우저 지원**: WebRTC는 **Chrome**, **Firefox**, **Safari**, **Edge** 등 대부분의 최신 브라우저에서 네이티브로 지원됩니다. 추가적인 플러그인이 필요 없이 실시간 통신 기능을 사용할 수 있습니다.
+
+### 결론
+
+- **HLS**는 **대규모 스트리밍**에 적합하며, 상대적으로 긴 지연 시간을 허용할 수 있는 **방송, 교육, 엔터테인먼트**와 같은 서비스에서 주로 사용됩니다. **HTTP 기반**이므로 네트워크 호환성이 높고, 기존 CDN 인프라를 활용할 수 있는 장점이 있습니다.
+- **WebRTC**는 **즉각적인 반응이 필요한 실시간 인터랙티브 애플리케이션**에 적합합니다. **낮은 지연 시간**과 **보안성**을 갖추고 있어 **화상 회의, 실시간 통신, 온라인 협업 도구** 등에 적합하며, 브라우저에서 네이티브로 지원되는 장점이 있습니다. 다만, **확장성** 측면에서는 SFU와 같은 구조적 보완이 필요합니다.
+
+따라서, **대규모 시청자와의 방송**에는 HLS가 적합하고, **소규모 실시간 상호작용**이나 **낮은 지연 시간이 필요한 서비스**에는 WebRTC가 더 나은 선택이 될 것입니다.
+
+
+&lt;/details&gt;
+
+
+## 홍창현
+
+
+	# WebRTC (Web Real-Time Communication)
+
+
+	웹 브라우저 간에 플러그인의 도움 없이 서로 통신할 수 있도록 설계된 **Javascript API**
+
+
+	→ 별다른 소프트웨어 없이 카메라, 마이크 등을 사용하여 실시간 커뮤니케이션을 제공
+
+
+	음성 통화, 영상 통화, P2P 파일 공유 등으로 활용됨
+
+
+	## WebRTC의 장점
+
+
+	### WebRTC는 낮은 Latency를 갖는다
+
+	- WebRTC는 **`P2P(peer-to-peer)방식`**으로 데이터를 전송
+		- **P2P**는 **중간 서버**를 거치지 않음
+	- WebRTC는 **UDP 기반**으로 작동하여 신속하게 패킷을 전송
+		- HLS와 RTMP는 **TCP 기반**
+
+	### WebRTC는 호환성이 높다
+
+
+	![17](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/17.png)_image.png_
+
+
+	## WebRTC의 단점
+
+
+	### 많은 사용자가 사용할 수 없다 (스케일링 문제)
+
+	- WebRTC는 P2P(peer-to-peer) 구조로 작동하기 때문에 각 사용자 간의 직접적인 연결을 설정
+	- 사용자가 많아질수록 필요한 연결 수가 **기하급수적으로 증가**함
+
+	![18](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/18.png)_image.png_
+
+	- N명의 사용자가 있을 때 사용자 한명이 추가되면 N개의 연결이 필요
+		- 서버와 클라이언트 모두에 큰 부담
+		- 네트워크 대역폭과 성능 저하 초래
+
+	### 화질 문제 (성능문제)
+
+	- 실시간 비디오와 오디오 스트리밍을 위해 상당한 대역폭을 소모
+	- 특히 고화질 비디오 스트림은 많은 대역폭을 요구
+	- 대역폭이 제한된 환경에서는 **패킷 손실**이 발생할 수 있으며, 이는 전체 스트림의 품질 저하로 이어짐
+		- WebRTC는 **UDP 기반**이므로 패킷 손실이 일어날 수 있음
+	- 다수의 사용자가 동시에 스트리밍을 시도하면 **대역폭이 고갈**될 위험
+
+	### 대규모 라이브 방송에 불완전함
+
+	- **예측 불가능한 대역폭 소모**
+		- **HLS나 RTMP**의 예측 가능한 방식
+			- HLS나 RTMP는 중앙 서버에서 스트리밍을 관리하고 일반적으로 미리 인코딩된 비디오 조각을 전송
+			- 스케일링 가능 : 수많은 사용자에게 콘텐츠를 효율적으로 배포할 수 있음
+		- **WebRTC**는 미리 인코딩된 스트림을 사용하지 않기 때문에 대역폭이 비디오 품질과 사용자 수에 따라 즉각적으로 변동함
+
+	## WebRTC보다 빠른 기술이 있을까?
+
+
+	## **WebTransport**
+
+	- WebTransport는 UDP 기반으로 통신
+	- WebRTC의 signaling 없이도 서버와의 실시간 데이터 교환 가능
+
+	그러나 WebTransport는 아직 개발 단계이며, 안정적인 표준화가 이루어지지 않아 모든 브라우저에서의 지원이 불확실
+
+
+	WebRTC처럼 실시간 오디오와 비디오 전송을 위한 최적화가 충분하지 않음
+
+
+## 김준서
+
+
+	&amp;gt; 참고자료  
+	&amp;gt; [https://www.cdnetworks.com/ko/blog/media-delivery/what-is-rtmp-ingest/](https://www.cdnetworks.com/ko/blog/media-delivery/what-is-rtmp-ingest/)  
+	&amp;gt; [https://ossrs.net/lts/en-us/docs/v6/doc/flv](https://ossrs.net/lts/en-us/docs/v6/doc/flv)  
+	&amp;gt; [https://growthvalue.tistory.com/178](https://growthvalue.tistory.com/178)  
+	&amp;gt; [https://ossrs.net/lts/en-us/docs/v4/doc/delivery-http-flv](https://ossrs.net/lts/en-us/docs/v4/doc/delivery-http-flv)  
+	&amp;gt; [https://medium.com/@delivalue100/rtmp-realtime-messaging-protocol-c4474e464ffd](https://medium.com/@delivalue100/rtmp-realtime-messaging-protocol-c4474e464ffd)  
+	&amp;gt; [https://obsproject.com/forum/whats-new/posts/2763754/](https://obsproject.com/forum/whats-new/posts/2763754/) - OBS 포럼   
+	&amp;gt; [https://devocean.sk.com/blog/techBoardDetail.do?ID=164296](https://devocean.sk.com/blog/techBoardDetail.do?ID=164296)  
+	&amp;gt; [https://blog.naver.com/mingyo01/222050438291](https://blog.naver.com/mingyo01/222050438291)  
+	&amp;gt; [https://velog.io/@chosj1526/%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8A%B8%EC%9C%84%EC%B9%98-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%94%94%EC%9E%90%EC%9D%B8](https://velog.io/@chosj1526/%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8A%B8%EC%9C%84%EC%B9%98-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%94%94%EC%9E%90%EC%9D%B8)
+
+
+	### 용어 정리
+
+
+	bitrate - 시간당 처리하는 비트의 수
+
+
+	### RTMP
+
+
+	어도브에서 규정한 오디오, 비디오 데이터 통신 기술을 의미한다.
+
+
+	어도브에서 규정한 만큼 기존에는 Flash Player을 지원하기 위해 작성된 기술이었다.
+
+
+	그러나 최근 어도브에서 Flash Player의 지원을 중단한 만큼 점차 사용률이 저조해지고 있다.
+
+
+	하지만 이는 클라이언트 단에서의 문제점이고, 영상 데이터를 서버로 옮기고 저장하는 데에 있어서는 높은 지연 시간과 효율을 가지고 있기에, HLS, MPEG-DASH, HTTP-FLV와 같은 기술과 함께 사용된다.
+
+
+	![19](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/19.png)_image.png_
+
+
+	![20](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/20.png)_image.png_
+
+
+	RTMP(Real-Time Messaging Protocol)의 지연 시간이 빠른 이유는 다음과 같습니다:
+
+	1. **지속적인 연결 유지**: RTMP는 클라이언트와 서버 간에 **지속적인 TCP 연결**을 유지합니다. 이는 데이터 전송 시마다 새로운 연결을 설정할 필요가 없기 때문에 **연결 설정에 따른 오버헤드**를 줄여줍니다.
+	2. **작은 청크(chunk) 단위 전송**: 데이터를 **작은 청크로 분할하여 전송**함으로써, 데이터가 준비되는 즉시 전송할 수 있습니다. 이는 **버퍼링 시간을 최소화**하고, 실시간 성능을 향상시킵니다.
+
+	트위치의 경우 스트리머 → Ingest → Transcode → Replication → Edge → 시청자를 거치며 스트리밍 데이터를 전송
+
+
+	![21](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/21.png)_image.png_
+
+	- Ingest - 스트리머의 비디오 영상이 트위치 데이터 센터로 가는 것
+	- Transcode - 비디오 형식을 바꾸는 것
+	- Replication - 복사. 안정성을 위해
+	- Edge - CDN이라고도 부름
+
+	![22](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/22.png)_image.png_
+
+
+	![23](/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/23.png)_image.png_
+
+
+## 김지수
+
+
+## RTMP 프로토콜
+
+[bookmark](https://bmobmo.tistory.com/16)
+
+
+### **1. 영상 전송 프로토콜 종류**
+
+- RTSP : 1996년 온라인 비디오 스트리밍용 프로토콜
+- RTMP : 2009년 기술 일반인 공개
+- SRT : 2017년 오픈 라이선스 전환
+- NDI : 2016년 다양한 소프트웨어에 뉴텍은 무상 배포
+- HLS : 애플에 의해 2009년 공개
+- DASH : 2011년 공개
+- WebRTC : 구글 2011년 공개
+
+### RTSP **(Real Time Streaming Protocol)**
+
+
+스트리밍의 시작이라고 말할 수 있다. 1996년 등장하였으며 RTSP가 등장 전 영상, 음악 등 멀티미디어 정보를 완전히 다운로드한 후 시청할 수 있었다.
+
+
+CCTV에서 사용하고 있는 프로토콜
+
+
+다만 오래된 기술이라 화질 저하, 미디어 서버 운영에 대한 높은 난이도 등으로 도태되고 있는 실정이다.
+
+
+### RTMP **(Real Time Messaging Protocol)**
+
+
+### **개요**
+
+- **개발자:** Adobe Systems (원래 Macromedia가 개발)
+- **출시 시기:** 2003년
+- **주요 용도:** 실시간 비디오 및 오디오 스트리밍, 특히 라이브 방송
+- **특징:**
+	- **저지연 스트리밍:** 실시간 스트리밍에 적합한 낮은 지연 시간
+	- **양방향 통신:** 클라이언트와 서버 간의 실시간 데이터 전송 가능
+	- **유연성:** 비디오, 오디오, 데이터 스트림을 동시에 전송
+
+### **한계점**
+
+- **보안:** 기본적으로 보안 기능이 내장되어 있지 않아 데이터 암호화가 필요할 경우 추가 설정이 필요함
+- **방화벽 문제:** 전용 포트(기본적으로 1935)를 사용하므로 일부 네트워크 환경에서는 차단될 수 있음
+- **모바일 지원 부족:** HTTP 기반 스트리밍 프로토콜(HLS, MPEG-DASH)에 비해 모바일 기기에서의 지원이 제한적
+- **확장성:** 대규모
+
+### **SRT (Secure Reliable Transport)**
+
+
+OBS 사용
+
+
+### **개요**
+
+- **개발자:** Haivision
+- **출시 시기:** 2017년
+- **주요 용도:** 불안정한 네트워크 환경에서도 안정적이고 보안이 강화된 비디오 스트리밍
+- **특징:**
+	- **보안 강화:** AES 암호화를 통해 데이터 전송 시 보안을 보장
+	- **신뢰성:** 패킷 손실, 지연, 네트워크 변동성에 강한 내성을 가짐
+	- **적응성:** 다양한 네트워크 조건에 맞춰 동적으로 조정
+	- **오픈 소스:** SRT는 오픈 소스 프로젝트로, 다양한 플랫폼과 쉽게 통합 가능
+
+### **SRT의 주요 기능**
+
+- **암호화:** 전송 중인 데이터를 암호화하여 도청 및 데이터 변조를 방지
+- **재전송 메커니즘:** 패킷 손실 시 재전송을 통해 데이터의 완전성을 유지
+- **동적 비트레이트 조정:** 네트워크 상태에 따라 비트레이트를 자동으로 조정하여 스트리밍 품질을 최적화
+- **방화벽 우회:** UDP 기반이지만, NAT 및 방화벽 환경에서도 안정적으로 동작
+
+### **장점**
+
+1. **보안:** RTMP와 달리 기본적으로 데이터 암호화를 지원하여 보안성이 뛰어남
+2. **신뢰성:** 불안정한 네트워크 환경에서도 안정적인 데이터 전송을 보장
+3. **유연성:** 다양한 네트워크 조건에 적응하여 최적의 스트리밍 품질 제공
+4. **확장성:** 대규모 스트리밍 환경에서도 효율적으로 확장 가능
+5. **오픈 소스:** 무료로 사용 가능하며, 커뮤니티 지원을 통해 지속적으로 개선됨
+
+### **단점**
+
+1. **채택률:** RTMP에 비해 상대적으로 최근에 등장한 프로토콜로, 기존 인프라와의 호환성 문제 발생 가능
+2. **설정 복잡성:** 초기 설정과 최적화를 위해 기술적인 지식이 필요할 수 있음
+
+---
+
+
+## **RTMP와 SRT의 비교**
+
+
+| **특징**      | **RTMP**                         | **SRT**                   |
+| ----------- | -------------------------------- | ------------------------- |
+| **보안**      | 기본적으로 보안 기능 없음 (RTMPS로 보안 강화 가능) | AES 암호화 내장, 기본적으로 보안 강화   |
+| **전송 프로토콜** | TCP 기반                           | UDP 기반                    |
+| **신뢰성**     | TCP의 신뢰성 제공, 그러나 네트워크 변동성에 취약    | 패킷 손실 복구, 네트워크 변동성에 강한 내성 |
+| **지연 시간**   | 낮음                               | 낮음                        |
+| **방화벽 우회**  | 전용 포트 사용, 방화벽 문제 발생 가능           | NAT 및 방화벽 환경에서도 안정적 동작    |
+| **확장성**     | 대규모 분산 환경에서 추가 설정 필요             | 대규모 스트리밍 환경에서 효율적으로 확장 가능 |
+| **오픈 소스**   | 아니오                              | 예 (오픈 소스 프로젝트)            |
+
+
+[bookmark](https://blog.naver.com/n_cloudplatform/222493527661)
+
+
+**카메라 ▶ Encoder(인코더) ▶ Media Server(+CDN Server) ▶  동영상 플레이어 ▶ 시청자(Client)**
+
+
+압축되지 않은 동영상은 용량이 크기 때문에 압축하는 과정이 필요하다. 이 과정에서 코덱을 활용한다.
+
+
+코덱이란?
+
+
+### **카메라 ▶ Encoder(인코더)**
+
+
+대표적인 코덱에서는 H.264, 음성은 AAC
+
+
+웹 배포용으로 사용
+
+
+원본 파일을 압축할 때, 손실압축, 무손실 압축이 존재함
+
+
+JPEG - 손실 압축
+
+
+PNG - 무손실 압축. 이미지 디테일 손실이 없음, 상대적으로 많은 메모리 사용
+
+
+상황과 목적에 맞는 압축 방식이 필요함
+
+
+### **Encoder(인코더) ▶ Media Server(+CDN Server)**
+
+
+스트리밍이란, **멀티미디어 파일을 다운로드 하는 동시에 실행하는 방법이나 기술**을 말합니다. 예를 들면 넷플릭스에서 영화를 보는데 영화 전체를 다운로드 받고 난 뒤에 즉, 2GB 가량의 영상을 전부 다운 받은 후 영화가 재생된다면 사용자 불만이 폭주하겠죠?
+
+
+​
+
+
+실제 넷플릭스는 그렇지 않습니다. **다운로드와 동시에 바로 재생이 되며, 추가 다운로드가 계속 진행되는 방식**을 스트리밍이라고 하며, 이러한 스트리밍의 규칙을 ​**스트리밍 프로토콜**이라고 부릅니다.
+
+
+**Encoder : RTMP,RTSP,webRTC,SRT**
+**Player : HLS,DASH,LL-HLS,webRTC,SRT**
+
+
+**Encoder**의 경우 주로 **RTMP(Real Time Messaging Protocol) 프로토콜**을 사용합니다.
+
+
+​
+
+
+과거에는 UDP기반의 RTSP(Real Time Streaming Protocol) 프로토콜을 많이 사용하였으나 최근에는 RTMP 프로토콜이 거의 표준이 되어가고 있습니다.
+
+
+**Player**의 경우에는 **HLS(HTTP-Live Streaming), MPEG-DASH**가 대표적입니다.
+
+
+​
+
+
+스트리밍이란 &apos;다운로드와 동시에 미디어가 재생되는 기술&apos;이라고 설명 드렸는데, 스트리밍의 효율적인 동작을 위해서는 파일을 작은 단위로 분할해야 합니다.
+
+
+​
+
+
+이 과정은 대표적인 Player 프로토콜인 HLS, DASH을 통해 알아보도록 하겠습니다.
+
+
+**Player 프로토콜 작동 과정 이해하기** feat. HLS &amp;amp; DASH
+
+
+**✅ 우선 H.264 + AAC등 포맷의 동영상 파일을 작은 단위로 분할**​합니다.
+
+
+(용량에 따라 2초 ~10초 단위)
+
+
+**​**
+
+
+**✅ 이와 더불어 분할된 파일의 재생순서가 작성된 manifest 파일을 생성**합니다.
+
+
+manifest파일에는 분할된 동영상 파일을 어떤 순서로 몇 초간 재생할 것인지에 대한 내용들이 텍스트로 작성되어 있습니다. HLS의 경우에는 .m3u8 파일이, Dash의 경우 .mpd(xml)와 같은 manifest 파일이 생성됩니다.이러한 과정을 거쳐 작은 단위로 분할된 미디어 파일은 mp2ts와 mp4로 구성되어 있고 mp2ts의 확장자는 .ts입니다.
+
+
+**​**
+
+
+**✅** 마지막으로 HLS, DASH를 지원하는 브라우저나 Application에서 **Manifest 파일을 읽어서 재생**합니다. Manifest 파일에 작성되어 있는 분할된 동영상 파일을 순차적으로 읽어 들여 재생하게 됩니다. 따라서 첫번째 segment file을 다 불러오게 되면 재생을 시작할 수 있게 되고, 재생이 진행되면서 2번째 및 3번째 segment file을 뒤에서 계속 실행합니다.
+
+
+​
+
+
+만약 동영상을 중간부터 재생한다고 하면 manifest 파일(.m3u8, mpd)에 근거하여 해당 타임에 맞는 segment file을 먼저 다운로드를 하게 될 것입니다.
+
+
+로컬 PC에 녹화하는 기능
+
+
+### **Media Server(+CDN Server) ▶  동영상 플레이어**
+
+
+안정적인 송출을 위해서는 충분한 인터넷 업로드, 대역폭이 확보되어야 합니다. 따라서 **Bitrate를 변환**하는 작업도 필수적으로 필요합니다.
+
+
+**비트레이트(Bitrate)**는 **특정한 시간 단위(이를테면 초 단위)마다 처리하는 비트의 수**를 뜻합니다.
+
+
+​
+
+
+나아가 **멀티비트레이트(Multi Bitrate)**는 비디오 플레이어에서 보여지는 화질 선택 기능과 밀접하게 관련이 있습니다. 멀티비트레이트는 **비트레이트가 다른 여러 개의 영상을 준비하여 필요에 따라 영상을 전환하는 방식이나 기술**을 뜻합니다.
+
+
+### **동영상 플레이어 ▶ 시청자(Client)**
+
+
+이후 실시간으로 생성한 HLS 및DASH 영상 조각 파일을 사용자에게 전달하려면
+
+
+**전송 서버**
+
+
+가 있어야합니다.
+
+
+**일반적인 미디어 서버는 전송 서버의 역할까지 수행**
+
+
+하지만, 동시 시청자가 많은 방송일 경우에는
+
+
+**대규모 트래픽을 안정적으로 처리하기 위해 CDN을 사용**
+
+
+하는 것을 권장합니다.
+
+
+[bookmark](https://medium.com/@delivalue100/rtmp-realtime-messaging-protocol-c4474e464ffd)
+
+
+[bookmark](https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/)
+
+
+**트랜스코딩** 시스템은 제작자로부터 들어오는 실시간 메시징 프로토콜(RTMP) 스트림을 가져와 HLS 호환 스트림으로 변환합니다.
+
+
+[bookmark](https://blog.twitch.tv/en/2022/04/26/ingesting-live-video-streams-at-global-scale/)
+
+
+[bookmark](https://blog.twitch.tv/en/2021/10/25/low-latency-high-reach-creating-an-unparalleled-live-video-streaming-network-at-twitch/)
+
+
+## **1. 기본 용어**
+
+
+### **1.1. 스트리밍 (Streaming)**
+
+- **설명:** 동영상이나 오디오 콘텐츠를 다운로드하지 않고 실시간으로 재생하는 기술입니다. 사용자는 데이터가 전송되는 동시에 콘텐츠를 시청할 수 있습니다.
+- **예시:** 유튜브, 넷플릭스에서의 동영상 시청.
+
+### **1.2. 버퍼링 (Buffering)**
+
+- **설명:** 원활한 스트리밍을 위해 일시적으로 데이터를 미리 다운로드하여 저장하는 과정입니다. 네트워크 지연이나 변동성이 있을 때 재생 중단을 최소화합니다.
+- **예시:** 동영상이 로딩되면서 일시정지 상태가 되는 현상.
+
+### **1.3. 지연 시간 (Latency)**
+
+- **설명:** 데이터가 송신지에서 수신지까지 도달하는 데 걸리는 시간입니다. 실시간 스트리밍에서는 지연 시간이 짧을수록 더 원활한 경험을 제공합니다.
+- **예시:** 라이브 방송에서의 채팅 반응 속도.
+
+---
+
+
+## **2. 기술적 용어**
+
+
+### **2.1. 코덱 (Codec)**
+
+- **설명:** 비디오와 오디오 데이터를 압축하고 압축을 해제하는 소프트웨어 또는 하드웨어입니다. 효율적인 전송과 저장을 가능하게 합니다.
+- **종류:**
+	- **H.264 (AVC):** 널리 사용되는 비디오 코덱.
+	- **H.265 (HEVC):** H.264보다 더 높은 압축 효율.
+	- **VP9, AV1:** 오픈 소스 비디오 코덱.
+	- **AAC, MP3:** 오디오 코덱.
+
+### **2.2. 비트레이트 (Bitrate)**
+
+- **설명:** 동영상이나 오디오 데이터의 전송 속도를 비트 단위로 나타낸 값입니다. 높은 비트레이트는 더 나은 품질을 제공하지만, 더 많은 대역폭을 필요로 합니다.
+- **종류:**
+	- **고정 비트레이트 (CBR):** 일정한 비트레이트로 전송.
+	- **가변 비트레이트 (VBR):** 필요에 따라 비트레이트를 조정.
+
+### **2.3. 해상도 (Resolution)**
+
+- **설명:** 화면의 가로와 세로 픽셀 수를 나타내는 지표로, 동영상의 선명도와 품질을 결정합니다.
+- **예시:** 1920x1080 (Full HD), 1280x720 (HD), 3840x2160 (4K).
+
+### **2.4. 프레임 레이트 (Frame Rate)**
+
+- **설명:** 초당 표시되는 프레임 수로, 동영상의 부드러움을 결정합니다.
+- **예시:** 24fps, 30fps, 60fps.
+
+### **2.5. 컨테이너 (Container)**
+
+- **설명:** 비디오, 오디오, 자막 등의 다양한 미디어 데이터를 하나의 파일로 묶는 형식입니다.
+- **종류:**
+	- **MP4:** 가장 널리 사용되는 컨테이너.
+	- **MKV:** 다양한 코덱과 기능을 지원.
+	- **AVI, MOV:** 다른 일반적인 컨테이너 형식.
+
+---
+
+
+## **3. 스트리밍 프로토콜**
+
+
+### **3.1. RTMP (Real-Time Messaging Protocol)**
+
+- **설명:** Adobe에서 개발한 실시간 스트리밍 프로토콜로, 라이브 스트리밍에 주로 사용됩니다.
+- **특징:** 낮은 지연 시간, 양방향 통신 지원.
+
+### **3.2. HLS (HTTP Live Streaming)**
+
+- **설명:** Apple에서 개발한 HTTP 기반의 스트리밍 프로토콜로, 적응형 비트레이트 스트리밍을 지원합니다.
+- **특징:** HTTP 인프라 활용, 광범위한 디바이스 호환성.
+
+### **3.3. MPEG-DASH (Dynamic Adaptive Streaming over HTTP)**
+
+- **설명:** ISO 표준의 HTTP 기반 스트리밍 프로토콜로, 적응형 비트레이트를 지원하며 다양한 미디어 형식을 지원합니다.
+- **특징:** 개방형 표준, 다양한 플랫폼과 호환.
+
+### **3.4. WebRTC (Web Real-Time Communication)**
+
+- **설명:** 브라우저 간 실시간 통신을 가능하게 하는 오픈 소스 프로젝트로, 주로 화상 회의 등에 사용됩니다.
+- **특징:** 매우 낮은 지연 시간, P2P 연결 지원, 보안 통신.
+
+### **3.5. SRT (Secure Reliable Transport)**
+
+- **설명:** Haivision에서 개발한 프로토콜로, 불안정한 네트워크 환경에서도 안정적인 전송을 목표로 합니다.
+- **특징:** 패킷 손실 복구, 보안 기능 강화, 네트워크 적응성.
+
+---
+
+
+## **4. 인프라 관련 용어**
+
+
+### **4.1. CDN (Content Delivery Network)**
+
+- **설명:** 전 세계에 분산된 서버 네트워크로, 사용자에게 콘텐츠를 빠르고 안정적으로 전달합니다.
+- **기능:** 지리적 근접 서버 사용, 대역폭 분산, 부하 분산.
+
+### **4.2. 인코딩 (Encoding)**
+
+- **설명:** 원본 미디어 데이터를 특정 코덱과 설정을 사용하여 압축 및 변환하는 과정입니다.
+- **목적:** 효율적인 저장과 전송을 위해 비트레이트와 해상도를 조정.
+
+### **4.3. 트랜스코딩 (Transcoding)**
+
+- **설명:** 이미 인코딩된 미디어 데이터를 다른 형식이나 코덱으로 변환하는 과정입니다.
+- **용도:** 다양한 디바이스와 플랫폼에 맞춘 스트리밍.
+
+### **4.4. 패키징 (Packaging)**
+
+- **설명:** 인코딩된 미디어를 특정 스트리밍 프로토콜 형식으로 변환하는 과정입니다.
+- **예시:** HLS, MPEG-DASH를 위한 세그먼트 생성.
+
+### **4.5. 캐싱 (Caching)**
+
+- **설명:** 자주 요청되는 데이터를 임시로 저장하여 접근 속도를 높이는 기술입니다.
+- **용도:** CDN에서의 콘텐츠 빠른 전달, 버퍼링 감소.
+
+---
+
+
+## **5. 품질 및 성능 관련 용어**
+
+
+### **5.1. 적응형 비트레이트 (Adaptive Bitrate)**
+
+- **설명:** 사용자의 네트워크 조건에 따라 자동으로 비트레이트를 조정하여 최적의 재생 품질을 유지하는 기술입니다.
+- **프로토콜:** HLS, MPEG-DASH.
+
+### **5.2. 시작 지연 시간 (Start-up Latency)**
+
+- **설명:** 스트리밍 시작부터 첫 프레임이 재생되기까지 걸리는 시간입니다.
+- **중요성:** 사용자 경험에 큰 영향을 미침.
+
+### **5.3. 캐시 히트/미스 (Cache Hit/Miss)**
+
+- **설명:** 요청된 데이터가 캐시에 존재하는지 여부를 나타냅니다. 캐시 히트는 빠른 응답을, 미스는 원본 서버로부터 데이터를 가져와야 함을 의미합니다.
+
+### **5.4. 지터 (Jitter)**
+
+- **설명:** 패킷 전송 간의 시간 변동을 의미하며, 실시간 스트리밍의 품질에 영향을 미칠 수 있습니다.
+- **영향:** 영상의 끊김이나 오디오의 왜곡을 유발할 수 있음.
+
+### **5.5. 패킷 손실 (Packet Loss)**
+
+- **설명:** 전송 중에 데이터 패킷이 손실되는 현상입니다.
+- **영향:** 영상 및 오디오 품질 저하, 재생 중단.
+
+---
+
+
+## **6. 기타 관련 용어**
+
+
+### **6.1. DRM (Digital Rights Management)**
+
+- **설명:** 디지털 콘텐츠의 저작권 보호를 위한 기술 및 정책입니다.
+- **용도:** 불법 복제 방지, 콘텐츠 접근 제어.
+
+### **6.2. QoS (Quality of Service)**
+
+- **설명:** 네트워크 성능을 관리하고 보장하기 위한 기술 및 정책입니다.
+- **용도:** 스트리밍의 안정성과 품질을 유지.
+
+### **6.3. GOP (Group of Pictures)**
+
+- **설명:** 비디오 인코딩에서 I-프레임, P-프레임, B-프레임 등으로 구성된 프레임 그룹입니다.
+- **영향:** 압축 효율과 재생 품질에 영향을 미침.
+
+### **6.4. HDR (High Dynamic Range)**
+
+- **설명:** 더 넓은 색역과 명암 대비를 제공하는 영상 기술입니다.
+- **장점:** 더 생동감 있고 현실적인 영상 표현.
+
+### **6.5. LUT (Look-Up Table)**
+
+- **설명:** 색 보정과 그레이딩을 위해 사용되는 표로, 색상 변환을 빠르게 적용할 수 있습니다.
+- **용도:** 비디오 후반 작업에서 색상 일관성 유지.
+
+### **6.6. 비디오 월 (Video Wall)**
+
+- **설명:** 여러 대의 디스플레이를 연결하여 하나의 큰 화면을 구성하는 시스템입니다.
+- **용도:** 대형 이벤트, 컨트롤 룸, 광고 등에서 사용.
+
+### **6.7. OTT (Over-The-Top)**
+
+- **설명:** 인터넷을 통해 제공되는 미디어 서비스로, 전통적인 방송 플랫폼을 거치지 않습니다.
+- **예시:** 넷플릭스, 디즈니+, 아마존 프라임 비디오.
+
+### **6.8. VOD (Video on Demand)**
+
+- **설명:** 사용자가 원하는 시간에 원하는 콘텐츠를 시청할 수 있는 서비스입니다.
+- **예시:** 넷플릭스, 유튜브의 프리미엄 서비스.
+
+### **6.9. CDN (Content Delivery Network)**
+
+- **설명:** 전 세계에 분산된 서버 네트워크로, 콘텐츠를 사용자에게 빠르고 효율적으로 전달합니다.
+- **예시:** Akamai, Cloudflare, Amazon CloudFront.
+
+### **6.10. 클라우드 인코딩 (Cloud Encoding)**
+
+- **설명:** 클라우드 기반 서비스에서 비디오를 인코딩하는 프로세스입니다.
+- **장점:** 확장성, 유연성, 비용 효율성.
+
+## **1. Codec의 어원 (Etymology)**
+
+
+&quot;Codec&quot;은 두 단어의 합성어입니다:
+
+- **CO**der (인코더): 데이터를 특정 형식으로 변환하거나 압축하는 장치 또는 소프트웨어.
+- **DE**coder (디코더): 인코딩된 데이터를 원래 형식으로 복원하거나 해제하는 장치 또는 소프트웨어.
+
+따라서, &quot;Codec&quot;은 &quot;Coder&quot;와 &quot;Decoder&quot;의 결합으로 이루어진 단어입니다. 이 합성어는 1980년대 초반에 처음 등장했으며, 디지털 오디오와 비디오 데이터를 효율적으로 전송하고 저장하기 위해 개발된 기술을 지칭하기 위해 사용되었습니다.
+
+
+&amp;lt;/details&amp;gt;
+
+&lt;/video&gt;&lt;/video&gt;&lt;/details&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;gominzip&quot;, &quot;hoeeeeeh&quot;, &quot;Jisukim&quot;, &quot;홍창현&quot;, &quot;김준서&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+
+      
+        <summary type="html">목차</summary>
+      
+
+      
+      
+    </entry>
   
 </feed>

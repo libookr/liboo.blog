@@ -6,5 +6,508 @@
     <link>
     https://blog.liboo.kr</link>
     
+      
+      <item>
+        <title>🐬 서버를 docker swarm 으로 관리해보자</title>
+        
+          <description>&lt;h1 id=&quot;기존-서버-운영-방식&quot;&gt;기존 서버 운영 방식&lt;/h1&gt;
+
+</description>
+        
+        <pubDate>Wed, 04 Dec 2024 05:41:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/_%EC%84%9C%EB%B2%84%EB%A5%BC_docker_swarm_%EC%9C%BC%EB%A1%9C_%EA%B4%80%EB%A6%AC%ED%95%B4%EB%B3%B4%EC%9E%90</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/_%EC%84%9C%EB%B2%84%EB%A5%BC_docker_swarm_%EC%9C%BC%EB%A1%9C_%EA%B4%80%EB%A6%AC%ED%95%B4%EB%B3%B4%EC%9E%90</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>채팅 서버에 Redis 를 쓴 이유</title>
+        
+          <description>&lt;h1 id=&quot;초기-설계&quot;&gt;초기 설계&lt;/h1&gt;
+
+</description>
+        
+        <pubDate>Wed, 04 Dec 2024 05:36:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%EC%97%90_Redis_%EB%A5%BC_%EC%93%B4_%EC%9D%B4%EC%9C%A0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%EC%97%90_Redis_%EB%A5%BC_%EC%93%B4_%EC%9D%B4%EC%9C%A0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>확장성을 고려한 초반 서버 설계</title>
+        
+          <description>&lt;h1 id=&quot;확장성&quot;&gt;확장성&lt;/h1&gt;
+
+</description>
+        
+        <pubDate>Wed, 04 Dec 2024 05:04:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%ED%99%95%EC%9E%A5%EC%84%B1%EC%9D%84_%EA%B3%A0%EB%A0%A4%ED%95%9C_%EC%B4%88%EB%B0%98_%EC%84%9C%EB%B2%84_%EC%84%A4%EA%B3%84</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%ED%99%95%EC%9E%A5%EC%84%B1%EC%9D%84_%EA%B3%A0%EB%A0%A4%ED%95%9C_%EC%B4%88%EB%B0%98_%EC%84%9C%EB%B2%84_%EC%84%A4%EA%B3%84</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>에러페이지 다루기</title>
+        
+          <description>&lt;h3 id=&quot;에러페이지-도입배경&quot;&gt;에러페이지 도입배경&lt;/h3&gt;
+
+</description>
+        
+        <pubDate>Wed, 04 Dec 2024 04:14:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%97%90%EB%9F%AC%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%8B%A4%EB%A3%A8%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%97%90%EB%9F%AC%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%8B%A4%EB%A3%A8%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>React-Query로 안정적인 스트리밍을 위한 로딩 및 에러 관리하기</title>
+        
+          <description>&lt;h2 id=&quot;문제-인식&quot;&gt;🚨 문제 인식&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Wed, 04 Dec 2024 03:09:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>[React-Query] useQuery속성 : Suspense</title>
+        
+          <description>&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Sun, 01 Dec 2024 12:51:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>[React-Query] useQuery속성 : onError</title>
+        
+          <description>&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Sun, 01 Dec 2024 04:08:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>4.5.1 버전에서 ts, yarn.lock 에러</title>
+        
+          <description>&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Thu, 28 Nov 2024 11:56:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>ts-pattern</title>
+        
+          <description>&lt;p&gt;&lt;a href=&quot;https://www.npmjs.com/package/ts-pattern/v/4.0.1&quot;&gt;https://www.npmjs.com/package/ts-pattern/v/4.0.1&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Wed, 27 Nov 2024 04:16:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/ts-pattern</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/ts-pattern</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>다시보기를 위한 Node-Media-Server, FFMpeg 분석</title>
+        
+          <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Sat, 23 Nov 2024 06:55:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>다중 탭에서 하나의 소켓을 공유할 수 있을까</title>
+        
+          <description>&lt;h1 id=&quot;why&quot;&gt;Why?&lt;/h1&gt;
+
+</description>
+        
+        <pubDate>Sat, 23 Nov 2024 04:32:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>NestJS를 통한 일관적인 시스템 설계</title>
+        
+          <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Sat, 23 Nov 2024 04:11:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>리액트 훅 폼 딥다이브</title>
+        
+          <description>&lt;h1 id=&quot;리액트-훅-폼&quot;&gt;리액트 훅 폼&lt;/h1&gt;
+
+</description>
+        
+        <pubDate>Sat, 23 Nov 2024 04:03:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EB%A6%AC%EC%95%A1%ED%8A%B8_%ED%9B%85_%ED%8F%BC_%EB%94%A5%EB%8B%A4%EC%9D%B4%EB%B8%8C</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EB%A6%AC%EC%95%A1%ED%8A%B8_%ED%9B%85_%ED%8F%BC_%EB%94%A5%EB%8B%A4%EC%9D%B4%EB%B8%8C</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>채팅창 렌더링 최적화</title>
+        
+          <description>&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Fri, 22 Nov 2024 11:07:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%B1%84%ED%8C%85%EC%B0%BD_%EB%A0%8C%EB%8D%94%EB%A7%81_%EC%B5%9C%EC%A0%81%ED%99%94</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%B1%84%ED%8C%85%EC%B0%BD_%EB%A0%8C%EB%8D%94%EB%A7%81_%EC%B5%9C%EC%A0%81%ED%99%94</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>Input 이미지 처리 방식</title>
+        
+          <description>&lt;p&gt;Base64 방식과 FormData 방식의 장단점을 정리합니다.&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Wed, 20 Nov 2024 06:08:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/Input_%EC%9D%B4%EB%AF%B8%EC%A7%80_%EC%B2%98%EB%A6%AC_%EB%B0%A9%EC%8B%9D</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/Input_%EC%9D%B4%EB%AF%B8%EC%A7%80_%EC%B2%98%EB%A6%AC_%EB%B0%A9%EC%8B%9D</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>[Error] Rendered more hooks than during the previous render</title>
+        
+          <description>&lt;h2 id=&quot;rendered-more-hooks-than-during-the-previous-render&quot;&gt;Rendered more hooks than during the previous render&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Tue, 19 Nov 2024 09:49:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/Error-_Rendered_more_hooks_than_during_the_previous_render</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/Error-_Rendered_more_hooks_than_during_the_previous_render</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>삭제한 브랜치 remote 정리</title>
+        
+          <description>&lt;p&gt;git prune&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Mon, 18 Nov 2024 12:27:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%82%AD%EC%A0%9C%ED%95%9C_%EB%B8%8C%EB%9E%9C%EC%B9%98_remote_%EC%A0%95%EB%A6%AC</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%82%AD%EC%A0%9C%ED%95%9C_%EB%B8%8C%EB%9E%9C%EC%B9%98_remote_%EC%A0%95%EB%A6%AC</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>[Socket.io] 클라이언트의 실시간 채팅 구현기</title>
+        
+          <description>&lt;p&gt;&lt;a href=&quot;https://socket.io/docs/v4/tutorial/introduction&quot;&gt;https://socket.io/docs/v4/tutorial/introduction&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 14 Nov 2024 06:22:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/Socket.io-_%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%B1%84%ED%8C%85_%EA%B5%AC%ED%98%84%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/Socket.io-_%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%B1%84%ED%8C%85_%EA%B5%AC%ED%98%84%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>nestjs에서 swagger 사용해보기</title>
+        
+          <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Wed, 13 Nov 2024 11:34:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/nestjs%EC%97%90%EC%84%9C_swagger_%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/nestjs%EC%97%90%EC%84%9C_swagger_%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>PR 슬랙봇으로 자동 리뷰 요청하기</title>
+        
+          <description>&lt;p&gt;&lt;img src=&quot;/upload/2024-11-13-PR_슬랙봇으로_자동_리뷰_요청하기.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-13&lt;/em&gt;%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_11.18.11.png_&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Wed, 13 Nov 2024 02:14:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/PR_%EC%8A%AC%EB%9E%99%EB%B4%87%EC%9C%BC%EB%A1%9C_%EC%9E%90%EB%8F%99_%EB%A6%AC%EB%B7%B0_%EC%9A%94%EC%B2%AD%ED%95%98%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/PR_%EC%8A%AC%EB%9E%99%EB%B4%87%EC%9C%BC%EB%A1%9C_%EC%9E%90%EB%8F%99_%EB%A6%AC%EB%B7%B0_%EC%9A%94%EC%B2%AD%ED%95%98%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>웹소켓 알아보기</title>
+        
+          <description>&lt;h2 id=&quot;웹소켓&quot;&gt;웹소켓&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Tue, 12 Nov 2024 10:20:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%9B%B9%EC%86%8C%EC%BC%93_%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%9B%B9%EC%86%8C%EC%BC%93_%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>Docker, Container, k8s 알아보기</title>
+        
+          <description>&lt;h2 id=&quot;docker&quot;&gt;Docker&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Tue, 12 Nov 2024 10:20:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/Docker,_Container,_k8s_%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/Docker,_Container,_k8s_%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>CI 설정 중 Peer Dependencies 이슈 발생</title>
+        
+          <description>&lt;h2 id=&quot;문제-상황&quot;&gt;문제 상황&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Tue, 12 Nov 2024 09:46:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/CI_%EC%84%A4%EC%A0%95_%EC%A4%91_Peer_Dependencies_%EC%9D%B4%EC%8A%88_%EB%B0%9C%EC%83%9D</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/CI_%EC%84%A4%EC%A0%95_%EC%A4%91_Peer_Dependencies_%EC%9D%B4%EC%8A%88_%EB%B0%9C%EC%83%9D</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>웹 소켓의 실시간 양방향 통신 (feat. WS vs Socket.io)</title>
+        
+          <description>&lt;blockquote&gt;
+  &lt;p&gt;목차&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        
+        <pubDate>Mon, 11 Nov 2024 01:25:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%9B%B9_%EC%86%8C%EC%BC%93%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%96%91%EB%B0%A9%ED%96%A5_%ED%86%B5%EC%8B%A0_(feat._WS_vs_Socket.io)</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%9B%B9_%EC%86%8C%EC%BC%93%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%96%91%EB%B0%A9%ED%96%A5_%ED%86%B5%EC%8B%A0_(feat._WS_vs_Socket.io)</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>[docker] 인프라 감자의 Docker 튜토리얼</title>
+        
+          <description>&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;목차&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        
+        <pubDate>Sat, 09 Nov 2024 06:37:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/docker-_%EC%9D%B8%ED%94%84%EB%9D%BC_%EA%B0%90%EC%9E%90%EC%9D%98_Docker_%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/docker-_%EC%9D%B8%ED%94%84%EB%9D%BC_%EA%B0%90%EC%9E%90%EC%9D%98_Docker_%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>외부의 사용자가 Object Storage에 접근하지 못하는 권한 제어</title>
+        
+          <description>&lt;h2 id=&quot;문제-상황&quot;&gt;문제 상황&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Fri, 08 Nov 2024 12:01:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%99%B8%EB%B6%80%EC%9D%98_%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80_Object_Storage%EC%97%90_%EC%A0%91%EA%B7%BC%ED%95%98%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EA%B6%8C%ED%95%9C_%EC%A0%9C%EC%96%B4</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title> 커스텀 react 스니펫 만들기</title>
+        
+          <description>&lt;p&gt;&lt;a href=&quot;https://jskdev.vercel.app/docs/dev/React/2024-11-08-custom-snippets/&quot;&gt;bookmark&lt;/a&gt;&lt;/p&gt;
+</description>
+        
+        <pubDate>Fri, 08 Nov 2024 04:25:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/_%EC%BB%A4%EC%8A%A4%ED%85%80_react_%EC%8A%A4%EB%8B%88%ED%8E%AB_%EB%A7%8C%EB%93%A4%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/_%EC%BB%A4%EC%8A%A4%ED%85%80_react_%EC%8A%A4%EB%8B%88%ED%8E%AB_%EB%A7%8C%EB%93%A4%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>반응형 비디오 플레이어 구현: 패딩 탑 기법</title>
+        
+          <description>&lt;p&gt;&lt;a href=&quot;https://jskdev.vercel.app/docs/dev/VideoStreaming/2024-11-07-padding-top/&quot;&gt;bookmark&lt;/a&gt;&lt;/p&gt;
+</description>
+        
+        <pubDate>Fri, 08 Nov 2024 02:52:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EB%B0%98%EC%9D%91%ED%98%95_%EB%B9%84%EB%94%94%EC%98%A4_%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4_%EA%B5%AC%ED%98%84-_%ED%8C%A8%EB%94%A9_%ED%83%91_%EA%B8%B0%EB%B2%95</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EB%B0%98%EC%9D%91%ED%98%95_%EB%B9%84%EB%94%94%EC%98%A4_%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4_%EA%B5%AC%ED%98%84-_%ED%8C%A8%EB%94%A9_%ED%83%91_%EA%B8%B0%EB%B2%95</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>tsconfig.json의 상호 참조 문제</title>
+        
+          <description>&lt;h2 id=&quot;문제상황&quot;&gt;문제상황&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Fri, 08 Nov 2024 02:50:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/tsconfig.json%EC%9D%98_%EC%83%81%ED%98%B8_%EC%B0%B8%EC%A1%B0_%EB%AC%B8%EC%A0%9C</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/tsconfig.json%EC%9D%98_%EC%83%81%ED%98%B8_%EC%B0%B8%EC%A1%B0_%EB%AC%B8%EC%A0%9C</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>[docker] yarn-berry workspace 를 찾지 못하는 오류</title>
+        
+          <description>&lt;p&gt;패키지매니저를 yarn-berry 로 쓰고 dockerfile 을 아래와 같이 작성했는데&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 07 Nov 2024 09:56:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>패키지 매니저 및 모노레포 정하기</title>
+        
+          <description>&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;목차&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        
+        <pubDate>Thu, 31 Oct 2024 05:59:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%ED%8C%A8%ED%82%A4%EC%A7%80_%EB%A7%A4%EB%8B%88%EC%A0%80_%EB%B0%8F_%EB%AA%A8%EB%85%B8%EB%A0%88%ED%8F%AC_%EC%A0%95%ED%95%98%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%ED%8C%A8%ED%82%A4%EC%A7%80_%EB%A7%A4%EB%8B%88%EC%A0%80_%EB%B0%8F_%EB%AA%A8%EB%85%B8%EB%A0%88%ED%8F%AC_%EC%A0%95%ED%95%98%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>커스텀 ESLint 만들기</title>
+        
+          <description>&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;목차&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        
+        <pubDate>Thu, 31 Oct 2024 05:28:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%BB%A4%EC%8A%A4%ED%85%80_ESLint_%EB%A7%8C%EB%93%A4%EA%B8%B0</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%BB%A4%EC%8A%A4%ED%85%80_ESLint_%EB%A7%8C%EB%93%A4%EA%B8%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>동영상 스트리밍 처리 프로토콜을 알아보자</title>
+        
+          <description>&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;목차&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        
+        <pubDate>Mon, 28 Oct 2024 02:40:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EB%8F%99%EC%98%81%EC%83%81_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D_%EC%B2%98%EB%A6%AC_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C%EC%9D%84_%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EB%8F%99%EC%98%81%EC%83%81_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D_%EC%B2%98%EB%A6%AC_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C%EC%9D%84_%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90</guid>
+      </item>
+      
+    
   </channel>
 </rss>
