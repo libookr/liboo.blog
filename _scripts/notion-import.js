@@ -203,7 +203,9 @@ categories:
             page_id: id,
             properties: {
                 "상태": {
-                    status: "배포 완료", // 새로운 상태값
+                    status: {
+                        name: "배포 완료"
+                    }, // 새로운 상태값
                 },
             },
         });
