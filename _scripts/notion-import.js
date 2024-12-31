@@ -139,11 +139,12 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         }
 
 
+        const ftitle = `${fdate}-${title.replaceAll(" ", "_")}.md`;
 
         const fm = `---
 layout: post
 current: post
-cover: "upload/${title}/0.png"
+cover: "upload/${ftitle}/0.png"
 navigation: True
 title: "${title}"
 date: ${date}
@@ -164,7 +165,6 @@ categories:
         body = escapeCodeBlock(body);
         body = replaceTitleOutsideRawBlocks(body);
 
-        const ftitle = `${fdate}-${title.replaceAll(" ", "_")}.md`;
 
         let index = 0;
         let edited_md = body.replace(
