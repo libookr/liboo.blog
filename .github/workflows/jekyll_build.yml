@@ -23,8 +23,7 @@ jobs:
 
       - name: Clean `_site` directory
         run: |
-          ls .jekyll-cache
-          rm -rf _site .jekyll-cache
+          rm -rf ./_site
 
       - name: Install dependencies
         run: |
@@ -34,6 +33,12 @@ jobs:
 
       - name: Build Jekyll site
         run: bundle exec jekyll build
+
+      - name: test
+        run: |
+          cat _site/assets/built/screen.css | grep post-card-author-m
+          
+          
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
