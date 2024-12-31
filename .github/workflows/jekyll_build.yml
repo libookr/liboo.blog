@@ -21,6 +21,10 @@ jobs:
         with:
           ruby-version: 3.1 # 필요한 Ruby 버전
 
+      - name: Clean `_site` directory
+        run: |
+          rm -rf _site
+
       - name: Install dependencies
         run: |
           gem install bundler
