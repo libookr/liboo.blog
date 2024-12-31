@@ -23,7 +23,8 @@ jobs:
 
       - name: Clean `_site` directory
         run: |
-          rm -rf _site
+          ls .jekyll-cache
+          rm -rf _site .jekyll-cache
 
       - name: Install dependencies
         run: |
