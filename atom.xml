@@ -8,6 +8,21 @@
     
       
       <item>
+        <title>테스트</title>
+        
+          <description>&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=2IE68SDTYvI&quot;&gt;https://www.youtube.com/watch?v=2IE68SDTYvI&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Tue, 31 Dec 2024 09:03:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%ED%85%8C%EC%8A%A4%ED%8A%B8</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%ED%85%8C%EC%8A%A4%ED%8A%B8</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>🐬 서버를 docker swarm 으로 관리해보자</title>
         
           <description>&lt;h1 id=&quot;기존-서버-운영-방식&quot;&gt;기존 서버 운영 방식&lt;/h1&gt;
