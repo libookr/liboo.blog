@@ -2,7 +2,7 @@
 
 {% for post in paginator.posts %}
     <article class="post-card {{ page.class }}{% unless post.cover %} no-image{% endunless %}">
-        {% assign image_url = post.cover | default_image: "/assets/images/writing.jpg" %}
+        {% assign image_url = post.cover | default_image: "assets/images/writing.jpg" %}
         <a class="post-card-image-link" href="{{ site.baseurl }}{{ post.url | remove_first: '/' }}">
             <div class="post-card-image" style="background-image: url({{ site.baseurl }}{{ image_url }})"></div>
         </a>
