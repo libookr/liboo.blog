@@ -143,7 +143,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         const fm = `---
 layout: post
 current: post
-cover: upload/${title}/0.png
+cover: "upload/${title}/0.png"
 navigation: True
 title: "${title}"
 date: ${date}
