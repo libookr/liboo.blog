@@ -28,6 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           gem install bundler
+          bundle clean --force
           bundle install
 
       - name: Build Jekyll site
