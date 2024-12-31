@@ -16,6 +16,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16 # 필요한 Node.js 버전
+
+      - name: Install Node.js dependencies
+        run: |
+          npm install # `gulp` 및 기타 의존성 설치
+
+      - name: Run Gulp tasks
+        run: |
+          npx gulp # Gulp를 실행하여 CSS 및 기타 파일 빌드
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
