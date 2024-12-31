@@ -84,14 +84,12 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         // title
         let title = id;
         let ptitle = r.properties?.["제목"]?.["title"];
-        console.log(ptitle, r.properties?.["제목"]?.["id"], r.properties);
         if (ptitle?.length > 0) {
             title = ptitle[0]?.["plain_text"];
         }
         // tags
         let tags = [];
         let ptags = r.properties?.["태그"]?.["multi_select"];
-        console.log(ptags);
         for (const t of ptags) {
             const n = t?.["name"];
             if (n) {
@@ -102,7 +100,6 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
         // categories
         let cats = [];
         let pcats = r.properties?.["카테고리"]?.["multi_select"];
-        console.log(pcats);
         for (const t of pcats) {
             const n = t?.["name"];
             if (n) {
@@ -141,22 +138,7 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
 
         const ftitle = `${fdate}-${title.replaceAll(" ", "_")}.md`;
 
-        const fm = `---
-layout: post
-current: post
-cover: "upload/${ftitle}/0.png"
-navigation: True
-title: "${title}"
-date: ${date}
-tags:
-    - ${fmtags}
-class: post-template
-subclass: 'post'
-author: ${fmauthors}
-categories:
-    - ${fmcats}
----
-`;
+
         const mdblocks = await n2m.pageToMarkdown(id);
         let body = n2m.toMarkdownString(mdblocks)["parent"];
         if (body === "") {
@@ -197,6 +179,33 @@ categories:
                 return `![${index++}](/${filename})${res}`;
             }
         );
+
+        let cover = "upload/${ftitle}/0.png";
+        const thumbnailPath = path.join(process.cwd(), cover);
+
+// 파일 존재 여부 확인
+        console.log(thumbnailPath);
+        fs.access(thumbnailPath, fs.constants.F_OK, (err) => {
+            if (err) {
+                cover = "assets/images/writing.jpg"
+            }
+        });
+        const fm = `---
+layout: post
+current: post
+cover: "${cover}"
+navigation: True
+title: "${title}"
+date: ${date}
+tags:
+    - ${fmtags}
+class: post-template
+subclass: 'post'
+author: ${fmauthors}
+categories:
+    - ${fmcats}
+---
+`;
 
         //writing to file
         fs.writeFile(path.join(root, ftitle), fm + edited_md, (err) => {
