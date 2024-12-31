@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
   <link href="https://blog.liboo.kr/author/gominzip/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://blog.liboo.kr/" rel="alternate" type="text/html" />
-  <updated>2024-12-31T09:23:52+00:00</updated>
+  <updated>2024-12-31T09:28:21+00:00</updated>
   <id>https://blog.liboo.kr/author/gominzip/feed.xml</id>
 
   
@@ -949,12 +949,12 @@ packageExtensions:
     </entry>
   
     <entry>
-      <title type="html">웹 소켓의 실시간 양방향 통신 (feat. WS vs Socket.io)</title>
-      <link href="https://blog.liboo.kr/%EC%9B%B9_%EC%86%8C%EC%BC%93%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%96%91%EB%B0%A9%ED%96%A5_%ED%86%B5%EC%8B%A0_(feat._WS_vs_Socket.io)" rel="alternate" type="text/html" title="웹 소켓의 실시간 양방향 통신 (feat. WS vs Socket.io)" />
+      <title type="html">웹 소켓의 실시간 양방향 통신 [feat. WS vs Socket.io]</title>
+      <link href="https://blog.liboo.kr/%EC%9B%B9_%EC%86%8C%EC%BC%93%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%96%91%EB%B0%A9%ED%96%A5_%ED%86%B5%EC%8B%A0_-feat._WS_vs_Socket.io" rel="alternate" type="text/html" title="웹 소켓의 실시간 양방향 통신 [feat. WS vs Socket.io]" />
       <published>2024-11-11T01:25:00+00:00</published>
       <updated>2024-11-11T01:25:00+00:00</updated>
-      <id>https://blog.liboo.kr/%EC%9B%B9_%EC%86%8C%EC%BC%93%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%96%91%EB%B0%A9%ED%96%A5_%ED%86%B5%EC%8B%A0_(feat._WS_vs_Socket.io)</id>
-      <content type="html" xml:base="https://blog.liboo.kr/%EC%9B%B9_%EC%86%8C%EC%BC%93%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%96%91%EB%B0%A9%ED%96%A5_%ED%86%B5%EC%8B%A0_(feat._WS_vs_Socket.io)">&lt;blockquote&gt;
+      <id>https://blog.liboo.kr/%EC%9B%B9_%EC%86%8C%EC%BC%93%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%96%91%EB%B0%A9%ED%96%A5_%ED%86%B5%EC%8B%A0_%5Bfeat._WS_vs_Socket.io%5D</id>
+      <content type="html" xml:base="https://blog.liboo.kr/%EC%9B%B9_%EC%86%8C%EC%BC%93%EC%9D%98_%EC%8B%A4%EC%8B%9C%EA%B0%84_%EC%96%91%EB%B0%A9%ED%96%A5_%ED%86%B5%EC%8B%A0_-feat._WS_vs_Socket.io">&lt;blockquote&gt;
   &lt;p&gt;목차&lt;/p&gt;
 &lt;/blockquote&gt;
 
