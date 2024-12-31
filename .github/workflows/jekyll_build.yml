@@ -28,8 +28,8 @@ jobs:
       - name: Install dependencies
         run: |
           gem install bundler
-          bundle clean --force
           bundle install
+          bundle clean --force
 
       - name: Build Jekyll site
         run: bundle exec jekyll build
