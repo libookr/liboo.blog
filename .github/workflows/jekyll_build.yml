@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16 # 필요한 Node.js 버전
+          node-version: 10 # 필요한 Node.js 버전
 
       - name: Install Node.js dependencies
         run: |
