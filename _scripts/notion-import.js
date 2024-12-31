@@ -138,10 +138,12 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
             fmauthors += authors.map((name) => `  - "${name}"`).join("\n");
         }
 
+
+
         const fm = `---
 layout: post
 current: post
-cover: assets/images/writing.jpg
+cover: upload/${title}/0.png
 navigation: True
 title: "${title}"
 date: ${date}
