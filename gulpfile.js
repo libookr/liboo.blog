@@ -20,20 +20,12 @@ var swallowError = function swallowError(error) {
     this.emit('end');
 };
 
-var nodemonServerInit = function () {
-    livereload.listen(1234);
-};
-
-gulp.task('build', ['css'], function (/* cb */) {
-    return nodemonServerInit();
-});
-
 gulp.task('css', function () {
     var processors = [
         easyimport,
         customProperties,
         colorFunction(),
-        autoprefixer({browsers: ['last 2 versions']}),
+        autoprefixer({overrideBrowserslist: ['last 2 versions']}), // 'browsers' 옵션은 deprecated
         cssnano()
     ];
 
@@ -42,12 +34,7 @@ gulp.task('css', function () {
         .pipe(sourcemaps.init())
         .pipe(postcss(processors))
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('assets/built/'))
-        .pipe(livereload());
-});
-
-gulp.task('watch', function () {
-    gulp.watch('assets/css/**', ['css']);
+        .pipe(gulp.dest('assets/built/'));
 });
 
 gulp.task('zip', ['css'], function() {
@@ -64,4 +51,13 @@ gulp.task('zip', ['css'], function() {
         .pipe(gulp.dest(targetDir));
 });
 
+// 기본 작업: build 후 종료
+gulp.task('build', ['css']);
+
+// watch는 별도로 실행
+gulp.task('watch', function () {
+    gulp.watch('assets/css/**', ['css']);
+});
+
+// 기본 작업에서 watch를 제거하여 종료 가능
 gulp.task('default', ['build']);
