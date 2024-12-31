@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>커스텀 ESLint 만들기</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="The professional publishing platform" />
+<link rel="shortcut icon" href="https://blog.liboo.kr//assets/images/favicon.png" type="image/png" />
+<link rel="canonical" href="https://blog.liboo.kr/%EC%BB%A4%EC%8A%A4%ED%85%80_ESLint_%EB%A7%8C%EB%93%A4%EA%B8%B0" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Liboo.blog" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="커스텀 ESLint 만들기" />
+    <meta property="og:description" content="목차 팀에서 사용할 ESLint 만들기 팀 프로젝트에서 사용할 ESLint 설정을 만들고 배포하는 과정을 다루며, 이를 통해 코드 품질을 향상시키고 개발 효율성을 높이는 방법을 제시합니다. ESLint란? 정의 ESLint는 자바스크립트와 타입스크립트 코드의 품질을 유지하기 위한 정적 분석 도구입니다. 소스 코드를 실행하지 않고 코드의 문법과 논리적 오류, 스타일 문제 등을 분석하여 결함을 사전에" />
+    <meta property="og:url" content="https://blog.liboo.kr/%EC%BB%A4%EC%8A%A4%ED%85%80_ESLint_%EB%A7%8C%EB%93%A4%EA%B8%B0" />
+    <meta property="og:image" content="https://blog.liboo.kr/upload/2024-10-31-커스텀_ESLint_만들기.md/0.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta property="article:author" content="https://www.facebook.com/ghost" />
+    <meta property="article:published_time" content="2024-10-31T05:28:00+00:00" />
+    <meta property="article:modified_time" content="2024-10-31T05:28:00+00:00" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="커스텀 ESLint 만들기" />
+    <meta name="twitter:description" content="목차 팀에서 사용할 ESLint 만들기 팀 프로젝트에서 사용할 ESLint 설정을 만들고 배포하는 과정을 다루며, 이를 통해 코드 품질을 향상시키고 개발 효율성을 높이는 방법을 제시합니다. ESLint란? 정의 ESLint는 자바스크립트와 타입스크립트 코드의 품질을 유지하기 위한 정적 분석 도구입니다. 소스 코드를 실행하지 않고 코드의 문법과 논리적 오류, 스타일 문제 등을 분석하여 결함을 사전에" />
+    <meta name="twitter:url" content="https://blog.liboo.kr/" />
+    <meta name="twitter:image" content="https://blog.liboo.kr/upload/2024-10-31-커스텀_ESLint_만들기.md/0.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Liboo.blog" />
+    <meta name="twitter:site" content="@tryghost" />
+    <meta name="twitter:creator" content="@tryghost" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Liboo.blog",
+        "logo": "https://blog.liboo.kr/assets/images/blog-icon.png"
+    },
+    "url": "https://blog.liboo.kr/%EC%BB%A4%EC%8A%A4%ED%85%80_ESLint_%EB%A7%8C%EB%93%A4%EA%B8%B0",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://blog.liboo.kr/upload/2024-10-31-커스텀_ESLint_만들기.md/0.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://blog.liboo.kr/%EC%BB%A4%EC%8A%A4%ED%85%80_ESLint_%EB%A7%8C%EB%93%A4%EA%B8%B0"
+    },
+    "description": "목차 팀에서 사용할 ESLint 만들기 팀 프로젝트에서 사용할 ESLint 설정을 만들고 배포하는 과정을 다루며, 이를 통해 코드 품질을 향상시키고 개발 효율성을 높이는 방법을 제시합니다. ESLint란? 정의 ESLint는 자바스크립트와 타입스크립트 코드의 품질을 유지하기 위한 정적 분석 도구입니다. 소스 코드를 실행하지 않고 코드의 문법과 논리적 오류, 스타일 문제 등을 분석하여 결함을 사전에"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="커스텀 ESLint 만들기" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+                <a class="site-nav-logo" href="https://blog.liboo.kr/"><img src="/assets/images/blog-icon.png" alt="Liboo.blog" /></a>
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/getting-started/">Getting Started</a></li>
+    <li class="nav-try-ghost" role="menuitem"><a href="https://ghost.org">Try Ghost</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+                <a class="social-link social-link-fb" href="https://facebook.com/ghost" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+</a>
+            
+            
+                <a class="social-link social-link-tw" href="https://twitter.com/tryghost" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a>
+            
+        </div>
+        
+            <a class="subscribe-button" href="#subscribe">Subscribe</a>
+        
+    </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="31 October 2024">31 October 2024</time>
+                    
+                </section>
+                <h1 class="post-full-title">커스텀 ESLint 만들기</h1>
+            </header>
+
+            
+            <figure class="post-full-image" style="background-image: url(/upload/2024-10-31-커스텀_ESLint_만들기.md/0.png)">
+            </figure>
+            
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <blockquote>
+  <p><strong>목차</strong></p>
+</blockquote>
+
+<h1 id="팀에서-사용할-eslint-만들기">팀에서 사용할 ESLint 만들기</h1>
+
+<p>팀 프로젝트에서 사용할 ESLint 설정을 만들고 배포하는 과정을 다루며, 이를 통해 코드 품질을 향상시키고 개발 효율성을 높이는 방법을 제시합니다.</p>
+
+<h2 id="eslint란">ESLint란?</h2>
+
+<h3 id="정의">정의</h3>
+
+<p><strong>ESLint</strong>는 자바스크립트와 타입스크립트 코드의 품질을 유지하기 위한 정적 분석 도구입니다. 소스 코드를 실행하지 않고 코드의 문법과 논리적 오류, 스타일 문제 등을 분석하여 결함을 사전에 발견할 수 있습니다.</p>
+
+<h3 id="주요-기능">주요 기능</h3>
+
+<ul>
+  <li><strong>문법 검사</strong>: 코드의 문법 오류를 자동으로 감지</li>
+  <li><strong>스타일 가이드 준수</strong>: 팀에서 정한 코드 스타일 규칙을 적용</li>
+  <li><strong>플러그인 지원</strong>: 다양한 플러그인을 통해 기능 확장</li>
+  <li><strong>자동 수정</strong>: 일부 오류와 스타일 문제를 자동으로 수정</li>
+</ul>
+
+<h2 id="eslint의-필요성">ESLint의 필요성</h2>
+
+<h3 id="코드-품질-향상">코드 품질 향상</h3>
+
+<p>ESLint는 코드의 일관성을 유지하고 잠재적인 버그를 사전에 발견하여 코드 품질을 높입니다.</p>
+
+<h3 id="팀-간-협업-강화">팀 간 협업 강화</h3>
+
+<p>팀원 간의 코드 스타일과 규칙이 일관되면 협업이 원활해집니다. ESLint는 팀 전체가 동일한 규칙을 따르도록 강제하여 코드베이스의 일관성을 유지합니다.</p>
+
+<h3 id="자동화된-개발-워크플로우">자동화된 개발 워크플로우</h3>
+
+<p>ESLint는 CI/CD 파이프라인에 통합하여 코드가 병합되기 전에 자동으로 검사할 수 있습니다. 이를 통해 오류가 포함된 코드가 메인 브랜치에 합쳐지는 것을 방지할 수 있습니다.</p>
+
+<h2 id="eslint-설정-파일-이해하기">ESLint 설정 파일 이해하기</h2>
+
+<h3 id="기본-구조">기본 구조</h3>
+
+<p>ESLint 설정 파일은 JSON 또는 JavaScript 형식으로 작성할 수 있으며, 일반적으로 프로젝트 루트 디렉토리에 <code class="language-plaintext highlighter-rouge">.eslintrc.json</code> 또는 <code class="language-plaintext highlighter-rouge">.eslintrc.js</code> 파일로 위치합니다. 기본 구조는 다음과 같습니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+  "env": {
+    "browser": true,
+    "es2021": true},
+  "extends": ["eslint:recommended"],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
+  }
+}
+
+</code></pre></div></div>
+
+<h3 id="주요-옵션">주요 옵션</h3>
+
+<ul>
+  <li><strong>env</strong>: 코드가 실행될 환경을 지정 (예: 브라우저, Node.js)</li>
+  <li><strong>extends</strong>: 기존의 ESLint 설정을 확장 (예: <code class="language-plaintext highlighter-rouge">eslint:recommended</code>)</li>
+  <li><strong>parserOptions</strong>: ECMAScript 버전과 모듈 시스템 등을 설정</li>
+  <li><strong>rules</strong>: 적용할 개별 규칙과 그 강도를 정의</li>
+</ul>
+
+<h3 id="root-옵션"><code class="language-plaintext highlighter-rouge">root</code> 옵션</h3>
+
+<p>모노레포와 같은 다중 프로젝트 환경에서 ESLint 설정 파일의 상속 관계를 관리하기 위해 <code class="language-plaintext highlighter-rouge">root</code> 옵션을 사용합니다.</p>
+
+<ul>
+  <li><strong>root: true</strong>: 이 설정 파일을 최상위로 간주하고 상위 디렉토리의 설정을 무시</li>
+  <li><strong>root: false</strong>: 상위 디렉토리의 설정을 상속받음</li>
+</ul>
+
+<p><strong>예시:</strong> 프로젝트 최상위 디렉토리의 <code class="language-plaintext highlighter-rouge">.eslintrc.json</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+  "root": true,
+  "extends": ["eslint:recommended"],
+  "rules": { /* 공통 규칙 */ }
+}
+
+
+
+</code></pre></div></div>
+
+<h3 id="나만의-린트-만들어보기">나만의 린트 만들어보기</h3>
+
+<p><a href="https://www.npmjs.com/package/eslint-plugin-jsk-rules">https://www.npmjs.com/package/eslint-plugin-jsk-rules</a></p>
+
+<p><a href="https://github.com/jsk3342/eslint-plugin-jsk-rules">https://github.com/jsk3342/eslint-plugin-jsk-rules</a></p>
+
+<p><img src="/upload/2024-10-31-커스텀_ESLint_만들기.md/0.png" alt="0" /><em>%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-10-30</em>%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_10.15.43.png_</p>
+
+<p><img src="/upload/2024-10-31-커스텀_ESLint_만들기.md/1.png" alt="1" /><em>%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-10-30</em>%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_10.15.31.png_</p>
+
+<h3 id="참고-자료">참고 자료</h3>
+
+<p><a href="https://velog.io/@imkkuk/Prettier-ESLint-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B3%A0-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0">https://velog.io/@imkkuk/Prettier-ESLint-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B3%A0-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0</a></p>
+
+<p><a href="https://poiemaweb.com/eslint">https://poiemaweb.com/eslint</a></p>
+
+<p><a href="https://techblog.woowahan.com/15903/">https://techblog.woowahan.com/15903/</a></p>
+
+<p><a href="https://www.youtube.com/watch?v=Be9q0k5BJ_s">https://www.youtube.com/watch?v=Be9q0k5BJ_s</a>
+<a href="https://tech.kakao.com/posts/375">https://tech.kakao.com/posts/375</a>
+<a href="https://medium.com/@iamkjw/eslint-%EC%95%8C%EA%B3%A0-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-6babb63da4d6">https://medium.com/@iamkjw/eslint-%EC%95%8C%EA%B3%A0-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-6babb63da4d6</a></p>
+
+<p><a href="https://yceffort.kr/2022/06/how-to-write-my-own-eslint-rules">https://yceffort.kr/2022/06/how-to-write-my-own-eslint-rules</a></p>
+
+<p><a href="https://junghyeonsu.com/posts/eslint-configs-library/#%EC%99%84%EC%84%B1%EB%90%9C-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-%EB%AF%B8%EB%A6%AC-%EB%B3%B4%EA%B8%B0">https://junghyeonsu.com/posts/eslint-configs-library/#%EC%99%84%EC%84%B1%EB%90%9C-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-%EB%AF%B8%EB%A6%AC-%EB%B3%B4%EA%B8%B0</a></p>
+
+<p><a href="https://eslint.org/docs/latest/extend/shareable-configs">https://eslint.org/docs/latest/extend/shareable-configs</a></p>
+
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+                <section class="subscribe-form">
+                    <h3 class="subscribe-form-title">Subscribe to Liboo.blog</h3>
+                    <p>Get the latest posts delivered right to your inbox</p>
+                    <form method="post" action="/subscribe/" class="">
+    <input class="confirm" type="hidden" name="confirm"  /><input class="location" type="hidden" name="location"  /><input class="referrer" type="hidden" name="referrer"  />
+
+    <div class="form-group">
+        <input class="subscribe-email" type="email" name="email"  placeholder="youremail@example.com" />
+    </div>
+    <button class="" type="submit" disabled><span>Subscribe</span></button>
+    <script type="text/javascript">(function(g,h,o,s,t){h[o]('.location')[s]=h[o]('.location')[s] || g.location.href;h[o]('.referrer')[s]=h[o]('.referrer')[s] || h.referrer;})(window,document,'querySelector','value');</script>
+</form>
+
+                </section>
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+                <!-- #author-->
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <!-- /author  -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+<!-- Links to Previous/Next posts -->
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+
+            <!-- If there's a next post, display it using the same markup included from - partials/post-card.hbs -->
+            
+                
+
+    <article class="post-card post-template">
+        
+            <a class="post-card-image-link" href="/%ED%8C%A8%ED%82%A4%EC%A7%80_%EB%A7%A4%EB%8B%88%EC%A0%80_%EB%B0%8F_%EB%AA%A8%EB%85%B8%EB%A0%88%ED%8F%AC_%EC%A0%95%ED%95%98%EA%B8%B0">
+                <div class="post-card-image" style="background-image: url(/upload/2024-10-31-패키지_매니저_및_모노레포_정하기.md/0.png)"></div>
+            </a>
+        
+        <div class="post-card-content">
+            <a class="post-card-content-link" href="/%ED%8C%A8%ED%82%A4%EC%A7%80_%EB%A7%A4%EB%8B%88%EC%A0%80_%EB%B0%8F_%EB%AA%A8%EB%85%B8%EB%A0%88%ED%8F%AC_%EC%A0%95%ED%95%98%EA%B8%B0">
+                <header class="post-card-header">
+                    
+
+                    <h2 class="post-card-title">패키지 매니저 및 모노레포 정하기</h2>
+                </header>
+                <section class="post-card-excerpt">
+                    
+                        <p>
+  목차
+
+
+</p>
+                    
+                </section>
+            </a>
+            <footer class="post-card-meta">
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <span class="reading-time">
+                    
+                    
+                      3 min read
+                    
+                </span>
+            </footer>
+        </div>
+    </article>
+
+            
+
+            <!-- If there's a previous post, display it using the same markup included from - partials/post-card.hbs -->
+            
+                
+
+    <article class="post-card post-template">
+        
+            <a class="post-card-image-link" href="/%EB%8F%99%EC%98%81%EC%83%81_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D_%EC%B2%98%EB%A6%AC_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C%EC%9D%84_%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90">
+                <div class="post-card-image" style="background-image: url(/upload/2024-10-28-동영상_스트리밍_처리_프로토콜을_알아보자.md/0.png)"></div>
+            </a>
+        
+        <div class="post-card-content">
+            <a class="post-card-content-link" href="/%EB%8F%99%EC%98%81%EC%83%81_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D_%EC%B2%98%EB%A6%AC_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C%EC%9D%84_%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90">
+                <header class="post-card-header">
+                    
+
+                    <h2 class="post-card-title">동영상 스트리밍 처리 프로토콜을 알아보자</h2>
+                </header>
+                <section class="post-card-excerpt">
+                    
+                        <p>
+  목차
+
+
+</p>
+                    
+                </section>
+            </a>
+            <footer class="post-card-meta">
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <span class="reading-time">
+                    
+                    
+                      36 min read
+                    
+                </span>
+            </footer>
+        </div>
+    </article>
+
+            
+
+        </div>
+    </div>
+</aside>
+
+<!-- Floating header which appears on-scroll, included from includes/floating-header.hbs -->
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="https://blog.liboo.kr/">
+            
+                <img src="/assets/images/favicon.png" alt="Liboo.blog icon" />
+            
+            <span>Liboo.blog</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">커스텀 ESLint 만들기</div>
+    <div class="floating-header-share">
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
+</svg>
+</div>
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=%EC%BB%A4%EC%8A%A4%ED%85%80+ESLint+%EB%A7%8C%EB%93%A4%EA%B8%B0&amp;url=https://jekyllt.github.io/jasper2/%EC%BB%A4%EC%8A%A4%ED%85%80_ESLint_%EB%A7%8C%EB%93%A4%EA%B8%B0"
+            onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+        </a>
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://jekyllt.github.io/jasper2/%EC%BB%A4%EC%8A%A4%ED%85%80_ESLint_%EB%A7%8C%EB%93%A4%EA%B8%B0"
+            onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+
+        </a>
+    </div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+<!-- /post -->
+
+<!-- The #contentFor helper here will send everything inside it up to the matching #block helper found in default.hbs -->
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://blog.liboo.kr/">Liboo.blog</a> &copy; 2024</section>
+                <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> &
+                    <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> using
+                    <a href="https://github.com/jekyllt/jasper2" target="_blank" rel="noopener">Jasper2</a></section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                    <a href="https://facebook.com/ghost" target="_blank" rel="noopener">Facebook</a>
+                    <a href="https://twitter.com/tryghost" target="_blank" rel="noopener">Twitter</a>
+                    <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+                </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+        <div id="subscribe" class="subscribe-overlay">
+            <a class="subscribe-overlay-close" href="#"></a>
+            <div class="subscribe-overlay-content">
+                
+                    <img class="subscribe-overlay-logo" src="/assets/images/blog-icon.png" alt="Liboo.blog" />
+                
+                <h1 class="subscribe-overlay-title">Subscribe to Liboo.blog</h1>
+                <p class="subscribe-overlay-description">Stay up to date! Get all the latest &amp; greatest posts delivered straight to your inbox</p>
+                <form method="post" action="/subscribe/" class="">
+    <input class="confirm" type="hidden" name="confirm"  /><input class="location" type="hidden" name="location"  /><input class="referrer" type="hidden" name="referrer"  />
+
+    <div class="form-group">
+        <input class="subscribe-email" type="email" name="email"  placeholder="youremail@example.com" />
+    </div>
+    <button class="" type="submit" disabled><span>Subscribe</span></button>
+    <script type="text/javascript">(function(g,h,o,s,t){h[o]('.location')[s]=h[o]('.location')[s] || g.location.href;h[o]('.referrer')[s]=h[o]('.referrer')[s] || h.referrer;})(window,document,'querySelector','value');</script>
+</form>
+
+            </div>
+        </div>
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-69281367-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>

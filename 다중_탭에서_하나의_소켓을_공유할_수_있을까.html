@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>다중 탭에서 하나의 소켓을 공유할 수 있을까</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="The professional publishing platform" />
+<link rel="shortcut icon" href="https://blog.liboo.kr//assets/images/favicon.png" type="image/png" />
+<link rel="canonical" href="https://blog.liboo.kr/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Liboo.blog" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="다중 탭에서 하나의 소켓을 공유할 수 있을까" />
+    <meta property="og:description" content="Why? 현재 채팅 기능의 로직은 이러하다 채팅 컴포넌트 마운트 서버 소켓과 connection을 위한 새로운 소켓 생성 userId, sessionId를 알고 있는 상태에서 join_room 시도 서버에서 userId를 토대로 검증 후 채팅 가능 여부 전송 처음 채팅 기능을 설계할 때도 고민했던 지점은 매번 마운트&amp;언마운트 시에 소켓을 생성해 connect하고 disconnect를 반복하는 부분이었다. userId는 고유하지만" />
+    <meta property="og:url" content="https://blog.liboo.kr/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C" />
+    <meta property="og:image" content="https://blog.liboo.kr/upload/2024-11-23-다중_탭에서_하나의_소켓을_공유할_수_있을까.md/0.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta property="article:author" content="https://www.facebook.com/ghost" />
+    <meta property="article:published_time" content="2024-11-23T04:32:00+00:00" />
+    <meta property="article:modified_time" content="2024-11-23T04:32:00+00:00" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="다중 탭에서 하나의 소켓을 공유할 수 있을까" />
+    <meta name="twitter:description" content="Why? 현재 채팅 기능의 로직은 이러하다 채팅 컴포넌트 마운트 서버 소켓과 connection을 위한 새로운 소켓 생성 userId, sessionId를 알고 있는 상태에서 join_room 시도 서버에서 userId를 토대로 검증 후 채팅 가능 여부 전송 처음 채팅 기능을 설계할 때도 고민했던 지점은 매번 마운트&amp;언마운트 시에 소켓을 생성해 connect하고 disconnect를 반복하는 부분이었다. userId는 고유하지만" />
+    <meta name="twitter:url" content="https://blog.liboo.kr/" />
+    <meta name="twitter:image" content="https://blog.liboo.kr/upload/2024-11-23-다중_탭에서_하나의_소켓을_공유할_수_있을까.md/0.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Liboo.blog" />
+    <meta name="twitter:site" content="@tryghost" />
+    <meta name="twitter:creator" content="@tryghost" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Liboo.blog",
+        "logo": "https://blog.liboo.kr/assets/images/blog-icon.png"
+    },
+    "url": "https://blog.liboo.kr/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://blog.liboo.kr/upload/2024-11-23-다중_탭에서_하나의_소켓을_공유할_수_있을까.md/0.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://blog.liboo.kr/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C"
+    },
+    "description": "Why? 현재 채팅 기능의 로직은 이러하다 채팅 컴포넌트 마운트 서버 소켓과 connection을 위한 새로운 소켓 생성 userId, sessionId를 알고 있는 상태에서 join_room 시도 서버에서 userId를 토대로 검증 후 채팅 가능 여부 전송 처음 채팅 기능을 설계할 때도 고민했던 지점은 매번 마운트&amp;언마운트 시에 소켓을 생성해 connect하고 disconnect를 반복하는 부분이었다. userId는 고유하지만"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="다중 탭에서 하나의 소켓을 공유할 수 있을까" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+                <a class="site-nav-logo" href="https://blog.liboo.kr/"><img src="/assets/images/blog-icon.png" alt="Liboo.blog" /></a>
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/getting-started/">Getting Started</a></li>
+    <li class="nav-try-ghost" role="menuitem"><a href="https://ghost.org">Try Ghost</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+                <a class="social-link social-link-fb" href="https://facebook.com/ghost" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+</a>
+            
+            
+                <a class="social-link social-link-tw" href="https://twitter.com/tryghost" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a>
+            
+        </div>
+        
+            <a class="subscribe-button" href="#subscribe">Subscribe</a>
+        
+    </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="23 November 2024">23 November 2024</time>
+                    
+                </section>
+                <h1 class="post-full-title">다중 탭에서 하나의 소켓을 공유할 수 있을까</h1>
+            </header>
+
+            
+            <figure class="post-full-image" style="background-image: url(/upload/2024-11-23-다중_탭에서_하나의_소켓을_공유할_수_있을까.md/0.png)">
+            </figure>
+            
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <h1 id="why">Why?</h1>
+
+<p>현재 채팅 기능의 로직은 이러하다</p>
+
+<ol>
+  <li>채팅 컴포넌트 마운트</li>
+  <li>서버 소켓과 connection을 위한 새로운 소켓 생성</li>
+  <li>userId, sessionId를 알고 있는 상태에서 join_room 시도</li>
+  <li>서버에서 userId를 토대로 검증 후 채팅 가능 여부 전송</li>
+</ol>
+
+<p>처음 채팅 기능을 설계할 때도 고민했던 지점은 매번 마운트&amp;언마운트 시에 소켓을 생성해 connect하고 disconnect를 반복하는 부분이었다.</p>
+
+<p>userId는 고유하지만 사용자가 여러탭으로 입장하게 된다면 하나의 userId에 대한 여러 socket이 연결된다는 문제가 있었고, 이로인해 불필요한 소켓 연결이 늘어나 서버의 리소스 낭비를 불러일으킬 수 있다는 결론이 나왔다.</p>
+
+<p><a href="https://www.youtube.com/watch?v=SVt1-Opp3Wo">https://www.youtube.com/watch?v=SVt1-Opp3Wo</a></p>
+
+<p>그러던 중 토스에서도 같은 고민을 했었으며 해당 영상의 인사이트를 통해 하나의 userId에 대한 하나의 소켓으로 개선해보기로 결정하였다.</p>
+
+<h1 id="how">How?</h1>
+
+<p>브라우저 탭들이 하나의 상태를 공유할 수 있도록하는 외부의 무언가가 필요했다</p>
+
+<p>그리고 Web Worker API는 그 역할을 해 줄 수 있었다!</p>
+
+<h2 id="shared-worker-thread">Shared Worker Thread</h2>
+
+<p><img src="/upload/2024-11-23-다중_탭에서_하나의_소켓을_공유할_수_있을까.md/0.png" alt="0" /><em>image.png</em></p>
+
+<h1 id="sharedworkerthread에-소켓-넣고-공유해보기">SharedWorkerThread에 소켓 넣고 공유해보기</h1>
+
+<p><a href="https://velog.io/@typo/sharing-websocket-connections-betwwen-tabs-and-windows">https://velog.io/@typo/sharing-websocket-connections-betwwen-tabs-and-windows</a></p>
+
+<p>기존 레퍼런스들은 리액트 + 웹팩과 WS 모듈을 사용한다는 점에서 우리 프로젝트와 다른 부분들이 있었다.</p>
+
+<p>클라이언트와 sharedWorker를 연결하는 과정은 쉽게 될 것이라 생각했지만.. 생각보다 많은 문제가 발생했다.</p>
+
+<h2 id="workerts-스크립트">worker.ts 스크립트</h2>
+
+<p>워커의 내부 동작을 작성한 스크립트이다. ts의 경우 <reference lib="webworker"></reference>를 작성해주어야 워커관련 타입과 메서드를 인식해준다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
+/// &lt;reference lib="webworker" /&gt;
+
+import { io } from "socket.io-client";
+
+// 소켓 연결
+const socket = io("http://localhost:8080"); // 서버 URL
+const ports: MessagePort[] = [];
+
+self.onconnect = (e: MessageEvent) =&gt; {
+  const port = e.ports[0];
+  ports.push(port);
+
+  // 클라이언트에서 오는 메시지를 소켓 서버로 전달
+  port.onmessage = (messageEvent) =&gt; {
+    const { message } = messageEvent.data;
+    console.log("Received message in SharedWorker:", message);
+
+    // 서버로 메시지 전송
+    socket.emit("send_normal_chat", { msg: message });
+  };
+
+  // 소켓에서 오는 메시지를 모든 탭에 전달
+  socket.on("message", (msg: string) =&gt; {
+    ports.forEach((p) =&gt; p.postMessage({ message: msg }));
+  });
+};
+
+export const test = 0;
+
+
+</code></pre></div></div>
+
+<h1 id="shared-worker-생성">Shared Worker 생성</h1>
+
+<p><a href="https://ko.vite.dev/guide/features#web-workers">https://ko.vite.dev/guide/features#web-workers</a></p>
+
+<p>1차 시도: 여러 레퍼런스에서 진행하는 생성자를 통한 워커 생성을 진행하였다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
+import { useEffect, useState } from "react";
+
+const App = () =&gt; {
+  const [worker, setWorker] = useState&lt;SharedWorker | null&gt;(null);
+  const [message, setMessage] = useState&lt;string&gt;("");
+
+  // App.tsx에서 worker.ts를 동적으로 import
+  useEffect(() =&gt; {
+    const worker = new SharedWorker(new URL("./worker.ts", import.meta.url));
+
+    // worker가 준비되면 메시지 전송
+    worker.port.onmessage = (event) =&gt; {
+      console.log("Received message from worker:", event.data.message);
+      setMessage(event.data.message);
+    };
+
+    worker.port.start();
+
+    // 초기 메시지 전송
+    worker.port.postMessage({ message: "Hello from React!" });
+
+    setWorker(worker);
+
+    return () =&gt; {
+      worker.port.close();
+    };
+  }, []);
+
+
+</code></pre></div></div>
+
+<p>하지만 계속해서 socket 생성도 되지 않고 port와 연결이 되지 않는 모습이 보였고, 브라우저의 소스코드 파일을 확인해본 결과 worker 스크립트가 올라가지 않는 문제를 발견</p>
+
+<p><del>이는 vite의 트리쉐이킹 문제로 import로 가져오지 않은 스크립트 파일이었으므로 빌드 과정에서 올라가지 못했고 스크립트가 없는 SharedWorker가 생성되게 된것이다.</del></p>
+
+<p>⇒ 멘토님: 잘못됐다. 브라우저에 어떻게 올라가느냐를 알아보자</p>
+
+<hr />
+
+<h2 id="️해당-문제의-원인과-해결">❗️해당 문제의 원인과 해결</h2>
+
+<p>처음에는 단순히 트리쉐이킹으로 import 문이 없어서 소스에 파일이 들어오지 못했나? 라는 뇌피셜을 마구마구 적어두었다… 하지만 이는 전혀 무관하다!</p>
+
+<p>트리 셰이킹은 번들링 단계에서 불필요한 코드(사용되지 않는 모듈)를 제거하는 최적화 과정으로, 워커 파일의 실행 방식이나 브라우저에서의 동작과는 직접적인 관계가 없다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
+const worker = new SharedWorker(new URL('/src/utils/chatWorker.ts', import.meta.url), { type: 'module' });
+
+</code></pre></div></div>
+
+<h3 id="1-sharedworker의-작동-방식">1. <strong><code class="language-plaintext highlighter-rouge">SharedWorker</code></strong><strong>의 작동 방식</strong></h3>
+
+<ul>
+  <li><strong>SharedWorker</strong>는 JavaScript 파일을 워커 스레드로 실행합니다. 브라우저는 워커를 실행할 때 해당 파일을 가져와 실행하지만, 워커가 모듈로 작성되었는지 여부를 알아야 적절히 처리할 수 있습니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">type: 'module'</code>을 지정하면 브라우저는 해당 워커 파일을 <strong>ES 모듈</strong>로 처리합니다.</li>
+  <li>ES 모듈로 처리하면 다음이 가능합니다:
+    <ol>
+      <li>파일 내부에서 <code class="language-plaintext highlighter-rouge">import/export</code>를 사용할 수 있음.</li>
+      <li>파일 스코프가 독립적임.</li>
+    </ol>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="2-왜-type-module을-붙여야-하나">2. <strong>왜</strong> <strong><code class="language-plaintext highlighter-rouge">type: 'module'</code></strong><strong>을 붙여야 하나?</strong></h3>
+
+<p>Vite는 기본적으로 ES 모듈을 기반으로 동작하며, 브라우저에서 모듈 방식으로 스크립트를 처리하도록 번들링합니다.</p>
+
+<h3 id="브라우저가-파일을-로드하는-과정">브라우저가 파일을 로드하는 과정:</h3>
+
+<ul>
+  <li>브라우저는 <code class="language-plaintext highlighter-rouge">SharedWorker</code>의 첫 번째 인자로 받은 파일 경로를 <strong>네트워크 요청</strong>으로 받아옵니다.</li>
+  <li>요청한 파일이 <strong>일반 스크립트</strong>(<code class="language-plaintext highlighter-rouge">type: "classic"</code>)로 처리되면, 파일 내용이 전역 스코프에서 실행됩니다.</li>
+  <li>요청한 파일이 <strong>모듈 스크립트</strong>(<code class="language-plaintext highlighter-rouge">type: "module"</code>)로 처리되면, 브라우저는 이를 <strong>ESM</strong>으로 실행하며, 모듈 사양에 맞는 환경에서 처리합니다.</li>
+</ul>
+
+<p>따라서, <code class="language-plaintext highlighter-rouge">SharedWorker</code> 파일이 모듈로 작성되었다면 <strong><code class="language-plaintext highlighter-rouge">type: 'module'</code></strong><strong>을 지정해야 브라우저가 이를 올바르게 처리</strong>할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="3-vite의-번들링-과정과-type-module의-관계">3. <strong>Vite의 번들링 과정과</strong> <strong><code class="language-plaintext highlighter-rouge">type: 'module</code></strong><strong>의 관계</strong></h2>
+
+<h3 id="vite의-동작-방식">Vite의 동작 방식:</h3>
+
+<ol>
+  <li><strong>파일 변환</strong>:
+    <ul>
+      <li>Vite는 TypeScript 파일(<code class="language-plaintext highlighter-rouge">.ts</code>)을 JavaScript 파일(<code class="language-plaintext highlighter-rouge">.js</code>)로 변환합니다.</li>
+      <li>ES6 이상의 모듈 사양에 따라 번들링합니다.</li>
+      <li><code class="language-plaintext highlighter-rouge">import.meta.url</code>은 Vite가 처리하여 브라우저에서 파일 경로를 알 수 있도록 합니다.</li>
+    </ul>
+  </li>
+  <li><strong>파일 제공</strong>:
+    <ul>
+      <li>개발 서버 모드에서 Vite는 파일을 번들링하지 않고 <strong>온디맨드로 제공</strong>합니다.</li>
+      <li>브라우저가 <code class="language-plaintext highlighter-rouge">new URL('/src/utils/chatWorker.ts', import.meta.url)</code>을 요청하면 Vite는 해당 파일을 동적으로 처리하고 반환합니다.</li>
+      <li>프로덕션 빌드에서는 Vite가 워커 파일을 <strong>별도 번들</strong>로 분리하여 제공하며, 브라우저가 이 파일을 적절히 로드하도록 경로를 설정합니다.</li>
+    </ul>
+  </li>
+  <li><strong>모듈 지원</strong>:
+    <ul>
+      <li>Vite는 워커 파일을 기본적으로 ES 모듈로 처리합니다.</li>
+      <li>워커를 <code class="language-plaintext highlighter-rouge">type: 'module'</code>로 지정하지 않으면 브라우저는 이를 일반 스크립트로 처리하려고 하며, 이 경우 오류가 발생할 수 있습니다.</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="4-type-module이-없을-때-발생하는-문제">4. <strong><code class="language-plaintext highlighter-rouge">type: 'module'</code></strong><strong>이 없을 때 발생하는 문제</strong></h2>
+
+<h3 id="문제">문제:</h3>
+
+<ul>
+  <li>브라우저가 워커 파일을 일반 스크립트로 실행하려고 시도.</li>
+  <li>Vite가 번들링한 결과 파일은 <strong>ESM 사양</strong>에 따라 작성되므로 일반 스크립트로 실행할 수 없음.</li>
+  <li>예를 들어, Vite는 워커 파일에서 다음과 같은 코드를 생성할 수 있습니다:</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>javascript
+	javascript
+	코드 복사
+	import { someFunction } from './someModule.js';
+	someFunction();
+	
+	
+	
+</code></pre></div></div>
+
+<ul>
+  <li>브라우저는 일반 스크립트에서 <code class="language-plaintext highlighter-rouge">import</code>를 지원하지 않으므로 에러 발생:</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>javascript
+	javascript
+	코드 복사
+	SyntaxError: Unexpected token 'import'
+	
+	
+	
+</code></pre></div></div>
+
+<h3 id="해결">해결:</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">type: 'module'</code>을 명시하면 브라우저는 해당 파일을 모듈로 처리하고, Vite가 제공하는 파일을 정상적으로 실행.</li>
+</ul>
+
+<hr />
+
+<h2 id="5-vite가-제공하는-url-동작-방식">5. <strong>Vite가 제공하는 URL 동작 방식</strong></h2>
+
+<p><code class="language-plaintext highlighter-rouge">new URL('/src/utils/chatWorker.ts', import.meta.url)</code>은 다음 단계를 거칩니다:</p>
+
+<ol>
+  <li>Vite는 <code class="language-plaintext highlighter-rouge">import.meta.url</code>을 통해 현재 모듈의 URL을 계산.</li>
+  <li><code class="language-plaintext highlighter-rouge">/src/utils/chatWorker.ts</code> 경로를 현재 모듈의 URL을 기준으로 해석.</li>
+  <li>워커 파일을 <code class="language-plaintext highlighter-rouge">http://localhost:3000/src/utils/chatWorker.ts</code>처럼 브라우저에서 접근 가능한 URL로 변환.</li>
+  <li>브라우저가 해당 URL로 요청을 보냄.</li>
+  <li>Vite 개발 서버가 해당 파일을 동적으로 처리하여 반환.</li>
+</ol>
+
+<hr />
+
+<h2 id="6-결론">6. <strong>결론</strong></h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">type: 'module'</code>은 브라우저에게 워커 파일이 <strong>ES 모듈</strong>임을 알려주는 역할.</li>
+  <li>Vite는 파일을 번들링하거나 제공할 때 <strong>ES 모듈 형식</strong>으로 처리하므로, 이를 명시적으로 지정해야 브라우저가 올바르게 로드.</li>
+  <li>Vite와 브라우저의 모듈 동작을 결합한 결과, <code class="language-plaintext highlighter-rouge">type: 'module'</code>을 지정하지 않으면 <code class="language-plaintext highlighter-rouge">import/export</code> 관련 에러가 발생.</li>
+</ul>
+
+<p>2차 시도</p>
+
+<p>마지막으로 vite 공식문서에 적혀있던 두번째 import 방식을 사용해보았다.</p>
+
+<p>쿼리 접미사 <code class="language-plaintext highlighter-rouge">?worker</code> 또는 <code class="language-plaintext highlighter-rouge">?sharedworker</code>를 이용해 스크립트 파일을 가져올 수 있다</p>
+
+<p>해당 방식을 통해 스크립트 파일은 트리쉐이킹이 되지 않고 성공적으로 워커를 생성할 수 있었다 ㅜㅜ</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
+import { useEffect, useState } from "react";
+import MyWorker from "./worker?sharedworker";
+
+const App = () =&gt; {
+  const [worker, setWorker] = useState&lt;SharedWorker | null&gt;(null);
+  const [message, setMessage] = useState&lt;string&gt;("");
+
+  useEffect(() =&gt; {
+    const worker = new MyWorker();
+
+    console.log(worker);
+    // worker가 준비되면 메시지 전송
+    worker.port.onmessage = (event) =&gt; {
+      console.log("Received message from worker:", event.data.message);
+      setMessage(event.data.message);
+    };
+
+    worker.port.start();
+
+    // 초기 메시지 전송
+    worker.port.postMessage({ message: "Hello from React!" });
+
+    setWorker(worker);
+
+    return () =&gt; {
+      worker.port.close();
+    };
+  }, []);
+
+  const handleClick = () =&gt; {
+    if (worker) {
+      // 버튼 클릭 시 메시지 전송
+      worker.port.postMessage({ message: "Hello from React on button click!" });
+    }
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;React with Shared Worker and Socket.io&lt;/h1&gt;
+      &lt;p&gt;Received from worker: {message}&lt;/p&gt;
+      &lt;button onClick={handleClick}&gt;Send Message to Worker&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+
+
+</code></pre></div></div>
+
+<p><img src="/upload/2024-11-23-다중_탭에서_하나의_소켓을_공유할_수_있을까.md/1.png" alt="1" /><em>image.png</em></p>
+
+<p>위는 클라이언트 탭을 2개 띄웠을때의 서버 로그이다.</p>
+
+<p>처음 탭이 열렸을 때 shared worker는 공유될 소켓 하나를 생성한다 (id: un19~)</p>
+
+<p>그리고 탭일 열렸을 때 클라이언트에서 “Hello from React”를 shared worker에게 postMessage를 하고 worker는 받은 메세지를 자신의 socket을 통해 서버로 전송한다.</p>
+
+<p>다른 탭을 열렸을 때는 이미 소켓이 있기 때문에 새로 생성이 이뤄지지 않고 이미 존재하는 소켓으로 또다시 서버에 메세지를 보낸 걸 확인할 수 있다.</p>
+
+<p>해당 과정을 좀더 확실하게 보고자 port가 연결될 때마다 카운팅을 하고 로그를 찍어보았다.</p>
+
+<p><img src="/upload/2024-11-23-다중_탭에서_하나의_소켓을_공유할_수_있을까.md/2.png" alt="2" /><em>image.png</em></p>
+
+<p>새로운 탭을 열거나 새로고침을 할 때마다 새로운 소켓이 생성되는 것이 아닌 하나의 소켓을 여러 포트(탭)에서 공유하고 있는 것을 확인할 수 있다.</p>
+
+<p>만약 포트(탭)을 사용하지 않게된다면 포트에 대한 공간을 제거하는 방식은 가비지 콜렉터를 이용한다고 한다. 후에 알아보자..</p>
+
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+                <section class="subscribe-form">
+                    <h3 class="subscribe-form-title">Subscribe to Liboo.blog</h3>
+                    <p>Get the latest posts delivered right to your inbox</p>
+                    <form method="post" action="/subscribe/" class="">
+    <input class="confirm" type="hidden" name="confirm"  /><input class="location" type="hidden" name="location"  /><input class="referrer" type="hidden" name="referrer"  />
+
+    <div class="form-group">
+        <input class="subscribe-email" type="email" name="email"  placeholder="youremail@example.com" />
+    </div>
+    <button class="" type="submit" disabled><span>Subscribe</span></button>
+    <script type="text/javascript">(function(g,h,o,s,t){h[o]('.location')[s]=h[o]('.location')[s] || g.location.href;h[o]('.referrer')[s]=h[o]('.referrer')[s] || h.referrer;})(window,document,'querySelector','value');</script>
+</form>
+
+                </section>
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+                <!-- #author-->
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <!-- /author  -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+<!-- Links to Previous/Next posts -->
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+
+            <!-- If there's a next post, display it using the same markup included from - partials/post-card.hbs -->
+            
+                
+
+    <article class="post-card post-template">
+        
+            <a class="post-card-image-link" href="/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D">
+                <div class="post-card-image" style="background-image: url(/assets/images/writing.jpg)"></div>
+            </a>
+        
+        <div class="post-card-content">
+            <a class="post-card-content-link" href="/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D">
+                <header class="post-card-header">
+                    
+
+                    <h2 class="post-card-title">다시보기를 위한 Node-Media-Server, FFMpeg 분석</h2>
+                </header>
+                <section class="post-card-excerpt">
+                    
+                        <p>서론
+
+</p>
+                    
+                </section>
+            </a>
+            <footer class="post-card-meta">
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <span class="reading-time">
+                    
+                    
+                      4 min read
+                    
+                </span>
+            </footer>
+        </div>
+    </article>
+
+            
+
+            <!-- If there's a previous post, display it using the same markup included from - partials/post-card.hbs -->
+            
+                
+
+    <article class="post-card post-template">
+        
+            <a class="post-card-image-link" href="/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84">
+                <div class="post-card-image" style="background-image: url(/upload/2024-11-23-NestJS를_통한_일관적인_시스템_설계.md/0.png)"></div>
+            </a>
+        
+        <div class="post-card-content">
+            <a class="post-card-content-link" href="/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84">
+                <header class="post-card-header">
+                    
+
+                    <h2 class="post-card-title">NestJS를 통한 일관적인 시스템 설계</h2>
+                </header>
+                <section class="post-card-excerpt">
+                    
+                        <p>서론
+
+</p>
+                    
+                </section>
+            </a>
+            <footer class="post-card-meta">
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                <span class="reading-time">
+                    
+                    
+                      1 min read
+                    
+                </span>
+            </footer>
+        </div>
+    </article>
+
+            
+
+        </div>
+    </div>
+</aside>
+
+<!-- Floating header which appears on-scroll, included from includes/floating-header.hbs -->
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="https://blog.liboo.kr/">
+            
+                <img src="/assets/images/favicon.png" alt="Liboo.blog icon" />
+            
+            <span>Liboo.blog</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">다중 탭에서 하나의 소켓을 공유할 수 있을까</div>
+    <div class="floating-header-share">
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
+</svg>
+</div>
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=%EB%8B%A4%EC%A4%91+%ED%83%AD%EC%97%90%EC%84%9C+%ED%95%98%EB%82%98%EC%9D%98+%EC%86%8C%EC%BC%93%EC%9D%84+%EA%B3%B5%EC%9C%A0%ED%95%A0+%EC%88%98+%EC%9E%88%EC%9D%84%EA%B9%8C&amp;url=https://jekyllt.github.io/jasper2/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C"
+            onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+        </a>
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://jekyllt.github.io/jasper2/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C"
+            onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+
+        </a>
+    </div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+<!-- /post -->
+
+<!-- The #contentFor helper here will send everything inside it up to the matching #block helper found in default.hbs -->
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://blog.liboo.kr/">Liboo.blog</a> &copy; 2024</section>
+                <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> &
+                    <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> using
+                    <a href="https://github.com/jekyllt/jasper2" target="_blank" rel="noopener">Jasper2</a></section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                    <a href="https://facebook.com/ghost" target="_blank" rel="noopener">Facebook</a>
+                    <a href="https://twitter.com/tryghost" target="_blank" rel="noopener">Twitter</a>
+                    <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+                </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+        <div id="subscribe" class="subscribe-overlay">
+            <a class="subscribe-overlay-close" href="#"></a>
+            <div class="subscribe-overlay-content">
+                
+                    <img class="subscribe-overlay-logo" src="/assets/images/blog-icon.png" alt="Liboo.blog" />
+                
+                <h1 class="subscribe-overlay-title">Subscribe to Liboo.blog</h1>
+                <p class="subscribe-overlay-description">Stay up to date! Get all the latest &amp; greatest posts delivered straight to your inbox</p>
+                <form method="post" action="/subscribe/" class="">
+    <input class="confirm" type="hidden" name="confirm"  /><input class="location" type="hidden" name="location"  /><input class="referrer" type="hidden" name="referrer"  />
+
+    <div class="form-group">
+        <input class="subscribe-email" type="email" name="email"  placeholder="youremail@example.com" />
+    </div>
+    <button class="" type="submit" disabled><span>Subscribe</span></button>
+    <script type="text/javascript">(function(g,h,o,s,t){h[o]('.location')[s]=h[o]('.location')[s] || g.location.href;h[o]('.referrer')[s]=h[o]('.referrer')[s] || h.referrer;})(window,document,'querySelector','value');</script>
+</form>
+
+            </div>
+        </div>
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-69281367-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>

@@ -1,1 +1,788 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.liboo.kr/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.liboo.kr/" rel="alternate" type="text/html" /><updated>2024-12-31T09:18:30+00:00</updated><id>https://blog.liboo.kr/feed.xml</id><title type="html">Liboo.blog</title><subtitle>The professional publishing platform</subtitle></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.liboo.kr/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.liboo.kr/" rel="alternate" type="text/html" /><updated>2024-12-31T09:23:52+00:00</updated><id>https://blog.liboo.kr/feed.xml</id><title type="html">Liboo.blog</title><subtitle>The professional publishing platform</subtitle><entry><title type="html">🐬 서버를 docker swarm 으로 관리해보자</title><link href="https://blog.liboo.kr/_%EC%84%9C%EB%B2%84%EB%A5%BC_docker_swarm_%EC%9C%BC%EB%A1%9C_%EA%B4%80%EB%A6%AC%ED%95%B4%EB%B3%B4%EC%9E%90" rel="alternate" type="text/html" title="🐬 서버를 docker swarm 으로 관리해보자" /><published>2024-12-04T05:41:00+00:00</published><updated>2024-12-04T05:41:00+00:00</updated><id>https://blog.liboo.kr/%F0%9F%90%AC_%EC%84%9C%EB%B2%84%EB%A5%BC_docker_swarm_%EC%9C%BC%EB%A1%9C_%EA%B4%80%EB%A6%AC%ED%95%B4%EB%B3%B4%EC%9E%90</id><content type="html" xml:base="https://blog.liboo.kr/_%EC%84%9C%EB%B2%84%EB%A5%BC_docker_swarm_%EC%9C%BC%EB%A1%9C_%EA%B4%80%EB%A6%AC%ED%95%B4%EB%B3%B4%EC%9E%90">&lt;h1 id=&quot;기존-서버-운영-방식&quot;&gt;기존 서버 운영 방식&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-🐬_서버를_docker_swarm_으로_관리해보자.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;최초의 서버 설계&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;최초의 서버 설계에서는 NCP 서버 인스턴스 1대에 NGINX, 채팅 서버, API 서버, RTMP 서버가 각각 1개의 컨테이너씩 띄워져있는 구조였습니다.&lt;/p&gt;
+
+&lt;p&gt;그러나 시간이 지나면서 각각의 서버를 수평 확장할 필요성을 느끼고 서버를 수평 확장 할 수 있도록 설계를 수정하고 보니 컨테이너를 어떻게 관리하고, 또 ncp 서버 인스턴스를 어떻게 추가/삭제 하면서 관리해야할지에 대한 어려움이 생겼습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;docker-swarm&quot;&gt;Docker Swarm&lt;/h2&gt;
+
+&lt;p&gt;도커 스웜은 쿠버네티스와 함께 이야기되는 대표적인 컨테이너 오케스트레이션 도구입니다.  이름에서부터 알 수 있듯이 도커 엔진을 그대로 쓰기 때문에 간단한 설정만으로도 클러스터와 서비스들을 관리할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;엔터프라이즈 레벨의 운영을 한다면 쿠버네티스가 조금 더 좋았겠지만 아직까지는 저희 프로젝트에서 네트워킹이나 Volume 등을 고려해봤을 때, 간편하게 설정할 수 있는 도커 스웜을 사용하는 것이 좋다고 생각했습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;클러스터링&quot;&gt;클러스터링&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-🐬_서버를_docker_swarm_으로_관리해보자.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-🐬_서버를_docker_swarm_으로_관리해보자.md/2.png&quot; alt=&quot;2&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;저희 팀은 기존에 메인 production 서버 1대, 테스트용 development 서버 1대로 총 2대 가동 하고 있었습니다.&lt;/p&gt;
+
+&lt;p&gt;그리고 개발이 어느정도 마무리 되는 시점인 6주차에 접어들면서 테스트용 development 서버의 활용성이 점점 떨어졌고, 부하 테스트나 데모 용도로 production 서버에 부하가 점점 늘어났습니다.&lt;/p&gt;
+
+&lt;p&gt;그래서 기존의 test 서버를 production 서버와 클러스터링 하면서 도커 컨테이너 기반으로 서비스를 운영하고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-🐬_서버를_docker_swarm_으로_관리해보자.md/3.png&quot; alt=&quot;3&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-🐬_서버를_docker_swarm_으로_관리해보자.md/4.png&quot; alt=&quot;4&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;위의 이미지에서 보시다시피 main, test 2개의 서버에 chat-server (replica 3), main-server, rtmp-server (replica 3), nginx 컨테이너를 나누어 실행하고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;Docker Swarm 은 아쉽게도 쿠버네티스처럼 컨테이너에 대한 메트릭을 자동으로 수집해서 오토 스케일링을 하는 작업을 공식적으로 제공하지는 않습니다. 따라서 현재는 수동적으로 ncp 인스턴스를 클러스터링하고 서비스의 scale 을 늘리고 줄여야 합니다.&lt;/p&gt;
+
+&lt;p&gt;하지만 메트릭 수집과 자동 스케일링을 할 수 있도록 스크립트를 작성하는 방식으로 리팩토링 하여 오토 스케일링을 구현할 예정입니다.&lt;/p&gt;</content><author><name>[&quot;hoeeeeeh&quot;]</name></author><category term="[&quot;과정/근거&quot;]" /><category term="[&quot;과정/근거&quot;]" /><category term="과정/근거" /><summary type="html">기존 서버 운영 방식</summary></entry><entry><title type="html">채팅 서버에 Redis 를 쓴 이유</title><link href="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%EC%97%90_Redis_%EB%A5%BC_%EC%93%B4_%EC%9D%B4%EC%9C%A0" rel="alternate" type="text/html" title="채팅 서버에 Redis 를 쓴 이유" /><published>2024-12-04T05:36:00+00:00</published><updated>2024-12-04T05:36:00+00:00</updated><id>https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%EC%97%90_Redis_%EB%A5%BC_%EC%93%B4_%EC%9D%B4%EC%9C%A0</id><content type="html" xml:base="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%EC%97%90_Redis_%EB%A5%BC_%EC%93%B4_%EC%9D%B4%EC%9C%A0">&lt;h1 id=&quot;초기-설계&quot;&gt;초기 설계&lt;/h1&gt;
+
+&lt;p&gt;초기의 채팅 서버 설계는 굉장히 직관적인 설계를 가졌습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-채팅_서버에_Redis_를_쓴_이유.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;초기 채팅 서버 설계&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://socket.io/&quot;&gt;socket.io&lt;/a&gt; 와 nest.js 를 활용해서 채팅 서버를 작성했고, 1대의 채팅 서버가 유저의 모든 메세지 이벤트를 받아, 같은 방에 있는 모든 클라이언트에게 메세지 이벤트를 emit 하는 구조였습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;초기-설계에서의-단순-수평-확장&quot;&gt;초기 설계에서의 단순 수평 확장&lt;/h1&gt;
+
+&lt;p&gt;초기의 단순한 설계에서 부하가 없을 때는 큰 문제를 느끼지 못했습니다. 그러나 과도한 부하가 걸리는 상황에는 채팅 서버의 확장이 필요해졌습니다.&lt;/p&gt;
+
+&lt;p&gt;프론트엔드 분들이 SharedWorker 소켓을 도입함으로써 서버의 부하를 줄였다면, 서버는 수평적 확장을 통해서 부하를 컨트롤 하는 것을 시도해봤습니다.&lt;/p&gt;
+
+&lt;p&gt;하지만 단순히 새로운 채팅 서버 컨테이너를 하나 더 띄워서 서비스를 사용해보면 문제가 발생합니다.&lt;/p&gt;
+
+&lt;p&gt;우선 유저들간 채팅의 동기화가 이루어지지 않습니다. 누군가 보낸 채팅을 다른 누군가는 보기도 하고, 못 보기도 합니다.
+정확히는 같은 채팅 서버에 있는 유저는 볼 수 있고, 다른 채팅 서버에 있는 유저는 볼 수 없습니다.&lt;/p&gt;
+
+&lt;p&gt;또한 서버에서도 유저를 차단하려고 했을 때, 어느 서버에서 데이터를 가져와야 할 지 모르기 때문에 모든 서버에 해당 유저의 정보가 존재하는지 요청을 보내야 합니다.&lt;/p&gt;
+
+&lt;p&gt;이처럼 채팅 서버를 수평 확장했을 때, 채팅 서버간 데이터 공유를 할 수 있어야 한다는 문제점이 발생하게 되었습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-채팅_서버에_Redis_를_쓴_이유.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;단순하게 수평 확장한 구조&lt;/em&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;수평-확장을-고려한-구조-재설계&quot;&gt;수평 확장을 고려한 구조 재설계&lt;/h1&gt;
+
+&lt;p&gt;저희는 이런 문제를 해결하기 위해서 redis pub/sub 구조를 활용했습니다.
+채팅 서버 A 의 ‘liboo’ 라는 room 으로 메세지가 온다면, 채팅 서버 A 는 redis pub/sub 구조를 통해서 다른 채팅 서버 B/C 로도 메세지를 전파할 수 있습니다.
+채팅 서버 B, C 는 레디스로부터 받은 이벤트를 기반으로 해당 채팅 서버에 있는 클라이언트에게 메세지를 emit 합니다.&lt;/p&gt;
+
+&lt;p&gt;또한, 채팅 서버를 수평 확장하더라도 redis 인스턴스가 하나라면 같은 문제가 반복된다고 생각했습니다.
+따라서 redis 인스턴스도 확장이 가능하도록 redis-cluster 로 구축했습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-채팅_서버에_Redis_를_쓴_이유.md/2.png&quot; alt=&quot;2&quot; /&gt;&lt;em&gt;redis pub/sub 을 활용한 구조 재설계&lt;/em&gt;&lt;/p&gt;</content><author><name>[&quot;hoeeeeeh&quot;]</name></author><category term="[&quot;과정/근거&quot;]" /><category term="[&quot;과정/근거&quot;]" /><category term="과정/근거" /><summary type="html">초기 설계</summary></entry><entry><title type="html">확장성을 고려한 초반 서버 설계</title><link href="https://blog.liboo.kr/%ED%99%95%EC%9E%A5%EC%84%B1%EC%9D%84_%EA%B3%A0%EB%A0%A4%ED%95%9C_%EC%B4%88%EB%B0%98_%EC%84%9C%EB%B2%84_%EC%84%A4%EA%B3%84" rel="alternate" type="text/html" title="확장성을 고려한 초반 서버 설계" /><published>2024-12-04T05:04:00+00:00</published><updated>2024-12-04T05:04:00+00:00</updated><id>https://blog.liboo.kr/%ED%99%95%EC%9E%A5%EC%84%B1%EC%9D%84_%EA%B3%A0%EB%A0%A4%ED%95%9C_%EC%B4%88%EB%B0%98_%EC%84%9C%EB%B2%84_%EC%84%A4%EA%B3%84</id><content type="html" xml:base="https://blog.liboo.kr/%ED%99%95%EC%9E%A5%EC%84%B1%EC%9D%84_%EA%B3%A0%EB%A0%A4%ED%95%9C_%EC%B4%88%EB%B0%98_%EC%84%9C%EB%B2%84_%EC%84%A4%EA%B3%84">&lt;h1 id=&quot;확장성&quot;&gt;확장성&lt;/h1&gt;
+
+&lt;p&gt;Liboo 프로젝트의 처음 구조를 설계할때는 아래 그림과 같은 구조였습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-확장성을_고려한_초반_서버_설계.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;저희 서버는 네이버 부스트캠프 최종 발표 시점에 생기는 부하를 감당할 수 있을 정도로 설계를 해보는 것이 목표였습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;그림이 다소 난잡하지만 주요한 부분은 RTMP 서버, 메인 (API) 서버, 그림에는 없지만 채팅 서버를 전부 분리했다는 점입니다.&lt;/p&gt;
+
+&lt;p&gt;이렇게 분리했던 이유는 RTMP 서버는 RTMP 스트림 데이터를 HLS 세그먼트와 index 파일로 트랜스파일링 하는, CPU intensive 한 작업을 많이 할 거라고 생각했기 때문입니다.&lt;/p&gt;
+
+&lt;p&gt;그에 반해 API 서버는 클라이언트의 요청을 처리하면서 메모리와 DB I/O 에 더 집중적이고,&lt;/p&gt;
+
+&lt;p&gt;채팅 서버는 사용자 수가 매우 많아진다면 동시에 처리 하는데 CPU 를 많이 쓸 수 있겠지만 기본적으로 메모리와 네트워크 처리량이 조금 더 집중적이라고 생각했습니다.&lt;/p&gt;
+
+&lt;p&gt;RTMP, API, 채팅 서버가 하나의 서버로 관리된다면 RTMP 스트림 처리 작업을 위해서 CPU 사용량이 과도하게 높아지면 서버를 스케일링할 때 API 와 채팅 서버도 같이 늘어나야 합니다.&lt;/p&gt;
+
+&lt;p&gt;저희는 서버를 각각의 역할에 맞게, 집중적으로 사용하는 부분에 맞게 분리를 해서 서버 스케일링이 효율적으로 이루어질 수 있도록, 확장성을 고려해보는 것이 이번 프로젝트의 가장 큰 목표였습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-확장성을_고려한_초반_서버_설계.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;전체적인 서버의 아키텍처 구조는 위와 같습니다.&lt;/p&gt;</content><author><name>[&quot;hoeeeeeh&quot;]</name></author><category term="[&quot;과정/근거&quot;]" /><category term="[&quot;과정/근거&quot;]" /><category term="과정/근거" /><summary type="html">확장성</summary></entry><entry><title type="html">에러페이지 다루기</title><link href="https://blog.liboo.kr/%EC%97%90%EB%9F%AC%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%8B%A4%EB%A3%A8%EA%B8%B0" rel="alternate" type="text/html" title="에러페이지 다루기" /><published>2024-12-04T04:14:00+00:00</published><updated>2024-12-04T04:14:00+00:00</updated><id>https://blog.liboo.kr/%EC%97%90%EB%9F%AC%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%8B%A4%EB%A3%A8%EA%B8%B0</id><content type="html" xml:base="https://blog.liboo.kr/%EC%97%90%EB%9F%AC%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%8B%A4%EB%A3%A8%EA%B8%B0">&lt;h3 id=&quot;에러페이지-도입배경&quot;&gt;에러페이지 도입배경&lt;/h3&gt;
+
+&lt;p&gt;특정 컴포넌트가 에러시에 부모로 에러처리의 역할을 위임하여 처리한 기존의 방식과 다르게 페이지 전체가 에러를 다뤄야 하는 경우도 있다는 것을 깨달았다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;잘못된 주소로 접근&lt;/strong&gt;하는 경우&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;잘못된 ID로 데이터를 요청&lt;/strong&gt;하는 경우&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;잘못된 주소로 접근하는 경우&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+&amp;lt;Routes&amp;gt;
+  &amp;lt;Route path=&quot;/&quot; element={&amp;lt;MainPage /&amp;gt;} /&amp;gt;
+  &amp;lt;Route path=&quot;/live/:id&quot; element={&amp;lt;ClientPage /&amp;gt;} /&amp;gt;
+  &amp;lt;Route path=&quot;/replay/:id&quot; element={&amp;lt;ReplayPage /&amp;gt;} /&amp;gt;
+  &amp;lt;Route path=&quot;/host&quot; element={&amp;lt;HostPage /&amp;gt;} /&amp;gt;
+  &amp;lt;Route path=&quot;*&quot; element={&amp;lt;ErrorPage /&amp;gt;} /&amp;gt;
+&amp;lt;/Routes&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;특정 라우팅을 제외한 페이지는 에러페이지로 가도록 처리&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;잘못된 ID로 데이터를 요청하는 경우&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;페이지에서 데이터를 페칭해올 때 useParam으로 ID를 추출해서 데이터를 가져오는 경우가 있었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-에러페이지_다루기.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;여기서 ID가 잘못되는 경우에 어떻게 처리를 해야할지 고민했다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;비디오를 보여주는 부분만 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AsyncBoundary&lt;/code&gt;로 에러처리를 하기&lt;/li&gt;
+  &lt;li&gt;에러페이지로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;navigate&lt;/code&gt;하기&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;결론적으로 &lt;strong&gt;에러페이지로&lt;/strong&gt; &lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;navigate&lt;/code&gt;&lt;/strong&gt;&lt;strong&gt;하는 방법&lt;/strong&gt;을 선택&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;비디오부문만 에러처리하는 것이 아닌 &lt;strong&gt;주소 자체가 잘못된 것&lt;/strong&gt;이라 판단하여 에러페이지로 넘기는게 맞다 판단&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;또한, 잘못된 ID를 통해 데이터를 페치해오는데 실패했지만 근본적인 이유는 ID가 유효하지 않은 것 때문이므로&lt;/p&gt;
+
+&lt;p&gt;ID가 유효한지 API로 초기 체크를 할 필요성을 느꼈다.&lt;/p&gt;
+
+&lt;h3 id=&quot;고차함수로-유효한-id파악하기&quot;&gt;고차함수로 유효한 ID파악하기&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useCheckLiveExist&lt;/code&gt; 훅을 통해 id가 유효한지 확인하고 유효하지 않으면 에러페이지로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;navigate&lt;/code&gt;처리&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;withLiveExistCheck&lt;/code&gt;라는 고차함수를 통해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientPage&lt;/code&gt;와 같은 페이지 전체를 감싸도록 구현&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export default function withLiveExistCheck&amp;lt;P extends object&amp;gt;(WrappedComponent: ComponentType&amp;lt;P&amp;gt;) {
+  return function WithLiveExistCheckComponent(props: P) {
+    const { id: liveId } = useParams();
+    const navigate = useNavigate();
+
+    const { data: isLiveExistData } = useCheckLiveExist({ liveId: liveId as string });
+    const isLiveExist = isLiveExistData?.existed;
+
+    useEffect(() =&amp;gt; {
+      if (!isLiveExist) {
+        navigate(&apos;/error&apos;);
+      }
+    }, [isLiveExistData]);
+
+    return &amp;lt;WrappedComponent {...props} /&amp;gt;;
+  };
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+function ClientPageComponent() {
+  return (
+    &amp;lt;&amp;gt;
+      &amp;lt;Header /&amp;gt;
+      &amp;lt;ClientContainer&amp;gt;
+        &amp;lt;AsyncBoundary pendingFallback={&amp;lt;&amp;gt;&amp;lt;/&amp;gt;} rejectedFallback={() =&amp;gt; &amp;lt;PlayerStreamError /&amp;gt;}&amp;gt;
+          &amp;lt;ClientView /&amp;gt;
+          &amp;lt;ClientChatRoom /&amp;gt;
+        &amp;lt;/AsyncBoundary&amp;gt;
+      &amp;lt;/ClientContainer&amp;gt;
+    &amp;lt;/&amp;gt;
+  );
+}
+
+const ClientPage = withLiveExistCheck(ClientPageComponent);
+
+export default ClientPage;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;왜 고차함수로 페이지를 감싸는 선택을 했을까&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientPage&lt;/code&gt; 뿐만아니라 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ReplayPage&lt;/code&gt;에서도 ID검증이 필요해서  중복 로직을 제거&lt;/li&gt;
+  &lt;li&gt;역할 분리 : Id를 검증하여 에러페이지로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;navigate&lt;/code&gt;하는 로직과 렌더링 로직을 &lt;strong&gt;분리&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>[&quot;홍창현&quot;]</name></author><category term="[&quot;과정/근거&quot;]" /><category term="[&quot;과정/근거&quot;]" /><category term="과정/근거" /><summary type="html">에러페이지 도입배경</summary></entry><entry><title type="html">React-Query로 안정적인 스트리밍을 위한 로딩 및 에러 관리하기</title><link href="https://blog.liboo.kr/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0" rel="alternate" type="text/html" title="React-Query로 안정적인 스트리밍을 위한 로딩 및 에러 관리하기" /><published>2024-12-04T03:09:00+00:00</published><updated>2024-12-04T03:09:00+00:00</updated><id>https://blog.liboo.kr/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0</id><content type="html" xml:base="https://blog.liboo.kr/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0">&lt;h2 id=&quot;문제-인식&quot;&gt;🚨 문제 인식&lt;/h2&gt;
+
+&lt;p&gt;HLS영상을 비동기로 데이터를 받아올 때 각각의 컴포넌트에서 각각의 방식으로 로딩 및 에러처리를 처리했고, 그 결과 일정 &lt;strong&gt;코드가 중복&lt;/strong&gt;되었고 &lt;strong&gt;비효율적&lt;/strong&gt;이었다. 이를 체계화하여 비동기로 데이터를 받아올 때의 상황을 정리할 필요성이 있었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;기존의 코드&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+const MainLiveSection = ({ title, type }: MainLiveSectionProps) =&amp;gt; {
+  const { data = [], isLoading, error } = useRecentLive();
+
+  if (error) {
+    return &amp;lt;div&amp;gt;데이터를 가져오는 중 에러가 발생했습니다.&amp;lt;/div&amp;gt;;
+  }
+
+  return (
+    &amp;lt;MainSectionContainer&amp;gt;
+      &amp;lt;MainSectionHeader&amp;gt;
+        &amp;lt;p className=&quot;live_section_title&quot;&amp;gt;{title}&amp;lt;/p&amp;gt;
+        &amp;lt;button className=&quot;live_section_button&quot;&amp;gt;전체보기&amp;lt;/button&amp;gt;
+      &amp;lt;/MainSectionHeader&amp;gt;
+
+      {isLoading &amp;amp;&amp;amp; &amp;lt;div&amp;gt;로딩 중...&amp;lt;/div&amp;gt;}
+
+      {data.length === 0 &amp;amp;&amp;amp; !isLoading &amp;amp;&amp;amp; &amp;lt;div&amp;gt;데이터가 없습니다.&amp;lt;/div&amp;gt;}
+				// 코드 생략
+    &amp;lt;/MainSectionContainer&amp;gt;
+  );
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위와 같은 코드가 커스텀 훅으로 데이터를 가져오는 컴포넌트마다 있었다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;isLoading&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;error&lt;/code&gt;일때 각각 연산자와 조건문을 통해서 처리했었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;해결-과정&quot;&gt;🏃 해결 과정&lt;/h2&gt;
+
+&lt;h3 id=&quot;관심사를-분리할-것&quot;&gt;관심사를 분리할 것&lt;/h3&gt;
+
+&lt;p&gt;컴포넌트의 역할을 렌더링되는 것에만 &lt;strong&gt;집중&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;비지니스 로직&lt;/li&gt;
+  &lt;li&gt;렌더링 로직&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;로딩과 에러처리는 해당 컴포넌트의 &lt;strong&gt;관심사에서 벗어난다고 판단&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;→ 로딩과 에러처리 역할을 &lt;strong&gt;부모(처리해야할 부분)&lt;/strong&gt;로 위임&lt;/p&gt;
+
+&lt;h3 id=&quot;suspense처리를-왜-해야하는가에-대한-의문&quot;&gt;Suspense처리를 왜 해야하는가에 대한 의문&lt;/h3&gt;
+
+&lt;p&gt;기존에 간단하게 로딩시에는&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+{isLoading &amp;amp;&amp;amp; &amp;lt;div&amp;gt;로딩 중...&amp;lt;/div&amp;gt;}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;와 같이 비동기 데이터를 가져올 때 걸리는 시간에 대해서 크게 고민하지 않았다. 또한, 단순히 사용자 경험의 향상이라는 이유로 로딩처리를 하는 것이라 판단했지만 최적화와도 관련이 있었다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;레이아웃 시프트 (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Layout Shift&lt;/code&gt;)
+    &lt;ul&gt;
+      &lt;li&gt;웹 페이지의 요소들이 예상치 못하게 이동하는 현상&lt;/li&gt;
+      &lt;li&gt;기존에 계산되었던 Layout이 다시 계산되는 문제가 있음&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Layout Shift&lt;/code&gt; 현상이 일어나지 않도록 하기 위해서 보여줘야하는 컴포넌트와 크기가 같은 컴포넌트를 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt; fallback컴포넌트에 보내주게 되면 Layout이 다시 계산되지 않아서 &lt;strong&gt;사용자 경험&lt;/strong&gt;과 &lt;strong&gt;최적화&lt;/strong&gt;를 동시에 해결할 수 있음&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+&amp;lt;Suspense fallback={&amp;lt;RecommendLiveSkeleton /&amp;gt;}&amp;gt;
+  &amp;lt;DataComponent /&amp;gt;
+&amp;lt;/Suspense&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Suspense의 fallback컴포넌트에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;skeleton&lt;/code&gt;을 직접 만들어서 대응&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;skeleton 라이브러리 선정
+    &lt;ul&gt;
+      &lt;li&gt;react-loading-skeleton, react-skeleton-loader : 간단하고 빠르게 적용&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;react-content-loader&lt;/code&gt;&lt;/strong&gt; : 디자인을 &lt;strong&gt;커스터마이징&lt;/strong&gt; 가능 (svg 기반)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;초기 로딩화면&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-React-Query로_안정적인_스트리밍을_위한_로딩_및_에러_관리하기.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;개선 후&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-React-Query로_안정적인_스트리밍을_위한_로딩_및_에러_관리하기.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;%EC%97%90%EB%9F%AC%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8.gif&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;추가로, 웹페이지의 성능지표인 &lt;strong&gt;CLS(Cumulative Layout Shift)&lt;/strong&gt;를 통해서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Layout Shift&lt;/code&gt; 빈도를 측정할 수 있음&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://wit.nts-corp.com/2020/12/28/6240&quot;&gt;https://wit.nts-corp.com/2020/12/28/6240&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;react-query를-활용하여-suspense-처리하기&quot;&gt;React-Query를 활용하여 Suspense 처리하기&lt;/h3&gt;
+
+&lt;p&gt;React-Query의 버전이 달라지면서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DefaultOptions&lt;/code&gt; 속성에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;suspense&lt;/code&gt; 속성이 제거됨&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-React-Query로_안정적인_스트리밍을_위한_로딩_및_에러_관리하기.md/2.png&quot; alt=&quot;2&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OmitKeyof&lt;/code&gt; 속성을 통해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;suspense&lt;/code&gt;가 빠진 것을 확인 할 수 있었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt;를 지원하는 새로운 훅이 있었다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;useSuspenseQuery&lt;/li&gt;
+  &lt;li&gt;useSuspenseQueries&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;위의 suspenseQuery는 기존의 useQuery의 기능에 React의 &lt;strong&gt;Suspense를 자동적으로 지원&lt;/strong&gt;해주는 훅이다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export const useMainLive = () =&amp;gt; {
+  return useSuspenseQuery&amp;lt;MainLive[], Error&amp;gt;({
+    queryKey: [&apos;mainLive&apos;],
+    queryFn: fetchMainLive,
+    refetchOnWindowFocus: false,
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;suspense와-errorboundary의-통합&quot;&gt;Suspense와 ErrorBoundary의 통합&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;ErrorBoundary 도입&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;컴포넌트에서 발생한 에러 관심사를 &lt;strong&gt;부모 컴포넌트로(ErrorBoundary) 위임&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;에러시 보여야 줘야 할 컴포넌트 할당&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ErrorBoundary&lt;/code&gt;를 &lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AsyncBoundary&lt;/code&gt;&lt;/strong&gt;라는 하나의 컴포넌트로 &lt;strong&gt;통합&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;→ 비동기 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt; 컴포넌트의 로딩 상태와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Error&lt;/code&gt; 상태를 동시에 처리하는 컴포넌트&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.slash.page/ko/libraries/react/async-boundary/src/withAsyncBoundary.i18n&quot;&gt;https://www.slash.page/ko/libraries/react/async-boundary/src/withAsyncBoundary.i18n&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+&amp;lt;AsyncBoundary
+  pendingFallback={&amp;lt;RecommendLiveSkeleton /&amp;gt;}
+  rejectedFallback={(error) =&amp;gt; &amp;lt;RecommendLiveError error={error} /&amp;gt;}
+&amp;gt;
+  &amp;lt;RecommendLive /&amp;gt;
+&amp;lt;/AsyncBoundary&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;인자값
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pendingFallback&lt;/code&gt; : 컴포넌트 로딩 시에 보여야할 컴포넌트&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rejectedFallback&lt;/code&gt; : 에러시에 보여야할 컴포넌트&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;장점
+    &lt;ul&gt;
+      &lt;li&gt;구현의 편리함&lt;/li&gt;
+      &lt;li&gt;추후에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;error&lt;/code&gt;가 발생한 컴포넌트에서 독립적으로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;refetch&lt;/code&gt; 가능&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name>[&quot;홍창현&quot;]</name></author><category term="[&quot;과정/근거&quot;]" /><category term="[&quot;과정/근거&quot;]" /><category term="과정/근거" /><category term="react-query" /><summary type="html">🚨 문제 인식</summary></entry><entry><title type="html">[React-Query] useQuery속성 : Suspense</title><link href="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense" rel="alternate" type="text/html" title="[React-Query] useQuery속성 : Suspense" /><published>2024-12-01T12:51:00+00:00</published><updated>2024-12-01T12:51:00+00:00</updated><id>https://blog.liboo.kr/%5BReact-Query%5D_useQuery%EC%86%8D%EC%84%B1_:_Suspense</id><content type="html" xml:base="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense">&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+&lt;h3 id=&quot;usequery에서-suspense를-사용해야-하는-상황&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useQuery&lt;/code&gt;에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt;를 사용해야 하는 상황&lt;/h3&gt;
+
+&lt;h2 id=&quot;문제-해결&quot;&gt;✅ 문제 해결&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;기존의 코드&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+const defaultOptions: DefaultOptions = {
+  queries: {
+    retry: 3,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
+    suspense: true,
+  }
+};
+
+export const queryClient = new QueryClient({
+  defaultOptions
+});
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;queries에 suspense값을 boolean으로 설정해주면 되었던 과거와 다르게 현재는 제공하지 않는 기능&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OmitKeyof&lt;/code&gt;를 통해 빠져버린 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;suspense&lt;/code&gt;속성&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-01-[React-Query]_useQuery속성_:_Suspense.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;새로-생긴-훅-usesuspensequery-는-suspense를-제공함&quot;&gt;새로 생긴 훅 &lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useSuspenseQuery&lt;/code&gt;&lt;/strong&gt; 는 suspense를 제공함&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;javascript
+export const useMainLive = () =&amp;gt; {
+  return useSuspenseQuery&amp;lt;MainLive[], Error&amp;gt;({
+    queryKey: [&apos;mainLive&apos;],
+    queryFn: fetchMainLive,
+    refetchOnWindowFocus: false,
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;gpt나 블로그를 아무리 찾아도 알려주지 않았던 정보였다. 아마 최근에 바뀐 것 같다.&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useSuspenseQuery&lt;/code&gt;&lt;/strong&gt; 훅을 사용하면 된다&lt;/p&gt;</content><author><name>[&quot;홍창현&quot;]</name></author><category term="[&quot;트러블슈팅&quot;]" /><category term="[&quot;트러블슈팅&quot;]" /><category term="트러블슈팅" /><category term="react-query" /><summary type="html">🚨 문제 상황</summary></entry><entry><title type="html">[React-Query] useQuery속성 : onError</title><link href="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError" rel="alternate" type="text/html" title="[React-Query] useQuery속성 : onError" /><published>2024-12-01T04:08:00+00:00</published><updated>2024-12-01T04:08:00+00:00</updated><id>https://blog.liboo.kr/%5BReact-Query%5D_useQuery%EC%86%8D%EC%84%B1_:_onError</id><content type="html" xml:base="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError">&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+&lt;h3 id=&quot;잘못된-id값으로-페이지를-접근하는-경우-채팅창을-포함한-모든-컴포넌트를-가려야-하는-상황&quot;&gt;잘못된 Id값으로 페이지를 접근하는 경우 채팅창을 포함한 모든 컴포넌트를 가려야 하는 상황&lt;/h3&gt;
+
+&lt;h2 id=&quot;해결-과정&quot;&gt;🏃 해결 과정&lt;/h2&gt;
+
+&lt;p&gt;이를 해결하기 위해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useQuery&lt;/code&gt;에서 Error 핸들링을 하기로 결정&lt;/p&gt;
+
+&lt;p&gt;일단, ErrorBoundary를 활용하여 Error시 보여줘야할 컴포넌트 선정&lt;/p&gt;
+
+&lt;h3 id=&quot;1차-해결-과정&quot;&gt;1차 해결 과정&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;onError&lt;/code&gt;는 더이상 사용할 수 없는 속성&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;throwOnError&lt;/code&gt;&lt;/strong&gt; 사용&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export const useClientLive = ({ liveId }: { liveId: string }) =&amp;gt; {
+  return useQuery&amp;lt;ClientLiveResponse, Error&amp;gt;({
+    queryKey: [&apos;clientLive&apos;],
+    queryFn: () =&amp;gt; fetchLive({ liveId }),
+    refetchOnWindowFocus: false,
+    initialData: { info: {} as ClientLive },
+    // onError는 더이상 제공하지 않음
+    onError: (error: Error) =&amp;gt; {
+      // 에러코드
+    },
+    throwOnError: true,
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;다시 생각해보니 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientView&lt;/code&gt;에서 에러처리를 하는 것이 아닌 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientPage&lt;/code&gt;에 접근하자마자 주소창의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id&lt;/code&gt;를 보고 유효한 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id&lt;/code&gt;인지 판단하는 것이 옳은 것임을 판단&lt;/p&gt;
+
+&lt;p&gt;→ 기존의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ErrorBoundary&lt;/code&gt;를 삭제하고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ErrorPage&lt;/code&gt;로 라우팅 하도록 수정&lt;/p&gt;
+
+&lt;h3 id=&quot;2차-해결-과정&quot;&gt;2차 해결 과정&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;liveId&lt;/code&gt; 값이 옳지 않은 값의 경우 에러&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://prod-files-secure.s3.us-west-2.amazonaws.com/ccf16174-2ad8-4e34-8ea6-9046cc60f199/605ffe33-fd6e-4ec4-9622-58401e9e6cab/20241201-1644-35.2177938.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;amp;X-Amz-Credential=AKIAT73L2G45FSPPWI6X%2F20241231%2Fus-west-2%2Fs3%2Faws4_request&amp;amp;X-Amz-Date=20241231T091941Z&amp;amp;X-Amz-Expires=3600&amp;amp;X-Amz-Signature=16493c115feb00c94581261f7040dc0613b6d3dc206c08de6f1f6b734ef59c98&amp;amp;X-Amz-SignedHeaders=host&amp;amp;x-id=GetObject&quot;&gt;20241201-1644-35.2177938.mp4&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;영상에는 길게 담기지 않았지만, 결과를 받아오는데 까지 오랜 시간이 걸림&lt;/p&gt;
+
+&lt;h3 id=&quot;query기본값-설정이-retry가-3&quot;&gt;query기본값 설정이 retry가 3&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+const defaultOptions: DefaultOptions = {
+  queries: {
+    retry: 3,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true
+  }
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;retry값을 0으로 수정&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export const useClientLive = ({ liveId }: { liveId: string }) =&amp;gt; {
+  return useQuery&amp;lt;ClientLiveResponse, Error&amp;gt;({
+    queryKey: [&apos;clientLive&apos;],
+    queryFn: () =&amp;gt; fetchLive({ liveId }),
+    refetchOnWindowFocus: false,
+    initialData: { info: {} as ClientLive },
+    throwonError: true,
+    retry: 0,
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;문제-해결&quot;&gt;✅ 문제 해결&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;고차함수를 사용해서 ClientPage를 감싸고 유효하지 않은 id를 기입 시에 errorPage로 이동&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+function ClientPageComponent() {
+  return (
+    &amp;lt;&amp;gt;
+      &amp;lt;Header /&amp;gt;
+      &amp;lt;ClientContainer&amp;gt;
+        &amp;lt;AsyncBoundary pendingFallback={&amp;lt;&amp;gt;&amp;lt;/&amp;gt;} rejectedFallback={() =&amp;gt; &amp;lt;PlayerStreamError /&amp;gt;}&amp;gt;
+          &amp;lt;ClientView /&amp;gt;
+          &amp;lt;ClientChatRoom /&amp;gt;
+        &amp;lt;/AsyncBoundary&amp;gt;
+      &amp;lt;/ClientContainer&amp;gt;
+    &amp;lt;/&amp;gt;
+  );
+}
+
+const ClientPage = withLiveExistCheck(ClientPageComponent);
+
+export default ClientPage;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export default function withLiveExistCheck&amp;lt;P extends object&amp;gt;(WrappedComponent: ComponentType&amp;lt;P&amp;gt;) {
+  return function WithLiveExistCheckComponent(props: P) {
+    const { id: liveId } = useParams();
+    const navigate = useNavigate();
+
+    const { data: isLiveExistData } = useCheckLiveExist({ liveId: liveId as string });
+    const isLiveExist = isLiveExistData?.existed;
+
+    useEffect(() =&amp;gt; {
+      if (!isLiveExist) {
+        navigate(&apos;/error&apos;);
+      }
+    }, [isLiveExistData]);
+
+    return &amp;lt;WrappedComponent {...props} /&amp;gt;;
+  };
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>[&quot;홍창현&quot;]</name></author><category term="[&quot;트러블슈팅&quot;]" /><category term="[&quot;트러블슈팅&quot;]" /><category term="트러블슈팅" /><category term="react-query" /><summary type="html">🚨 문제 상황</summary></entry><entry><title type="html">4.5.1 버전에서 ts, yarn.lock 에러</title><link href="https://blog.liboo.kr/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC" rel="alternate" type="text/html" title="4.5.1 버전에서 ts, yarn.lock 에러" /><published>2024-11-28T11:56:00+00:00</published><updated>2024-11-28T11:56:00+00:00</updated><id>https://blog.liboo.kr/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC</id><content type="html" xml:base="https://blog.liboo.kr/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC">&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+&lt;p&gt;백엔드 작업 내용과 프론트 작업 내용을 합치는 과정에서 yarn install로 의존성 패키지들을 설치하면, @nestjs가 비정상적으로 동작하는 문제를 발견했습니다&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-28-4.5.1_버전에서_ts,_yarn.lock_에러.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;해결-과정&quot;&gt;🏃 해결 과정&lt;/h2&gt;
+
+&lt;p&gt;yarn set version berry를 통해 레포지토리의 yarn 버전을 4.5.1에서 4.5.3으로 업데이트하니까 버그가 해결되었습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-28-4.5.1_버전에서_ts,_yarn.lock_에러.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;문제-해결&quot;&gt;✅ 문제 해결&lt;/h2&gt;
+
+&lt;p&gt;그런데 아직까지 정확하게 왜 4.5.1 버전에서 에러가 발생하는 지와 4.5.3 버전으로 업데이트 했을 때 오류가 해결되는지 원인을 찾지 못했습니다.&lt;/p&gt;
+
+&lt;p&gt;추후에 yarn에 대해 더 학습해보면서 원인에 대해 학습해볼 예정입니다.&lt;/p&gt;</content><author><name>[&quot;김준서&quot;, &quot;hoeeeeeh&quot;]</name></author><category term="[&quot;트러블슈팅&quot;]" /><category term="[&quot;트러블슈팅&quot;]" /><category term="트러블슈팅" /><summary type="html">🚨 문제 상황</summary></entry><entry><title type="html">ts-pattern</title><link href="https://blog.liboo.kr/ts-pattern" rel="alternate" type="text/html" title="ts-pattern" /><published>2024-11-27T04:16:00+00:00</published><updated>2024-11-27T04:16:00+00:00</updated><id>https://blog.liboo.kr/ts-pattern</id><content type="html" xml:base="https://blog.liboo.kr/ts-pattern">&lt;p&gt;&lt;a href=&quot;https://www.npmjs.com/package/ts-pattern/v/4.0.1&quot;&gt;https://www.npmjs.com/package/ts-pattern/v/4.0.1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.kimcoder.io/blog/ts-pattern&quot;&gt;https://www.kimcoder.io/blog/ts-pattern&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://toss.tech/article/ts-pattern-usage&quot;&gt;https://toss.tech/article/ts-pattern-usage&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mermaid
+stateDiagram-v2
+    [*] --&amp;gt; Initialized: 플레이어 마운트
+    %% 공통 플레이어 상태
+    state &quot;공통 플레이어 상태&quot; as PlayerState {
+        %% 재생 상태
+        state &quot;재생 상태&quot; as PlayState {
+            Playing --&amp;gt; Paused: 일시정지
+            Paused --&amp;gt; Playing: 재생
+        }
+        %% 볼륨 상태
+        state &quot;볼륨 상태&quot; as VolumeState {
+            Unmuted --&amp;gt; Muted: 음소거
+            Muted --&amp;gt; Unmuted: 음소거 해제
+            
+            %% 볼륨 레벨
+            state &quot;볼륨 레벨&quot; as VolumeLevel {
+                [*] --&amp;gt; Normal
+                Normal --&amp;gt; Low: 볼륨 감소
+                Low --&amp;gt; Normal: 볼륨 증가
+                Normal --&amp;gt; High: 볼륨 증가
+                High --&amp;gt; Normal: 볼륨 감소
+            }
+        }
+        %% 화면 상태
+        state &quot;화면 상태&quot; as ScreenState {
+            Normal --&amp;gt; Fullscreen: 전체화면
+            Fullscreen --&amp;gt; Normal: 전체화면 종료
+        }
+        %% 라이브 스트림 상태
+        state &quot;라이브 스트림 상태&quot; as LiveState {
+            Live --&amp;gt; DVR: 뒤로 이동
+            DVR --&amp;gt; Live: 실시간으로 이동
+        }
+        %% 진행바 상태
+        state &quot;진행바 상태&quot; as Progress {
+            %% 시청 진행
+            state &quot;시청 진행&quot; as TimeProgress {
+                [*] --&amp;gt; Watching
+                Watching --&amp;gt; Seeking: 진행바 클릭/드래그
+                Seeking --&amp;gt; Watching: 시간 이동 완료
+            }
+            
+            %% 버퍼링
+            state &quot;버퍼링&quot; as BufferState {
+                [*] --&amp;gt; Buffering
+                Buffering --&amp;gt; Buffered: 버퍼링 완료
+                Buffered --&amp;gt; Buffering: 추가 버퍼링 필요
+            }
+        }
+    }
+    %% 컨트롤 UI 상태
+    state &quot;컨트롤 UI 상태&quot; as ControlUI {
+        Visible --&amp;gt; Hidden: 마우스 멈춤 (3초)
+        Hidden --&amp;gt; Visible: 마우스 움직임
+    }
+    %% 전역 상태 연결
+    Initialized --&amp;gt; PlayerState: 초기화 완료
+    Initialized --&amp;gt; ControlUI: 초기 컨트롤 상태 설정
+    %% 노트: 키보드 컨트롤
+    note right of PlayerState
+        스페이스바: 재생/일시정지
+        F: 전체화면
+        좌/우 방향키: 앞/뒤로 이동
+    end note
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>[&quot;Jisukim&quot;]</name></author><category term="[&quot;학습&quot;]" /><category term="[&quot;학습&quot;]" /><category term="학습" /><summary type="html">https://www.npmjs.com/package/ts-pattern/v/4.0.1</summary></entry><entry><title type="html">다시보기를 위한 Node-Media-Server, FFMpeg 분석</title><link href="https://blog.liboo.kr/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D" rel="alternate" type="text/html" title="다시보기를 위한 Node-Media-Server, FFMpeg 분석" /><published>2024-11-23T06:55:00+00:00</published><updated>2024-11-23T06:55:00+00:00</updated><id>https://blog.liboo.kr/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D</id><content type="html" xml:base="https://blog.liboo.kr/%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%EB%A5%BC_%EC%9C%84%ED%95%9C_Node-Media-Server,_FFMpeg_%EB%B6%84%EC%84%9D">&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;실시간 스트리밍 서비스에서 HLS(HLS, HTTP Live Streaming)는 널리 사용되는 프로토콜입니다. 그러나 다시보기 기능을 구현하기 위해서는 전체 m3u8 플레이리스트가 필요하며, 이는 세그먼트 파일이 분할되어 있는 기존 구조에서는 추가적인 처리가 필요합니다. 이번 글에서는 Node-Media-Server와 FFmpeg를 활용하여 이러한 문제를 해결하고, 세그먼트 길이를 고정하여 다시보기용 m3u8 파일을 생성하는 방법에 대해 다뤄보겠습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;본론&quot;&gt;본론&lt;/h2&gt;
+
+&lt;h3 id=&quot;문제점-분석&quot;&gt;문제점 분석&lt;/h3&gt;
+
+&lt;p&gt;기존 구조에서는 세그먼트 별로 재생 시간이 일정하지 않아 다시보기용 m3u8 파일을 생성하는 데 어려움이 있었습니다. 세그먼트 길이가 불규칙하면 클라이언트 측에서 이를 처리하기 위한 복잡한 로직이 필요하며, 이는 서비스의 안정성과 성능에 영향을 줄 수 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;ffmpeg-인코딩-옵션-탐구&quot;&gt;FFmpeg 인코딩 옵션 탐구&lt;/h3&gt;
+
+&lt;p&gt;세그먼트 길이를 일정하게 유지하기 위해 FFmpeg의 비디오 코덱 옵션인 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vcParam&lt;/code&gt;을 활용할 수 있습니다. 주요 옵션은 다음과 같습니다:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g&lt;/code&gt;: 최대 GOP(Group of Pictures) 크기를 설정합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sc_threshold&lt;/code&gt;: 씬 변경 감도를 감지하는 임계값을 설정합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;keyint_min&lt;/code&gt;: 최소 GOP 크기를 설정합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;force_key_frames&lt;/code&gt;: 키 프레임을 특정 시간 간격으로 강제로 삽입합니다. 예를 들어, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;expr:gte(t,n_forced*2)&lt;/code&gt;는 2초마다 키 프레임을 삽입합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이러한 옵션을 조합하여 세그먼트 길이를 고정하면, 재생 시간의 일관성을 유지할 수 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;두-가지-접근-방법&quot;&gt;두 가지 접근 방법&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;키 프레임 고정 및 시작/종료 세그먼트 관리&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;키 프레임 간격과 GOP 크기를 고정하여 세그먼트 길이를 일정하게 유지합니다. 방송 시작과 종료 시점의 세그먼트 번호를 저장하여, 방송 종료 시 다시보기용 m3u8 파일을 생성하고 스토리지에 저장합니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;유동적인 키 프레임 설정 및 별도 플레이리스트 관리&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;키 프레임을 유동적으로 설정하고, 라이브용과 다시보기용 m3u8 파일을 별도로 생성합니다. 다시보기용 m3u8 파일은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index{번호}.m3u8&lt;/code&gt; 형태로 분리되며, 클라이언트 측에서 이를 처리하는 로직이 필요합니다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;성능-및-품질-고려사항&quot;&gt;성능 및 품질 고려사항&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;인코딩 부하&lt;/strong&gt;: 화면 전환 감지를 활성화하면 인코딩 부하가 증가합니다. 이는 서버 자원에 부담을 줄 수 있습니다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;영상 품질&lt;/strong&gt;: 키 프레임을 강제로 고정하면 씬 변경 시 화질 저하가 발생할 수 있습니다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;세그먼트 일정성&lt;/strong&gt;: 세그먼트 길이가 일정하면 클라이언트 측에서의 처리 로직이 단순해집니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;프로젝트의 요구사항과 서버의 성능을 고려하여 적절한 방법을 선택하는 것이 중요합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;최종-결정-및-구현-방안&quot;&gt;최종 결정 및 구현 방안&lt;/h3&gt;
+
+&lt;p&gt;화면 전환 감지 기능을 비활성화하고, GOP 크기를 조정하여 프레임 시간을 고정하는 방안을 선택했습니다. 이를 통해 세그먼트 길이를 일정하게 유지하면서 인코딩 부하는 최소화할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;구현 단계는 다음과 같습니다:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;GOP 설정을 통한 키 프레임 간격 고정&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;FFmpeg에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-g&lt;/code&gt; 옵션을 사용하여 원하는 키 프레임 간격을 설정합니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;세그먼트 번호 기반의 다시보기 m3u8 파일 생성&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;처음 생성되는 세그먼트(번호 0)부터 현재 스토리지에 저장된 마지막 세그먼트까지의 정보를 사용하여 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replay.m3u8&lt;/code&gt; 파일을 생성하고 업로드합니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;메인 서버에서 m3u8 정보 관리&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;RTMP 서버에서 세그먼트 파일만 처리하고, 메인 서버가 인메모리로 현재 방송의 m3u8 정보를 관리하여 클라이언트에게 제공합니다. 이를 통해 파일 입출력으로 인한 성능 저하를 방지할 수 있습니다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;세그먼트 길이를 일정하게 유지하는 것은 다시보기 기능 구현과 클라이언트 측의 처리 로직 단순화에 큰 도움이 됩니다. 화면 전환 감지 기능을 비활성화하고 GOP 설정을 조정함으로써 인코딩 부하를 최소화하면서 원하는 목표를 달성할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;이번 접근 방법은 서버 자원의 효율적인 활용과 서비스 품질 향상에 기여할 것으로 기대됩니다. 앞으로도 지속적인 모니터링과 최적화를 통해 더욱 안정적인 스트리밍 서비스를 제공하도록 노력하겠습니다.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;참고 자료&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.ktword.co.kr/test/view/view.php?no=3145&quot;&gt;KTword - GOP 관련 용어&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;FFmpeg 공식 문서 및 관련 기술 블로그&lt;/li&gt;
+&lt;/ul&gt;
+&lt;details&gt;
+&lt;summary&gt;기존 정리&lt;/summary&gt;
+
+## 서론
+
+
+기존에는 실시간으로 m3u8, hls 세그먼트 파일을 사용
+
+
+다시보기를 위해서는 전체 m3u8이 필요
+
+- 아니면 나눠진 m3u8을 클라이언트가 받아올 필요성이 있음
+
+이를 해결하기 위해 기존 node-media-server와 ffmpeg 탐구 start
+
+
+## 본론
+
+
+기존에는 다시보기용 m3u8을 만들기 어려웠음
+
+- 왜 why? 세그먼트 별로 플레이 시간이 달랐기 때문
+
+그래서 좀 찾아보니 vcParam으로 비디오 코덱에 줄 수 있는 4가지 옵션 발견
+
+- vcParam 사용법 - [ {옵션 1}, {값 1}, {옵션 2}, {값 2}, … ]
+- g - 최대 GOP를 설정할 수 있는 옵션
+	- GOP 관련 / [http://www.ktword.co.kr/test/view/view.php?no=3145](http://www.ktword.co.kr/test/view/view.php?no=3145) - 이거 공부하면 영상 처리 고도화 가능할듯
+- sc_threshold - 씬 변경 감도를 감지하는threshold
+- keyint_min - 최소 GOP를 설정할 수 있는 옵션
+- force_key_frames - 키 프레임 시간을 고정할 수 있는 옵션
+	- expr:gte(t,n_forced*{N}) - N초 만큼 키 프레임을 강제로 고정
+
+위의 옵션을 잘 이리저리하면 세그먼트 길이 고정이 가능
+
+- 그런데 영길님이랑 얘기해보니 강제로 키프레임 고정 하는게 괜찮나 생각이 듦
+	- 왜 와이 → 그만큼 프레임 처리가 많아 질 것 같다, 렌더링도 많이 될 것 같다.
+- 일단 아이디어는 확인했으니 차차 생각해볼 예정
+
+위의 조사를 토대로 작성한 다시보기 데이터 생성 플로우
+
+1. 키프레임을 고정하고, 방송의 시작/종료 세그먼트 번호를 저장한다.
+	- 이를 통해 방송이 종료될 때 다시보기용 m3u8을 만들어서 스토리지에 저장
+2. 키프레임을 유동적으로 설정하고 라이브용 m3u8, 다시보기용 m3u8을 만든다.
+	- 이 때 다시보기용 m3u8은 index{번호}.m3u8로 분리
+	- 프론트에서 이 데이터를 처리하는 로직이 추가적으로 필요할 것 같음
+- GPT 왈
+	- **첫 번째 방법**은 키프레임 간격과 GOP 크기를 고정하여 세그먼트 길이를 일정하게 유지하고 인코딩 부하를 줄이는 데 효과적입니다. 하지만 씬 변경 시 품질 저하가 발생할 수 있습니다.
+	- **두 번째 방법**은 강제 키프레임 삽입과 씬 변경 감지를 통해 영상 품질을 향상시키지만, 인코딩 부하가 증가하고 세그먼트 길이가 변동될 수 있습니다.
+
+**따라서** 프로젝트의 요구 사항과 서버의 성능, 네트워크 환경, 영상 품질의 중요도 등을 고려하여 적절한 방법을 선택하시길 권장합니다.
+
+
+아마 둘중 하나로 결정될 것 같은데 각 기능들이 서버에 주는 부하가 얼마나 될지 확인해보고 결정하는 게 좋을 듯
+
+
+근데 생각해보면 화면 전환을 감지하는 게 더 리소스를 많이 먹는 작업이지 않나..?
+
+- 이건 진짜 모르겠음
+- GPT왈왈
+	- **부하 측면에서**: 화면 전환 감지를 사용하는 것이 고정 키프레임을 사용하는 것보다 더 많은 **인코딩 부하**를 발생시킵니다.
+	- **선택의 기준**: 인코딩 부하와 영상 품질, 압축 효율, 세그먼트 일정성 등 **프로젝트의 우선순위와 서버 자원**을 고려하여 적절한 방법을 선택하시기 바랍니다.
+
+
+만약 영상 키프레임 고정이 가능하다면 rtmp 서버에서 m3u8을 계속 읽어서 오브젝트 스토리지로 안 보내도 될듯
+
+- 멘토님께 여쭤보니 파일 읽고 쓰는건 생각 이상으로 비싼 작업이라서 뺄 수 있으면 좋다.
+- 그래서 그냥 rtmp 서버는 세그먼트만 읽어서 보내고, 차라리 메인서버가 인메모리로 현재 방송의 m3u8 정보를 계속 들고 있다가 쏴주는 방식은 어떨까
+
+## 결론
+
+
+&amp;gt; 참고자료  
+&amp;gt; 
+
+
+&lt;/details&gt;</content><author><name>[&quot;김준서&quot;]</name></author><category term="[&quot;과정/근거&quot;]" /><category term="[&quot;과정/근거&quot;]" /><category term="과정/근거" /><summary type="html">서론</summary></entry></feed>

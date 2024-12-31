@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom" >
+  <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
+  <link href="https://blog.liboo.kr/tag/docker/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://blog.liboo.kr/" rel="alternate" type="text/html" />
+  <updated>2024-12-31T09:23:52+00:00</updated>
+  <id>https://blog.liboo.kr/tag/docker/feed.xml</id>
+
+  
+  
+  
+
+  
+    <title type="html">Liboo.blog | </title>
+  
+
+  
+    <subtitle>The professional publishing platform</subtitle>
+  
+
+  
+
+  
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+  
+  
+
+  
+    <entry>
+      <title type="html">[docker] yarn-berry workspace 를 찾지 못하는 오류</title>
+      <link href="https://blog.liboo.kr/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98" rel="alternate" type="text/html" title="[docker] yarn-berry workspace 를 찾지 못하는 오류" />
+      <published>2024-11-07T09:56:00+00:00</published>
+      <updated>2024-11-07T09:56:00+00:00</updated>
+      <id>https://blog.liboo.kr/%5Bdocker%5D_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98</id>
+      <content type="html" xml:base="https://blog.liboo.kr/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98">&lt;p&gt;패키지매니저를 yarn-berry 로 쓰고 dockerfile 을 아래와 같이 작성했는데&lt;/p&gt;
+
+&lt;p&gt;yarn install 을 하면서&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Error: nodeMediaServer@workspace:^: Workspace not found (nodeMediaServer@workspace:^)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;라는 오류가 발생했다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yaml
+FROM node:20-alpine
+
+RUN corepack enable
+
+# Setting working directory
+WORKDIR /app
+
+# Copying package.json and package-lock.json
+COPY package*.json ./
+
+# Installing dependencies
+RUN yarn install
+
+# Install FFmpeg. This is needed to convert the video to HLS
+RUN apk add --no-cache ffmpeg
+
+# /usr/bin/ffmpeg is the default path for ffmpeg, copy it to /app
+RUN cp /usr/bin/ffmpeg ./
+
+# Copying all the files
+COPY . .
+
+# Exposing ports
+EXPOSE 8000
+EXPOSE 1935
+
+# Running the app
+CMD [&quot;yarn&quot;, &quot;start&quot;]
+
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;basic
+[+] Building 3.9s (9/12)                                                                                                                                                                                            docker:desktop-linux
+ =&amp;gt; [media-server internal] load build definition from dockerfile                                                                                                                                                                   0.0s
+ =&amp;gt; =&amp;gt; transferring dockerfile: 573B                                                                                                                                                                                                0.0s
+ =&amp;gt; [media-server internal] load .dockerignore                                                                                                                                                                                      0.0s
+ =&amp;gt; =&amp;gt; transferring context: 2B                                                                                                                                                                                                     0.0s
+ =&amp;gt; [media-server internal] load metadata for docker.io/library/node:20-alpine                                                                                                                                                      1.0s
+ =&amp;gt; [media-server 1/8] FROM docker.io/library/node:20-alpine@sha256:c13b26e7e602ef2f1074aef304ce6e9b7dd284c419b35d89fcf3cc8e44a8def9                                                                                                0.0s
+ =&amp;gt; [media-server internal] load build context                                                                                                                                                                                      0.0s
+ =&amp;gt; =&amp;gt; transferring context: 6.16kB                                                                                                                                                                                                 0.0s
+ =&amp;gt; CACHED [media-server 2/8] RUN corepack enable                                                                                                                                                                                   0.0s
+ =&amp;gt; CACHED [media-server 3/8] WORKDIR /app                                                                                                                                                                                          0.0s
+ =&amp;gt; [media-server 4/8] COPY package*.json ./                                                                                                                                                                                        0.0s
+ =&amp;gt; ERROR [media-server 5/8] RUN yarn install                                                                                                                                                                                       2.9s
+------
+ &amp;gt; [media-server 5/8] RUN yarn install:
+0.483 ! Corepack is about to download https://repo.yarnpkg.com/4.5.1/packages/yarnpkg-cli/bin/yarn.js
+0.912 ➤ YN0000: · Yarn 4.5.1
+0.923 ➤ YN0000: ┌ Resolution step
+1.030 ➤ YN0001: │ Error: nodeMediaServer@workspace:^: Workspace not found (nodeMediaServer@workspace:^)
+1.030     at t.getWorkspaceByDescriptor (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:210:3520)
+1.030     at t.getCandidates (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:140:117086)
+1.030     at Pg.getCandidates (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:141:1311)
+1.030     at Pg.getCandidates (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:141:1311)
+1.030     at /root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:210:8420
+1.030     at Jm (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:140:53873)
+1.030     at gt (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:210:8400)
+1.030     at async Promise.allSettled (index 1)
+1.030     at async Yc (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:140:53201)
+1.030 ➤ YN0000: └ Completed
+1.030 ➤ YN0000: · Failed with errors in 0s 119ms
+------
+failed to solve: process &quot;/bin/sh -c yarn install&quot; did not complete successfully: exit code: 1
+
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이유는 COPY 와 yarn install 의 순서 때문이었다.&lt;/p&gt;
+
+&lt;p&gt;올바른 도커파일&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yaml
+FROM node:20-alpine
+
+RUN corepack enable
+
+# Setting working directory
+WORKDIR /app
+
+# Copying package.json and package-lock.json
+COPY package*.json ./
+
+# Install FFmpeg. This is needed to convert the video to HLS
+RUN apk add --no-cache ffmpeg
+
+# /usr/bin/ffmpeg is the default path for ffmpeg, copy it to /app
+RUN cp /usr/bin/ffmpeg ./
+
+# Copying all the files
+COPY . ./
+
+# Installing dependencies
+RUN yarn install
+
+# Exposing ports
+EXPOSE 8000
+EXPOSE 1935
+
+# Running the app
+CMD [&quot;yarn&quot;, &quot;start&quot;]
+
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;COPY . . 를 해야 yarn install 을 하면서 워크스페이스를 찾을텐데, copy 전에 yarn install 을 먼저 해서 워크스페이스를 찾을 수 없었던 것이다.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;hoeeeeeh&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="docker" />
+      
+
+      
+        <summary type="html">패키지매니저를 yarn-berry 로 쓰고 dockerfile 을 아래와 같이 작성했는데</summary>
+      
+
+      
+      
+    </entry>
+  
+</feed>

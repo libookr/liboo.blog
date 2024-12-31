@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom" >
+  <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
+  <link href="https://blog.liboo.kr/tag/react-query/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://blog.liboo.kr/" rel="alternate" type="text/html" />
+  <updated>2024-12-31T09:23:52+00:00</updated>
+  <id>https://blog.liboo.kr/tag/react-query/feed.xml</id>
+
+  
+  
+  
+
+  
+    <title type="html">Liboo.blog | </title>
+  
+
+  
+    <subtitle>The professional publishing platform</subtitle>
+  
+
+  
+
+  
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+  
+  
+
+  
+    <entry>
+      <title type="html">React-Query로 안정적인 스트리밍을 위한 로딩 및 에러 관리하기</title>
+      <link href="https://blog.liboo.kr/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0" rel="alternate" type="text/html" title="React-Query로 안정적인 스트리밍을 위한 로딩 및 에러 관리하기" />
+      <published>2024-12-04T03:09:00+00:00</published>
+      <updated>2024-12-04T03:09:00+00:00</updated>
+      <id>https://blog.liboo.kr/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0</id>
+      <content type="html" xml:base="https://blog.liboo.kr/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0">&lt;h2 id=&quot;문제-인식&quot;&gt;🚨 문제 인식&lt;/h2&gt;
+
+&lt;p&gt;HLS영상을 비동기로 데이터를 받아올 때 각각의 컴포넌트에서 각각의 방식으로 로딩 및 에러처리를 처리했고, 그 결과 일정 &lt;strong&gt;코드가 중복&lt;/strong&gt;되었고 &lt;strong&gt;비효율적&lt;/strong&gt;이었다. 이를 체계화하여 비동기로 데이터를 받아올 때의 상황을 정리할 필요성이 있었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;기존의 코드&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+const MainLiveSection = ({ title, type }: MainLiveSectionProps) =&amp;gt; {
+  const { data = [], isLoading, error } = useRecentLive();
+
+  if (error) {
+    return &amp;lt;div&amp;gt;데이터를 가져오는 중 에러가 발생했습니다.&amp;lt;/div&amp;gt;;
+  }
+
+  return (
+    &amp;lt;MainSectionContainer&amp;gt;
+      &amp;lt;MainSectionHeader&amp;gt;
+        &amp;lt;p className=&quot;live_section_title&quot;&amp;gt;{title}&amp;lt;/p&amp;gt;
+        &amp;lt;button className=&quot;live_section_button&quot;&amp;gt;전체보기&amp;lt;/button&amp;gt;
+      &amp;lt;/MainSectionHeader&amp;gt;
+
+      {isLoading &amp;amp;&amp;amp; &amp;lt;div&amp;gt;로딩 중...&amp;lt;/div&amp;gt;}
+
+      {data.length === 0 &amp;amp;&amp;amp; !isLoading &amp;amp;&amp;amp; &amp;lt;div&amp;gt;데이터가 없습니다.&amp;lt;/div&amp;gt;}
+				// 코드 생략
+    &amp;lt;/MainSectionContainer&amp;gt;
+  );
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위와 같은 코드가 커스텀 훅으로 데이터를 가져오는 컴포넌트마다 있었다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;isLoading&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;error&lt;/code&gt;일때 각각 연산자와 조건문을 통해서 처리했었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;해결-과정&quot;&gt;🏃 해결 과정&lt;/h2&gt;
+
+&lt;h3 id=&quot;관심사를-분리할-것&quot;&gt;관심사를 분리할 것&lt;/h3&gt;
+
+&lt;p&gt;컴포넌트의 역할을 렌더링되는 것에만 &lt;strong&gt;집중&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;비지니스 로직&lt;/li&gt;
+  &lt;li&gt;렌더링 로직&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;로딩과 에러처리는 해당 컴포넌트의 &lt;strong&gt;관심사에서 벗어난다고 판단&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;→ 로딩과 에러처리 역할을 &lt;strong&gt;부모(처리해야할 부분)&lt;/strong&gt;로 위임&lt;/p&gt;
+
+&lt;h3 id=&quot;suspense처리를-왜-해야하는가에-대한-의문&quot;&gt;Suspense처리를 왜 해야하는가에 대한 의문&lt;/h3&gt;
+
+&lt;p&gt;기존에 간단하게 로딩시에는&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+{isLoading &amp;amp;&amp;amp; &amp;lt;div&amp;gt;로딩 중...&amp;lt;/div&amp;gt;}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;와 같이 비동기 데이터를 가져올 때 걸리는 시간에 대해서 크게 고민하지 않았다. 또한, 단순히 사용자 경험의 향상이라는 이유로 로딩처리를 하는 것이라 판단했지만 최적화와도 관련이 있었다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;레이아웃 시프트 (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Layout Shift&lt;/code&gt;)
+    &lt;ul&gt;
+      &lt;li&gt;웹 페이지의 요소들이 예상치 못하게 이동하는 현상&lt;/li&gt;
+      &lt;li&gt;기존에 계산되었던 Layout이 다시 계산되는 문제가 있음&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Layout Shift&lt;/code&gt; 현상이 일어나지 않도록 하기 위해서 보여줘야하는 컴포넌트와 크기가 같은 컴포넌트를 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt; fallback컴포넌트에 보내주게 되면 Layout이 다시 계산되지 않아서 &lt;strong&gt;사용자 경험&lt;/strong&gt;과 &lt;strong&gt;최적화&lt;/strong&gt;를 동시에 해결할 수 있음&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+&amp;lt;Suspense fallback={&amp;lt;RecommendLiveSkeleton /&amp;gt;}&amp;gt;
+  &amp;lt;DataComponent /&amp;gt;
+&amp;lt;/Suspense&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Suspense의 fallback컴포넌트에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;skeleton&lt;/code&gt;을 직접 만들어서 대응&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;skeleton 라이브러리 선정
+    &lt;ul&gt;
+      &lt;li&gt;react-loading-skeleton, react-skeleton-loader : 간단하고 빠르게 적용&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;react-content-loader&lt;/code&gt;&lt;/strong&gt; : 디자인을 &lt;strong&gt;커스터마이징&lt;/strong&gt; 가능 (svg 기반)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;초기 로딩화면&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-React-Query로_안정적인_스트리밍을_위한_로딩_및_에러_관리하기.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;개선 후&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-React-Query로_안정적인_스트리밍을_위한_로딩_및_에러_관리하기.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;%EC%97%90%EB%9F%AC%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8.gif&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;추가로, 웹페이지의 성능지표인 &lt;strong&gt;CLS(Cumulative Layout Shift)&lt;/strong&gt;를 통해서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Layout Shift&lt;/code&gt; 빈도를 측정할 수 있음&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://wit.nts-corp.com/2020/12/28/6240&quot;&gt;https://wit.nts-corp.com/2020/12/28/6240&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;react-query를-활용하여-suspense-처리하기&quot;&gt;React-Query를 활용하여 Suspense 처리하기&lt;/h3&gt;
+
+&lt;p&gt;React-Query의 버전이 달라지면서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DefaultOptions&lt;/code&gt; 속성에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;suspense&lt;/code&gt; 속성이 제거됨&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-04-React-Query로_안정적인_스트리밍을_위한_로딩_및_에러_관리하기.md/2.png&quot; alt=&quot;2&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OmitKeyof&lt;/code&gt; 속성을 통해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;suspense&lt;/code&gt;가 빠진 것을 확인 할 수 있었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt;를 지원하는 새로운 훅이 있었다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;useSuspenseQuery&lt;/li&gt;
+  &lt;li&gt;useSuspenseQueries&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;위의 suspenseQuery는 기존의 useQuery의 기능에 React의 &lt;strong&gt;Suspense를 자동적으로 지원&lt;/strong&gt;해주는 훅이다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export const useMainLive = () =&amp;gt; {
+  return useSuspenseQuery&amp;lt;MainLive[], Error&amp;gt;({
+    queryKey: [&apos;mainLive&apos;],
+    queryFn: fetchMainLive,
+    refetchOnWindowFocus: false,
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;suspense와-errorboundary의-통합&quot;&gt;Suspense와 ErrorBoundary의 통합&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;ErrorBoundary 도입&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;컴포넌트에서 발생한 에러 관심사를 &lt;strong&gt;부모 컴포넌트로(ErrorBoundary) 위임&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;에러시 보여야 줘야 할 컴포넌트 할당&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ErrorBoundary&lt;/code&gt;를 &lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AsyncBoundary&lt;/code&gt;&lt;/strong&gt;라는 하나의 컴포넌트로 &lt;strong&gt;통합&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;→ 비동기 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt; 컴포넌트의 로딩 상태와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Error&lt;/code&gt; 상태를 동시에 처리하는 컴포넌트&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.slash.page/ko/libraries/react/async-boundary/src/withAsyncBoundary.i18n&quot;&gt;https://www.slash.page/ko/libraries/react/async-boundary/src/withAsyncBoundary.i18n&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+&amp;lt;AsyncBoundary
+  pendingFallback={&amp;lt;RecommendLiveSkeleton /&amp;gt;}
+  rejectedFallback={(error) =&amp;gt; &amp;lt;RecommendLiveError error={error} /&amp;gt;}
+&amp;gt;
+  &amp;lt;RecommendLive /&amp;gt;
+&amp;lt;/AsyncBoundary&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;인자값
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pendingFallback&lt;/code&gt; : 컴포넌트 로딩 시에 보여야할 컴포넌트&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rejectedFallback&lt;/code&gt; : 에러시에 보여야할 컴포넌트&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;장점
+    &lt;ul&gt;
+      &lt;li&gt;구현의 편리함&lt;/li&gt;
+      &lt;li&gt;추후에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;error&lt;/code&gt;가 발생한 컴포넌트에서 독립적으로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;refetch&lt;/code&gt; 가능&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;홍창현&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="react-query" />
+      
+
+      
+        <summary type="html">🚨 문제 인식</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">[React-Query] useQuery속성 : Suspense</title>
+      <link href="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense" rel="alternate" type="text/html" title="[React-Query] useQuery속성 : Suspense" />
+      <published>2024-12-01T12:51:00+00:00</published>
+      <updated>2024-12-01T12:51:00+00:00</updated>
+      <id>https://blog.liboo.kr/%5BReact-Query%5D_useQuery%EC%86%8D%EC%84%B1_:_Suspense</id>
+      <content type="html" xml:base="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense">&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+&lt;h3 id=&quot;usequery에서-suspense를-사용해야-하는-상황&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useQuery&lt;/code&gt;에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Suspense&lt;/code&gt;를 사용해야 하는 상황&lt;/h3&gt;
+
+&lt;h2 id=&quot;문제-해결&quot;&gt;✅ 문제 해결&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;기존의 코드&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+const defaultOptions: DefaultOptions = {
+  queries: {
+    retry: 3,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
+    suspense: true,
+  }
+};
+
+export const queryClient = new QueryClient({
+  defaultOptions
+});
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;queries에 suspense값을 boolean으로 설정해주면 되었던 과거와 다르게 현재는 제공하지 않는 기능&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OmitKeyof&lt;/code&gt;를 통해 빠져버린 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;suspense&lt;/code&gt;속성&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-12-01-[React-Query]_useQuery속성_:_Suspense.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;새로-생긴-훅-usesuspensequery-는-suspense를-제공함&quot;&gt;새로 생긴 훅 &lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useSuspenseQuery&lt;/code&gt;&lt;/strong&gt; 는 suspense를 제공함&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;javascript
+export const useMainLive = () =&amp;gt; {
+  return useSuspenseQuery&amp;lt;MainLive[], Error&amp;gt;({
+    queryKey: [&apos;mainLive&apos;],
+    queryFn: fetchMainLive,
+    refetchOnWindowFocus: false,
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;gpt나 블로그를 아무리 찾아도 알려주지 않았던 정보였다. 아마 최근에 바뀐 것 같다.&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useSuspenseQuery&lt;/code&gt;&lt;/strong&gt; 훅을 사용하면 된다&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;홍창현&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="react-query" />
+      
+
+      
+        <summary type="html">🚨 문제 상황</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">[React-Query] useQuery속성 : onError</title>
+      <link href="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError" rel="alternate" type="text/html" title="[React-Query] useQuery속성 : onError" />
+      <published>2024-12-01T04:08:00+00:00</published>
+      <updated>2024-12-01T04:08:00+00:00</updated>
+      <id>https://blog.liboo.kr/%5BReact-Query%5D_useQuery%EC%86%8D%EC%84%B1_:_onError</id>
+      <content type="html" xml:base="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError">&lt;h2 id=&quot;문제-상황&quot;&gt;🚨 문제 상황&lt;/h2&gt;
+
+&lt;h3 id=&quot;잘못된-id값으로-페이지를-접근하는-경우-채팅창을-포함한-모든-컴포넌트를-가려야-하는-상황&quot;&gt;잘못된 Id값으로 페이지를 접근하는 경우 채팅창을 포함한 모든 컴포넌트를 가려야 하는 상황&lt;/h3&gt;
+
+&lt;h2 id=&quot;해결-과정&quot;&gt;🏃 해결 과정&lt;/h2&gt;
+
+&lt;p&gt;이를 해결하기 위해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;useQuery&lt;/code&gt;에서 Error 핸들링을 하기로 결정&lt;/p&gt;
+
+&lt;p&gt;일단, ErrorBoundary를 활용하여 Error시 보여줘야할 컴포넌트 선정&lt;/p&gt;
+
+&lt;h3 id=&quot;1차-해결-과정&quot;&gt;1차 해결 과정&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;onError&lt;/code&gt;는 더이상 사용할 수 없는 속성&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;throwOnError&lt;/code&gt;&lt;/strong&gt; 사용&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export const useClientLive = ({ liveId }: { liveId: string }) =&amp;gt; {
+  return useQuery&amp;lt;ClientLiveResponse, Error&amp;gt;({
+    queryKey: [&apos;clientLive&apos;],
+    queryFn: () =&amp;gt; fetchLive({ liveId }),
+    refetchOnWindowFocus: false,
+    initialData: { info: {} as ClientLive },
+    // onError는 더이상 제공하지 않음
+    onError: (error: Error) =&amp;gt; {
+      // 에러코드
+    },
+    throwOnError: true,
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;다시 생각해보니 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientView&lt;/code&gt;에서 에러처리를 하는 것이 아닌 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientPage&lt;/code&gt;에 접근하자마자 주소창의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id&lt;/code&gt;를 보고 유효한 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id&lt;/code&gt;인지 판단하는 것이 옳은 것임을 판단&lt;/p&gt;
+
+&lt;p&gt;→ 기존의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ErrorBoundary&lt;/code&gt;를 삭제하고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ErrorPage&lt;/code&gt;로 라우팅 하도록 수정&lt;/p&gt;
+
+&lt;h3 id=&quot;2차-해결-과정&quot;&gt;2차 해결 과정&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;liveId&lt;/code&gt; 값이 옳지 않은 값의 경우 에러&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://prod-files-secure.s3.us-west-2.amazonaws.com/ccf16174-2ad8-4e34-8ea6-9046cc60f199/605ffe33-fd6e-4ec4-9622-58401e9e6cab/20241201-1644-35.2177938.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;amp;X-Amz-Credential=AKIAT73L2G45FSPPWI6X%2F20241231%2Fus-west-2%2Fs3%2Faws4_request&amp;amp;X-Amz-Date=20241231T091941Z&amp;amp;X-Amz-Expires=3600&amp;amp;X-Amz-Signature=16493c115feb00c94581261f7040dc0613b6d3dc206c08de6f1f6b734ef59c98&amp;amp;X-Amz-SignedHeaders=host&amp;amp;x-id=GetObject&quot;&gt;20241201-1644-35.2177938.mp4&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;영상에는 길게 담기지 않았지만, 결과를 받아오는데 까지 오랜 시간이 걸림&lt;/p&gt;
+
+&lt;h3 id=&quot;query기본값-설정이-retry가-3&quot;&gt;query기본값 설정이 retry가 3&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+const defaultOptions: DefaultOptions = {
+  queries: {
+    retry: 3,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true
+  }
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;retry값을 0으로 수정&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export const useClientLive = ({ liveId }: { liveId: string }) =&amp;gt; {
+  return useQuery&amp;lt;ClientLiveResponse, Error&amp;gt;({
+    queryKey: [&apos;clientLive&apos;],
+    queryFn: () =&amp;gt; fetchLive({ liveId }),
+    refetchOnWindowFocus: false,
+    initialData: { info: {} as ClientLive },
+    throwonError: true,
+    retry: 0,
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;문제-해결&quot;&gt;✅ 문제 해결&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;고차함수를 사용해서 ClientPage를 감싸고 유효하지 않은 id를 기입 시에 errorPage로 이동&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+function ClientPageComponent() {
+  return (
+    &amp;lt;&amp;gt;
+      &amp;lt;Header /&amp;gt;
+      &amp;lt;ClientContainer&amp;gt;
+        &amp;lt;AsyncBoundary pendingFallback={&amp;lt;&amp;gt;&amp;lt;/&amp;gt;} rejectedFallback={() =&amp;gt; &amp;lt;PlayerStreamError /&amp;gt;}&amp;gt;
+          &amp;lt;ClientView /&amp;gt;
+          &amp;lt;ClientChatRoom /&amp;gt;
+        &amp;lt;/AsyncBoundary&amp;gt;
+      &amp;lt;/ClientContainer&amp;gt;
+    &amp;lt;/&amp;gt;
+  );
+}
+
+const ClientPage = withLiveExistCheck(ClientPageComponent);
+
+export default ClientPage;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typescript
+export default function withLiveExistCheck&amp;lt;P extends object&amp;gt;(WrappedComponent: ComponentType&amp;lt;P&amp;gt;) {
+  return function WithLiveExistCheckComponent(props: P) {
+    const { id: liveId } = useParams();
+    const navigate = useNavigate();
+
+    const { data: isLiveExistData } = useCheckLiveExist({ liveId: liveId as string });
+    const isLiveExist = isLiveExistData?.existed;
+
+    useEffect(() =&amp;gt; {
+      if (!isLiveExist) {
+        navigate(&apos;/error&apos;);
+      }
+    }, [isLiveExistData]);
+
+    return &amp;lt;WrappedComponent {...props} /&amp;gt;;
+  };
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;홍창현&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="react-query" />
+      
+
+      
+        <summary type="html">🚨 문제 상황</summary>
+      
+
+      
+      
+    </entry>
+  
+</feed>
