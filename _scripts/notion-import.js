@@ -180,16 +180,8 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
             }
         );
 
-        let cover = "upload/${ftitle}/0.png";
-        const thumbnailPath = path.join(process.cwd(), cover);
+        const cover = index === 0 ? "assets/images/writing.jpg" : `upload/${ftitle}/0.png`;
 
-// 파일 존재 여부 확인
-        console.log(thumbnailPath);
-        fs.access(thumbnailPath, fs.constants.F_OK, (err) => {
-            if (err) {
-                cover = "assets/images/writing.jpg"
-            }
-        });
         const fm = `---
 layout: post
 current: post
