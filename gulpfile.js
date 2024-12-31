@@ -64,6 +64,6 @@ gulp.task('zip', ['css'], function() {
         .pipe(gulp.dest(targetDir));
 });
 
-gulp.task('default', ['build'], function () {
-    gulp.start('watch');
-});
+// gulp.task('default', ['build'], function () {
+//     gulp.start('watch');
+// });
