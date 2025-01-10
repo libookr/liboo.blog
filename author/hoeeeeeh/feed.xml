@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
   <link href="https://blog.liboo.kr/author/hoeeeeeh/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://blog.liboo.kr/" rel="alternate" type="text/html" />
-  <updated>2024-12-31T10:38:23+00:00</updated>
+  <updated>2025-01-10T05:09:33+00:00</updated>
   <id>https://blog.liboo.kr/author/hoeeeeeh/feed.xml</id>
 
   
@@ -38,6 +38,226 @@
   
   
 
+  
+    <entry>
+      <title type="html">[DB] 데이터베이스 마이그레이션 및 클러스터 설정</title>
+      <link href="https://blog.liboo.kr/DB-_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_" rel="alternate" type="text/html" title="[DB] 데이터베이스 마이그레이션 및 클러스터 설정 " />
+      <published>2025-01-09T10:57:00+00:00</published>
+      <updated>2025-01-09T10:57:00+00:00</updated>
+      <id>https://blog.liboo.kr/%5BDB%5D_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_</id>
+      <content type="html" xml:base="https://blog.liboo.kr/DB-_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_">&lt;h2 id=&quot;레디스-클러스터-설정&quot;&gt;레디스 클러스터 설정&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;redis-mysql-서비스에서-인스턴스로-마이그레이션하기&quot;&gt;Redis, MySQL 서비스에서 인스턴스로 마이그레이션하기&lt;/h1&gt;
+
+&lt;p&gt;기존에는 레디스를 NCP 에서 제공하는 서비스 자체를 사용했기 때문에 굳이 할 필요가 없었지만 레디스 클러스터를 샤딩까지 포함해서 서비스로 빌리면 요금이 어마어마하게 들어가게 된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;Redis 요금표&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;ncp 서버 인스턴스는 사용하지 않고 꺼두면 비용이 절감되는 방식이기 때문에 Redis 서비스를 직접 쓰기보다 서버 인스턴스에서 올려서 사용하는것이 비용 측면에서 이점이 많을 것 같아서 사용하던 MySQL 과 Redis 를 내리고 전부 서버 인스턴스로 올리고 개발/리팩토링 하려고 한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;public-subnet-private-subnet&quot;&gt;Public Subnet, Private Subnet&lt;/h2&gt;
+
+&lt;p&gt;Redis 나 MySQL 은 모두가 접근할 수 있는 Public 으로 접근가능하게 하기 보다는, Private Subnet 으로 관리하면서 같은 VPC 에 있는 인스턴스에서 접근하도록 하는 것이 보안에 훨씬 좋다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/2.png&quot; alt=&quot;2&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;실제 서버들이 배포되는 public subnet 인 web22-subnet-all 과, Redis 와 MySQL 이 돌아갈 private subnet 으로 분리했다.&lt;/p&gt;
+
+&lt;h2 id=&quot;ncp-인스턴스-생성&quot;&gt;NCP 인스턴스 생성&lt;/h2&gt;
+
+&lt;p&gt;우선 새로운 NCP 인스턴스를 하나 생성했다.&lt;/p&gt;
+
+&lt;p&gt;현재는 가장 싼 단계로 하나를 생성하고, Redis 와 MySQL 을 하나의 인스턴스에 설치해서 운용할 계획이다.&lt;/p&gt;
+
+&lt;p&gt;이렇게되면 인스턴스 하나가 문제가 생기면 두 개의 DB가 전부 동작할 수 없다는 매우 큰 단점을 가지게 된다. 그렇기 때문에 나중에 반드시 DB 를 분리하는 것이 좋다.&lt;/p&gt;
+
+&lt;p&gt;지금은 인스턴스의 비용을 최소화하면서 리팩토링하고 싶어서 위와 같은 방식을 선택했다.&lt;/p&gt;
+
+&lt;p&gt;이후에는 위에서 만들어둔 private subnet 에 할당해주면 된다.&lt;/p&gt;
+
+&lt;p&gt;Private Subnet 이다보니까 외부와 통신이 아예 안되어야 하는데 신기하게 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt update&lt;/code&gt; 같은 명령어가 동작했다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/3.png&quot; alt=&quot;3&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;apt 저장소가 &lt;a href=&quot;http://repo.ncloud.com/ubuntu&quot;&gt;http://repo.ncloud.com/ubuntu&lt;/a&gt; 로 되어있고 아마 이 주소는 내부망에 포함되는 모양이다.&lt;/p&gt;
+
+&lt;p&gt;내부망이 맞는지 한 번 확인해보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt; &lt;a href=&quot;http://repo.ncloud.com/&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;repo.ncloud.com&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/4.png&quot; alt=&quot;4&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;내부망(사설망) 이라면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10.x.x.x&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;192.168.x.x&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;172.16.x.x~172.31.x.x&lt;/code&gt;와 같은 &lt;strong&gt;사설 IP 대역이어야 하는데&lt;/strong&gt; &lt;a href=&quot;http://169.254.xxx.xxx/&quot;&gt;&lt;strong&gt;169.254.xxx.xxx&lt;/strong&gt;&lt;/a&gt; &lt;strong&gt;였다.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;그러면 &lt;a href=&quot;http://169.254.xxx.xxx/&quot;&gt;169.254.xxx.xxx&lt;/a&gt; 는 무슨 대역인가 하니&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bash
+169.254.xxx.xxx 대역의 IP 주소는 **Link-Local Address(링크 로컬 주소)**라고 불리며, 
+네트워크 설정 시 DHCP 서버를 통해 IP를 받지 못할 때 자동으로 할당되는 IP 주소입니다. 
+AWS/NCP 환경에서는 이 IP 대역이 AWS/NCP 내부 시스템과의 통신을 위한 특수 주소로 사용되기도 합니다.
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ip route show&lt;/code&gt; 로 라우팅을 확인해보면&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/5.png&quot; alt=&quot;5&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;169.254.x.x via 192.168.1.1 dev eth0 … 와 같은 라우팅이 보인다.&lt;/p&gt;
+
+&lt;p&gt;169.254.169.53 은 eth0 인터페이스 를 통해서 간다.&lt;/p&gt;
+
+&lt;p&gt;이 링크 로컬 주소는 네트워크 장치 단에서 이루어진다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;curl&lt;/code&gt; &lt;a href=&quot;http://169.254.169.254/latest/meta-data/&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://169.254.169.254/latest/meta-data/&lt;/code&gt;&lt;/a&gt; 를 통해서 인스턴스 메타데이터도 볼 수가 있다.&lt;/p&gt;
+
+&lt;p&gt;당연하게도 외부로는 ping 이나 wget/curl 은 안된다.&lt;/p&gt;
+
+&lt;p&gt;자세한 내용은 ncp 가이드가 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://guide.ncloud-docs.com/docs/linux-os-repository-check&quot;&gt;https://guide.ncloud-docs.com/docs/linux-os-repository-check&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;nat-gateway&quot;&gt;NAT Gateway&lt;/h2&gt;
+
+&lt;p&gt;NCP 가 Repository 를 제공해주다보니 redis 를 설치할 수 있긴 하다. 대신 최신 버전은 없을 수도 있다.&lt;/p&gt;
+
+&lt;p&gt;만약 최신 버전이나 NCP Repository 에 없는 버전을 설치하고 싶다면 NAT Gateway 가 필요하다.&lt;/p&gt;
+
+&lt;p&gt;NCP 에서 NAT Gateway 를 사용하고 싶다면&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;NAT Gateway 용 Subnet 생성&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/6.png&quot; alt=&quot;6&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;NAT Gateway 생성&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/7.png&quot; alt=&quot;7&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Private Subnet 에 Route Table 설정&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/8.png&quot; alt=&quot;8&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;을 통해서 Private Subnet 에 NAT 게이트웨이를 사용할 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;redis-설치-및-redis-cluster&quot;&gt;Redis 설치 및 Redis Cluster&lt;/h2&gt;
+
+&lt;p&gt;원하는 버전의 Redis 를 설치하고 난 후에는 Redis Cluster 설정을 해야한다.&lt;/p&gt;
+
+&lt;p&gt;일단은 redis master 3 대에 각각 레플리카를 1개씩 설정해보자.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bash
+port {PORT}
+maxmemory {MAX_MEMORY}mb 
+maxmemory-policy volatile-lru
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 5000
+cluster-announce-ip {ip}
+appendonly yes
+bind 0.0.0.0
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;포트와 maxmemory 는 원하는대로 설정하면 된다.&lt;/p&gt;
+
+&lt;p&gt;maxmemory-policy 는 메모리를 비워줄 때 어떤 기준으로 비울지를 결정한다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;strong&gt;정책&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;대상&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;삭제 기준&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;적합한 사용 사례&lt;/strong&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;noeviction&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;전체 키&lt;/td&gt;
+      &lt;td&gt;삭제하지 않음&lt;/td&gt;
+      &lt;td&gt;영구 데이터 저장&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;allkeys-lru&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;전체 키&lt;/td&gt;
+      &lt;td&gt;LRU(오래 사용되지 않은 키)&lt;/td&gt;
+      &lt;td&gt;캐시 시스템&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;volatile-lru&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;TTL 설정된 키&lt;/td&gt;
+      &lt;td&gt;LRU(오래 사용되지 않은 키)&lt;/td&gt;
+      &lt;td&gt;TTL 기반 캐시 시스템&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;allkeys-random&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;전체 키&lt;/td&gt;
+      &lt;td&gt;랜덤&lt;/td&gt;
+      &lt;td&gt;데이터 접근 패턴이 불규칙할 때&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;volatile-random&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;TTL 설정된 키&lt;/td&gt;
+      &lt;td&gt;랜덤&lt;/td&gt;
+      &lt;td&gt;TTL 기반 캐시에 랜덤 제거&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;volatile-ttl&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;TTL 설정된 키&lt;/td&gt;
+      &lt;td&gt;TTL이 가장 짧은 키&lt;/td&gt;
+      &lt;td&gt;TTL이 중요한 시간 기반 캐시&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;눈 여겨 볼 만한 설정값은&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cluster-announce-ip&lt;/code&gt; 인데,&lt;/p&gt;
+
+&lt;p&gt;Redis 클러스터는 클라이언트가 연결할 때, 노드 간에 데이터 슬롯을 분배하고 &lt;strong&gt;어떤 노드에 특정 키가 있는지&lt;/strong&gt;를 알려준다.&lt;/p&gt;
+
+&lt;p&gt;즉 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cluster-announce-ip&lt;/code&gt;는 노드가 클라이언트에게 자신을 알릴 때 사용하는 &lt;strong&gt;외부에 노출되는 IP 주소&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;만약-노드가-데이터를-가지고-있지-않다면&quot;&gt;만약 노드가 데이터를 가지고 있지 않다면,&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Docker 컨테이너 내부의 서버는 &lt;strong&gt;B의 Redis 노드&lt;/strong&gt;에 접속 후 &lt;strong&gt;슬롯 이동 명령을 받는다&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;Redis 클러스터가 기본적으로 &lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bind&lt;/code&gt;&lt;/strong&gt;&lt;strong&gt;된 내부 IP 주소&lt;/strong&gt;를 클라이언트에 알려준다.&lt;/li&gt;
+  &lt;li&gt;만약 레디스가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cluster-announce-ip&lt;/code&gt;를 설정하지 않았다면, 레디스 노드는 Docker 컨테이너에게 &lt;strong&gt;내부 IP(예: 127.0.0.1 또는 172.x.x.x)&lt;/strong&gt;를 반환할 수 있다.&lt;/li&gt;
+  &lt;li&gt;Docker 컨테이너는 외부 네트워크에서 해당 &lt;strong&gt;내부 IP&lt;/strong&gt;로 접근할 수 없기 때문에 연결이 끊어진다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;위와 같은 과정으로 레디스 연결이 원활하게 되지 않을 수 있다.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;hoeeeeeh&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+
+      
+        <summary type="html">레디스 클러스터 설정</summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">🐬 서버를 docker swarm 으로 관리해보자</title>

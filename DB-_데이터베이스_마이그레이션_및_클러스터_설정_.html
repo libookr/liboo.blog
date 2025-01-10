@@ -11,7 +11,7 @@
 
 
 
-    <title>[docker] yarn-berry workspace 를 찾지 못하는 오류</title>
+    <title>[DB] 데이터베이스 마이그레이션 및 클러스터 설정 </title>
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Styles'n'Scripts -->
@@ -36,30 +36,27 @@
     <!-- This tag outputs SEO meta+structured data and other important settings -->
     <meta name="description" content="The professional publishing platform" />
 <link rel="shortcut icon" href="https://blog.liboo.kr//assets/images/favicon.png" type="image/png" />
-<link rel="canonical" href="https://blog.liboo.kr/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98" />
+<link rel="canonical" href="https://blog.liboo.kr/DB-_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
 
      <!--title below is coming from _includes/dynamic_title-->
     <meta property="og:site_name" content="Liboo.blog" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="[docker] yarn-berry workspace 를 찾지 못하는 오류" />
-    <meta property="og:description" content="패키지매니저를 yarn-berry 로 쓰고 dockerfile 을 아래와 같이 작성했는데 yarn install 을 하면서 Error: nodeMediaServer@workspace:^: Workspace not found (nodeMediaServer@workspace:^) 라는 오류가 발생했다. yaml FROM node:20-alpine RUN corepack enable # Setting working directory WORKDIR /app # Copying package.json and package-lock.json COPY package*.json ./ # Installing dependencies RUN yarn install # Install" />
-    <meta property="og:url" content="https://blog.liboo.kr/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98" />
-    <meta property="og:image" content="https://blog.liboo.kr/assets/images/writing.jpg" />
+    <meta property="og:title" content="[DB] 데이터베이스 마이그레이션 및 클러스터 설정 " />
+    <meta property="og:description" content="레디스 클러스터 설정 image.png Redis, MySQL 서비스에서 인스턴스로 마이그레이션하기 기존에는 레디스를 NCP 에서 제공하는 서비스 자체를 사용했기 때문에 굳이 할 필요가 없었지만 레디스 클러스터를 샤딩까지 포함해서 서비스로 빌리면 요금이 어마어마하게 들어가게 된다. Redis 요금표 ncp 서버 인스턴스는 사용하지 않고 꺼두면 비용이 절감되는 방식이기 때문에 Redis 서비스를 직접 쓰기보다 서버 인스턴스에서" />
+    <meta property="og:url" content="https://blog.liboo.kr/DB-_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_" />
+    <meta property="og:image" content="https://blog.liboo.kr/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/0.png" />
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta property="article:author" content="https://www.facebook.com/ghost" />
-    <meta property="article:published_time" content="2024-11-07T09:56:00+00:00" />
-    <meta property="article:modified_time" content="2024-11-07T09:56:00+00:00" />
-    <meta property="article:tag" content="Docker" />
+    <meta property="article:published_time" content="2025-01-09T10:57:00+00:00" />
+    <meta property="article:modified_time" content="2025-01-09T10:57:00+00:00" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="[docker] yarn-berry workspace 를 찾지 못하는 오류" />
-    <meta name="twitter:description" content="패키지매니저를 yarn-berry 로 쓰고 dockerfile 을 아래와 같이 작성했는데 yarn install 을 하면서 Error: nodeMediaServer@workspace:^: Workspace not found (nodeMediaServer@workspace:^) 라는 오류가 발생했다. yaml FROM node:20-alpine RUN corepack enable # Setting working directory WORKDIR /app # Copying package.json and package-lock.json COPY package*.json ./ # Installing dependencies RUN yarn install # Install" />
+    <meta name="twitter:title" content="[DB] 데이터베이스 마이그레이션 및 클러스터 설정 " />
+    <meta name="twitter:description" content="레디스 클러스터 설정 image.png Redis, MySQL 서비스에서 인스턴스로 마이그레이션하기 기존에는 레디스를 NCP 에서 제공하는 서비스 자체를 사용했기 때문에 굳이 할 필요가 없었지만 레디스 클러스터를 샤딩까지 포함해서 서비스로 빌리면 요금이 어마어마하게 들어가게 된다. Redis 요금표 ncp 서버 인스턴스는 사용하지 않고 꺼두면 비용이 절감되는 방식이기 때문에 Redis 서비스를 직접 쓰기보다 서버 인스턴스에서" />
     <meta name="twitter:url" content="https://blog.liboo.kr/" />
-    <meta name="twitter:image" content="https://blog.liboo.kr/assets/images/writing.jpg" />
+    <meta name="twitter:image" content="https://blog.liboo.kr/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/0.png" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="Liboo.blog" />
-    <meta name="twitter:label2" content="Filed under" />
-    <meta name="twitter:data2" content="Docker" />
     <meta name="twitter:site" content="@tryghost" />
     <meta name="twitter:creator" content="@tryghost" />
     <meta property="og:image:width" content="1400" />
@@ -74,18 +71,18 @@
         "name": "Liboo.blog",
         "logo": "https://blog.liboo.kr/assets/images/blog-icon.png"
     },
-    "url": "https://blog.liboo.kr/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98",
+    "url": "https://blog.liboo.kr/DB-_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_",
     "image": {
         "@type": "ImageObject",
-        "url": "https://blog.liboo.kr/assets/images/writing.jpg",
+        "url": "https://blog.liboo.kr/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/0.png",
         "width": 2000,
         "height": 666
     },
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://blog.liboo.kr/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98"
+        "@id": "https://blog.liboo.kr/DB-_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_"
     },
-    "description": "패키지매니저를 yarn-berry 로 쓰고 dockerfile 을 아래와 같이 작성했는데 yarn install 을 하면서 Error: nodeMediaServer@workspace:^: Workspace not found (nodeMediaServer@workspace:^) 라는 오류가 발생했다. yaml FROM node:20-alpine RUN corepack enable # Setting working directory WORKDIR /app # Copying package.json and package-lock.json COPY package*.json ./ # Installing dependencies RUN yarn install # Install"
+    "description": "레디스 클러스터 설정 image.png Redis, MySQL 서비스에서 인스턴스로 마이그레이션하기 기존에는 레디스를 NCP 에서 제공하는 서비스 자체를 사용했기 때문에 굳이 할 필요가 없었지만 레디스 클러스터를 샤딩까지 포함해서 서비스로 빌리면 요금이 어마어마하게 들어가게 된다. Redis 요금표 ncp 서버 인스턴스는 사용하지 않고 꺼두면 비용이 절감되는 방식이기 때문에 Redis 서비스를 직접 쓰기보다 서버 인스턴스에서"
 }
     </script>
 
@@ -98,7 +95,7 @@
     </script> -->
 
     <meta name="generator" content="Jekyll 3.6.2" />
-    <link rel="alternate" type="application/rss+xml" title="[docker] yarn-berry workspace 를 찾지 못하는 오류" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="[DB] 데이터베이스 마이그레이션 및 클러스터 설정 " href="/feed.xml" />
 
 
 </head>
@@ -156,146 +153,212 @@ into the {body} of the default.hbs template -->
 <main id="site-main" class="site-main outer" role="main">
     <div class="inner">
 
-        <article class="post-full  tag-docker post ">
+        <article class="post-full  post ">
 
             <header class="post-full-header">
                 <section class="post-full-meta">
-                    <time class="post-full-meta-date" datetime=" 7 November 2024"> 7 November 2024</time>
-                    
-                        <span class="date-divider">/</span>
-                        
-                            
-                               <a href='/tag/docker/'>DOCKER</a>
-                            
-                        
+                    <time class="post-full-meta-date" datetime=" 9 January 2025"> 9 January 2025</time>
                     
                 </section>
-                <h1 class="post-full-title">[docker] yarn-berry workspace 를 찾지 못하는 오류</h1>
+                <h1 class="post-full-title">[DB] 데이터베이스 마이그레이션 및 클러스터 설정 </h1>
             </header>
 
             
-            <figure class="post-full-image" style="background-image: url(/assets/images/writing.jpg)">
+            <figure class="post-full-image" style="background-image: url(/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/0.png)">
             </figure>
             
 
             <section class="post-full-content">
                 <div class="kg-card-markdown">
-                    <p>패키지매니저를 yarn-berry 로 쓰고 dockerfile 을 아래와 같이 작성했는데</p>
+                    <h2 id="레디스-클러스터-설정">레디스 클러스터 설정</h2>
 
-<p>yarn install 을 하면서</p>
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/0.png" alt="0" /><em>image.png</em></p>
 
-<p><code class="language-plaintext highlighter-rouge">Error: nodeMediaServer@workspace:^: Workspace not found (nodeMediaServer@workspace:^)</code></p>
+<h1 id="redis-mysql-서비스에서-인스턴스로-마이그레이션하기">Redis, MySQL 서비스에서 인스턴스로 마이그레이션하기</h1>
 
-<p>라는 오류가 발생했다.</p>
+<p>기존에는 레디스를 NCP 에서 제공하는 서비스 자체를 사용했기 때문에 굳이 할 필요가 없었지만 레디스 클러스터를 샤딩까지 포함해서 서비스로 빌리면 요금이 어마어마하게 들어가게 된다.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yaml
-FROM node:20-alpine
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/1.png" alt="1" /><em>Redis 요금표</em></p>
 
-RUN corepack enable
+<p>ncp 서버 인스턴스는 사용하지 않고 꺼두면 비용이 절감되는 방식이기 때문에 Redis 서비스를 직접 쓰기보다 서버 인스턴스에서 올려서 사용하는것이 비용 측면에서 이점이 많을 것 같아서 사용하던 MySQL 과 Redis 를 내리고 전부 서버 인스턴스로 올리고 개발/리팩토링 하려고 한다.</p>
 
-# Setting working directory
-WORKDIR /app
+<h2 id="public-subnet-private-subnet">Public Subnet, Private Subnet</h2>
 
-# Copying package.json and package-lock.json
-COPY package*.json ./
+<p>Redis 나 MySQL 은 모두가 접근할 수 있는 Public 으로 접근가능하게 하기 보다는, Private Subnet 으로 관리하면서 같은 VPC 에 있는 인스턴스에서 접근하도록 하는 것이 보안에 훨씬 좋다.</p>
 
-# Installing dependencies
-RUN yarn install
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/2.png" alt="2" /><em>image.png</em></p>
 
-# Install FFmpeg. This is needed to convert the video to HLS
-RUN apk add --no-cache ffmpeg
+<p>실제 서버들이 배포되는 public subnet 인 web22-subnet-all 과, Redis 와 MySQL 이 돌아갈 private subnet 으로 분리했다.</p>
 
-# /usr/bin/ffmpeg is the default path for ffmpeg, copy it to /app
-RUN cp /usr/bin/ffmpeg ./
+<h2 id="ncp-인스턴스-생성">NCP 인스턴스 생성</h2>
 
-# Copying all the files
-COPY . .
+<p>우선 새로운 NCP 인스턴스를 하나 생성했다.</p>
 
-# Exposing ports
-EXPOSE 8000
-EXPOSE 1935
+<p>현재는 가장 싼 단계로 하나를 생성하고, Redis 와 MySQL 을 하나의 인스턴스에 설치해서 운용할 계획이다.</p>
 
-# Running the app
-CMD ["yarn", "start"]
+<p>이렇게되면 인스턴스 하나가 문제가 생기면 두 개의 DB가 전부 동작할 수 없다는 매우 큰 단점을 가지게 된다. 그렇기 때문에 나중에 반드시 DB 를 분리하는 것이 좋다.</p>
 
+<p>지금은 인스턴스의 비용을 최소화하면서 리팩토링하고 싶어서 위와 같은 방식을 선택했다.</p>
 
-</code></pre></div></div>
+<p>이후에는 위에서 만들어둔 private subnet 에 할당해주면 된다.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>basic
-[+] Building 3.9s (9/12)                                                                                                                                                                                            docker:desktop-linux
- =&gt; [media-server internal] load build definition from dockerfile                                                                                                                                                                   0.0s
- =&gt; =&gt; transferring dockerfile: 573B                                                                                                                                                                                                0.0s
- =&gt; [media-server internal] load .dockerignore                                                                                                                                                                                      0.0s
- =&gt; =&gt; transferring context: 2B                                                                                                                                                                                                     0.0s
- =&gt; [media-server internal] load metadata for docker.io/library/node:20-alpine                                                                                                                                                      1.0s
- =&gt; [media-server 1/8] FROM docker.io/library/node:20-alpine@sha256:c13b26e7e602ef2f1074aef304ce6e9b7dd284c419b35d89fcf3cc8e44a8def9                                                                                                0.0s
- =&gt; [media-server internal] load build context                                                                                                                                                                                      0.0s
- =&gt; =&gt; transferring context: 6.16kB                                                                                                                                                                                                 0.0s
- =&gt; CACHED [media-server 2/8] RUN corepack enable                                                                                                                                                                                   0.0s
- =&gt; CACHED [media-server 3/8] WORKDIR /app                                                                                                                                                                                          0.0s
- =&gt; [media-server 4/8] COPY package*.json ./                                                                                                                                                                                        0.0s
- =&gt; ERROR [media-server 5/8] RUN yarn install                                                                                                                                                                                       2.9s
-------
- &gt; [media-server 5/8] RUN yarn install:
-0.483 ! Corepack is about to download https://repo.yarnpkg.com/4.5.1/packages/yarnpkg-cli/bin/yarn.js
-0.912 ➤ YN0000: · Yarn 4.5.1
-0.923 ➤ YN0000: ┌ Resolution step
-1.030 ➤ YN0001: │ Error: nodeMediaServer@workspace:^: Workspace not found (nodeMediaServer@workspace:^)
-1.030     at t.getWorkspaceByDescriptor (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:210:3520)
-1.030     at t.getCandidates (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:140:117086)
-1.030     at Pg.getCandidates (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:141:1311)
-1.030     at Pg.getCandidates (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:141:1311)
-1.030     at /root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:210:8420
-1.030     at Jm (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:140:53873)
-1.030     at gt (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:210:8400)
-1.030     at async Promise.allSettled (index 1)
-1.030     at async Yc (/root/.cache/node/corepack/v1/yarn/4.5.1/yarn.js:140:53201)
-1.030 ➤ YN0000: └ Completed
-1.030 ➤ YN0000: · Failed with errors in 0s 119ms
-------
-failed to solve: process "/bin/sh -c yarn install" did not complete successfully: exit code: 1
+<p>Private Subnet 이다보니까 외부와 통신이 아예 안되어야 하는데 신기하게 <code class="language-plaintext highlighter-rouge">sudo apt update</code> 같은 명령어가 동작했다.</p>
 
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/3.png" alt="3" /><em>image.png</em></p>
+
+<p>apt 저장소가 <a href="http://repo.ncloud.com/ubuntu">http://repo.ncloud.com/ubuntu</a> 로 되어있고 아마 이 주소는 내부망에 포함되는 모양이다.</p>
+
+<p>내부망이 맞는지 한 번 확인해보자.</p>
+
+<p><code class="language-plaintext highlighter-rouge">nslookup</code> <a href="http://repo.ncloud.com/"><code class="language-plaintext highlighter-rouge">repo.ncloud.com</code></a></p>
+
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/4.png" alt="4" /><em>image.png</em></p>
+
+<p>내부망(사설망) 이라면 <code class="language-plaintext highlighter-rouge">10.x.x.x</code>, <code class="language-plaintext highlighter-rouge">192.168.x.x</code>, <code class="language-plaintext highlighter-rouge">172.16.x.x~172.31.x.x</code>와 같은 <strong>사설 IP 대역이어야 하는데</strong> <a href="http://169.254.xxx.xxx/"><strong>169.254.xxx.xxx</strong></a> <strong>였다.</strong></p>
+
+<p>그러면 <a href="http://169.254.xxx.xxx/">169.254.xxx.xxx</a> 는 무슨 대역인가 하니</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash
+169.254.xxx.xxx 대역의 IP 주소는 **Link-Local Address(링크 로컬 주소)**라고 불리며, 
+네트워크 설정 시 DHCP 서버를 통해 IP를 받지 못할 때 자동으로 할당되는 IP 주소입니다. 
+AWS/NCP 환경에서는 이 IP 대역이 AWS/NCP 내부 시스템과의 통신을 위한 특수 주소로 사용되기도 합니다.
 
 </code></pre></div></div>
 
-<p>이유는 COPY 와 yarn install 의 순서 때문이었다.</p>
+<p><code class="language-plaintext highlighter-rouge">ip route show</code> 로 라우팅을 확인해보면</p>
 
-<p>올바른 도커파일</p>
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/5.png" alt="5" /><em>image.png</em></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yaml
-FROM node:20-alpine
+<p>169.254.x.x via 192.168.1.1 dev eth0 … 와 같은 라우팅이 보인다.</p>
 
-RUN corepack enable
+<p>169.254.169.53 은 eth0 인터페이스 를 통해서 간다.</p>
 
-# Setting working directory
-WORKDIR /app
+<p>이 링크 로컬 주소는 네트워크 장치 단에서 이루어진다.</p>
 
-# Copying package.json and package-lock.json
-COPY package*.json ./
+<p><code class="language-plaintext highlighter-rouge">curl</code> <a href="http://169.254.169.254/latest/meta-data/"><code class="language-plaintext highlighter-rouge">http://169.254.169.254/latest/meta-data/</code></a> 를 통해서 인스턴스 메타데이터도 볼 수가 있다.</p>
 
-# Install FFmpeg. This is needed to convert the video to HLS
-RUN apk add --no-cache ffmpeg
+<p>당연하게도 외부로는 ping 이나 wget/curl 은 안된다.</p>
 
-# /usr/bin/ffmpeg is the default path for ffmpeg, copy it to /app
-RUN cp /usr/bin/ffmpeg ./
+<p>자세한 내용은 ncp 가이드가 있다.</p>
 
-# Copying all the files
-COPY . ./
+<p><a href="https://guide.ncloud-docs.com/docs/linux-os-repository-check">https://guide.ncloud-docs.com/docs/linux-os-repository-check</a></p>
 
-# Installing dependencies
-RUN yarn install
+<h2 id="nat-gateway">NAT Gateway</h2>
 
-# Exposing ports
-EXPOSE 8000
-EXPOSE 1935
+<p>NCP 가 Repository 를 제공해주다보니 redis 를 설치할 수 있긴 하다. 대신 최신 버전은 없을 수도 있다.</p>
 
-# Running the app
-CMD ["yarn", "start"]
+<p>만약 최신 버전이나 NCP Repository 에 없는 버전을 설치하고 싶다면 NAT Gateway 가 필요하다.</p>
 
+<p>NCP 에서 NAT Gateway 를 사용하고 싶다면</p>
+
+<ol>
+  <li>NAT Gateway 용 Subnet 생성</li>
+</ol>
+
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/6.png" alt="6" /><em>image.png</em></p>
+
+<ol>
+  <li>NAT Gateway 생성</li>
+</ol>
+
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/7.png" alt="7" /><em>image.png</em></p>
+
+<ol>
+  <li>Private Subnet 에 Route Table 설정</li>
+</ol>
+
+<p><img src="/upload/2025-01-09-[DB]_데이터베이스_마이그레이션_및_클러스터_설정_.md/8.png" alt="8" /><em>image.png</em></p>
+
+<p>을 통해서 Private Subnet 에 NAT 게이트웨이를 사용할 수 있다.</p>
+
+<h2 id="redis-설치-및-redis-cluster">Redis 설치 및 Redis Cluster</h2>
+
+<p>원하는 버전의 Redis 를 설치하고 난 후에는 Redis Cluster 설정을 해야한다.</p>
+
+<p>일단은 redis master 3 대에 각각 레플리카를 1개씩 설정해보자.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash
+port {PORT}
+maxmemory {MAX_MEMORY}mb 
+maxmemory-policy volatile-lru
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 5000
+cluster-announce-ip {ip}
+appendonly yes
+bind 0.0.0.0
 
 </code></pre></div></div>
 
-<p>COPY . . 를 해야 yarn install 을 하면서 워크스페이스를 찾을텐데, copy 전에 yarn install 을 먼저 해서 워크스페이스를 찾을 수 없었던 것이다.</p>
+<p>포트와 maxmemory 는 원하는대로 설정하면 된다.</p>
+
+<p>maxmemory-policy 는 메모리를 비워줄 때 어떤 기준으로 비울지를 결정한다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>정책</strong></th>
+      <th><strong>대상</strong></th>
+      <th><strong>삭제 기준</strong></th>
+      <th><strong>적합한 사용 사례</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">noeviction</code></td>
+      <td>전체 키</td>
+      <td>삭제하지 않음</td>
+      <td>영구 데이터 저장</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allkeys-lru</code></td>
+      <td>전체 키</td>
+      <td>LRU(오래 사용되지 않은 키)</td>
+      <td>캐시 시스템</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">volatile-lru</code></td>
+      <td>TTL 설정된 키</td>
+      <td>LRU(오래 사용되지 않은 키)</td>
+      <td>TTL 기반 캐시 시스템</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allkeys-random</code></td>
+      <td>전체 키</td>
+      <td>랜덤</td>
+      <td>데이터 접근 패턴이 불규칙할 때</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">volatile-random</code></td>
+      <td>TTL 설정된 키</td>
+      <td>랜덤</td>
+      <td>TTL 기반 캐시에 랜덤 제거</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">volatile-ttl</code></td>
+      <td>TTL 설정된 키</td>
+      <td>TTL이 가장 짧은 키</td>
+      <td>TTL이 중요한 시간 기반 캐시</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>눈 여겨 볼 만한 설정값은<code class="language-plaintext highlighter-rouge">cluster-announce-ip</code> 인데,</p>
+
+<p>Redis 클러스터는 클라이언트가 연결할 때, 노드 간에 데이터 슬롯을 분배하고 <strong>어떤 노드에 특정 키가 있는지</strong>를 알려준다.</p>
+
+<p>즉 <code class="language-plaintext highlighter-rouge">cluster-announce-ip</code>는 노드가 클라이언트에게 자신을 알릴 때 사용하는 <strong>외부에 노출되는 IP 주소</strong></p>
+
+<h3 id="만약-노드가-데이터를-가지고-있지-않다면">만약 노드가 데이터를 가지고 있지 않다면,</h3>
+
+<ol>
+  <li>Docker 컨테이너 내부의 서버는 <strong>B의 Redis 노드</strong>에 접속 후 <strong>슬롯 이동 명령을 받는다</strong>.</li>
+  <li>Redis 클러스터가 기본적으로 <strong><code class="language-plaintext highlighter-rouge">bind</code></strong><strong>된 내부 IP 주소</strong>를 클라이언트에 알려준다.</li>
+  <li>만약 레디스가 <code class="language-plaintext highlighter-rouge">cluster-announce-ip</code>를 설정하지 않았다면, 레디스 노드는 Docker 컨테이너에게 <strong>내부 IP(예: 127.0.0.1 또는 172.x.x.x)</strong>를 반환할 수 있다.</li>
+  <li>Docker 컨테이너는 외부 네트워크에서 해당 <strong>내부 IP</strong>로 접근할 수 없기 때문에 연결이 끊어진다.</li>
+</ol>
+
+<p>위와 같은 과정으로 레디스 연결이 원활하게 되지 않을 수 있다.</p>
 
 
                 </div>
@@ -351,32 +414,30 @@ CMD ["yarn", "start"]
     <div class="inner">
         <div class="read-next-feed">
             
-                
-                
-                
-                
-            
 
             <!-- If there's a next post, display it using the same markup included from - partials/post-card.hbs -->
+            
+
+            <!-- If there's a previous post, display it using the same markup included from - partials/post-card.hbs -->
             
                 
 
     <article class="post-card post-template">
         
-            <a class="post-card-image-link" href="/tsconfig.json%EC%9D%98_%EC%83%81%ED%98%B8_%EC%B0%B8%EC%A1%B0_%EB%AC%B8%EC%A0%9C">
-                <div class="post-card-image" style="background-image: url(/upload/2024-11-08-tsconfig.json의_상호_참조_문제.md/0.png)"></div>
+            <a class="post-card-image-link" href="/_%EC%84%9C%EB%B2%84%EB%A5%BC_docker_swarm_%EC%9C%BC%EB%A1%9C_%EA%B4%80%EB%A6%AC%ED%95%B4%EB%B3%B4%EC%9E%90">
+                <div class="post-card-image" style="background-image: url(/upload/2024-12-04-🐬_서버를_docker_swarm_으로_관리해보자.md/0.png)"></div>
             </a>
         
         <div class="post-card-content">
-            <a class="post-card-content-link" href="/tsconfig.json%EC%9D%98_%EC%83%81%ED%98%B8_%EC%B0%B8%EC%A1%B0_%EB%AC%B8%EC%A0%9C">
+            <a class="post-card-content-link" href="/_%EC%84%9C%EB%B2%84%EB%A5%BC_docker_swarm_%EC%9C%BC%EB%A1%9C_%EA%B4%80%EB%A6%AC%ED%95%B4%EB%B3%B4%EC%9E%90">
                 <header class="post-card-header">
                     
 
-                    <h2 class="post-card-title">tsconfig.json의 상호 참조 문제</h2>
+                    <h2 class="post-card-title">🐬 서버를 docker swarm 으로 관리해보자</h2>
                 </header>
                 <section class="post-card-excerpt">
                     
-                        <p>문제상황
+                        <p>기존 서버 운영 방식
 
 </p>
                     
@@ -406,57 +467,6 @@ CMD ["yarn", "start"]
 
             
 
-            <!-- If there's a previous post, display it using the same markup included from - partials/post-card.hbs -->
-            
-                
-
-    <article class="post-card post-template">
-        
-            <a class="post-card-image-link" href="/%ED%8C%A8%ED%82%A4%EC%A7%80_%EB%A7%A4%EB%8B%88%EC%A0%80_%EB%B0%8F_%EB%AA%A8%EB%85%B8%EB%A0%88%ED%8F%AC_%EC%A0%95%ED%95%98%EA%B8%B0">
-                <div class="post-card-image" style="background-image: url(/upload/2024-10-31-패키지_매니저_및_모노레포_정하기.md/0.png)"></div>
-            </a>
-        
-        <div class="post-card-content">
-            <a class="post-card-content-link" href="/%ED%8C%A8%ED%82%A4%EC%A7%80_%EB%A7%A4%EB%8B%88%EC%A0%80_%EB%B0%8F_%EB%AA%A8%EB%85%B8%EB%A0%88%ED%8F%AC_%EC%A0%95%ED%95%98%EA%B8%B0">
-                <header class="post-card-header">
-                    
-
-                    <h2 class="post-card-title">패키지 매니저 및 모노레포 정하기</h2>
-                </header>
-                <section class="post-card-excerpt">
-                    
-                        <p>
-  목차
-
-
-</p>
-                    
-                </section>
-            </a>
-            <footer class="post-card-meta">
-                
-                    
-                
-                    
-                
-                    
-                
-                    
-                
-                    
-                
-                <span class="reading-time">
-                    
-                    
-                      3 min read
-                    
-                </span>
-            </footer>
-        </div>
-    </article>
-
-            
-
         </div>
     </div>
 </aside>
@@ -472,18 +482,18 @@ CMD ["yarn", "start"]
         </a>
     </div>
     <span class="floating-header-divider">&mdash;</span>
-    <div class="floating-header-title">[docker] yarn-berry workspace 를 찾지 못하는 오류</div>
+    <div class="floating-header-title">[DB] 데이터베이스 마이그레이션 및 클러스터 설정 </div>
     <div class="floating-header-share">
         <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
 </svg>
 </div>
-        <a class="floating-header-share-tw" href="https://twitter.com/share?text=%5Bdocker%5D+yarn-berry+workspace+%EB%A5%BC+%EC%B0%BE%EC%A7%80+%EB%AA%BB%ED%95%98%EB%8A%94+%EC%98%A4%EB%A5%98&amp;url=https://jekyllt.github.io/jasper2/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98"
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=%5BDB%5D+%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4+%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98+%EB%B0%8F+%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0+%EC%84%A4%EC%A0%95+&amp;url=https://jekyllt.github.io/jasper2/DB-_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_"
             onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
 
         </a>
-        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://jekyllt.github.io/jasper2/docker-_yarn-berry_workspace_%EB%A5%BC_%EC%B0%BE%EC%A7%80_%EB%AA%BB%ED%95%98%EB%8A%94_%EC%98%A4%EB%A5%98"
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://jekyllt.github.io/jasper2/DB-_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98_%EB%B0%8F_%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0_%EC%84%A4%EC%A0%95_"
             onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
 
