@@ -7,6 +7,16 @@ logo: 'assets/images/blog-icon.png'
 class: page-template
 subclass: 'post page'
 ---
+# 목차
+
+1. [시작하기](#시작하기)
+    - [방송 호스트](#방송-호스트)
+        - [OBS를 통해 방송 송출하기](#OBS를-통해-방송-송출하기)
+        - [일반 채팅 / 공지 채팅 전환](#일반-채팅--공지-채팅)
+        - [악성 시청자 차단](#악성-시청자-차단)
+        - [질문 답변 처리](#질문-답변-처리)
+    - [시청자](#시청자)
+        - [일반 채팅 / 질문 채팅 전환](#일반-채팅--질문-채팅)
 
 # 시작하기
 
@@ -38,7 +48,7 @@ subclass: 'post page'
 - 시청자의 이름을 클릭해서 사용자를 차단할 수 있습니다.
 ![ban_user.png](images/ban_user.png)
 
-### 질문 답변 하기
+### 질문 답변 처리
 - 시청자의 질문을 체크 버튼을 통해서 완료시킬 수 있습니다. 완료된 질문은 리스트에서 사라집니다.
 ![complete_question.png](images/complete_question.png)
 
