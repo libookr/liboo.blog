@@ -347,12 +347,12 @@ bind 0.0.0.0
 
 <p>Redis 클러스터는 클라이언트가 연결할 때, 노드 간에 데이터 슬롯을 분배하고 <strong>어떤 노드에 특정 키가 있는지</strong>를 알려준다.</p>
 
-<p>즉 <code class="language-plaintext highlighter-rouge">cluster-announce-ip</code>는 노드가 클라이언트에게 자신을 알릴 때 사용하는 <strong>외부에 노출되는 IP 주소</strong></p>
+<p>즉 <code class="language-plaintext highlighter-rouge">cluster-announce-ip</code>는 노드가 클라이언트에게 자신을 알릴 때 사용하는 <strong>외부에 노출되는 IP 주소이다.</strong></p>
 
 <h3 id="만약-노드가-데이터를-가지고-있지-않다면">만약 노드가 데이터를 가지고 있지 않다면,</h3>
 
 <ol>
-  <li>Docker 컨테이너 내부의 서버는 <strong>B의 Redis 노드</strong>에 접속 후 <strong>슬롯 이동 명령을 받는다</strong>.</li>
+  <li>Docker 컨테이너 내부의 서버는 <strong>Redis 노드</strong>에 접속 후 <strong>슬롯 이동 명령을 받는다</strong>.</li>
   <li>Redis 클러스터가 기본적으로 <strong><code class="language-plaintext highlighter-rouge">bind</code></strong><strong>된 내부 IP 주소</strong>를 클라이언트에 알려준다.</li>
   <li>만약 레디스가 <code class="language-plaintext highlighter-rouge">cluster-announce-ip</code>를 설정하지 않았다면, 레디스 노드는 Docker 컨테이너에게 <strong>내부 IP(예: 127.0.0.1 또는 172.x.x.x)</strong>를 반환할 수 있다.</li>
   <li>Docker 컨테이너는 외부 네트워크에서 해당 <strong>내부 IP</strong>로 접근할 수 없기 때문에 연결이 끊어진다.</li>
