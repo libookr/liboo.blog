@@ -188,6 +188,21 @@
     
       
       <item>
+        <title>[채팅 서버] 채팅 서버 개선기 기록</title>
+        
+          <description>&lt;h1 id=&quot;채팅-서버-메모리-누수-해결하기&quot;&gt;채팅 서버 메모리 누수 해결하기&lt;/h1&gt;
+
+</description>
+        
+        <pubDate>Sat, 23 Nov 2024 04:14:00 +0000</pubDate>
+        <link>
+        https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D</link>
+        <guid isPermaLink="true">https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>NestJS를 통한 일관적인 시스템 설계</title>
         
           <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;

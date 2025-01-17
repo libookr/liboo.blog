@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom" >
+  <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
+  <link href="https://blog.liboo.kr/tag/chatting/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://blog.liboo.kr/" rel="alternate" type="text/html" />
+  <updated>2025-01-17T07:09:21+00:00</updated>
+  <id>https://blog.liboo.kr/tag/chatting/feed.xml</id>
+
+  
+  
+  
+
+  
+    <title type="html">Liboo.blog | </title>
+  
+
+  
+    <subtitle>라이부 개발 블로그</subtitle>
+  
+
+  
+
+  
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+  
+  
+
+  
+    <entry>
+      <title type="html">[채팅 서버] 채팅 서버 개선기 기록</title>
+      <link href="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D" rel="alternate" type="text/html" title="[채팅 서버] 채팅 서버 개선기 기록" />
+      <published>2024-11-23T04:14:00+00:00</published>
+      <updated>2024-11-23T04:14:00+00:00</updated>
+      <id>https://blog.liboo.kr/%5B%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84%5D_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D</id>
+      <content type="html" xml:base="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D">&lt;h1 id=&quot;채팅-서버-메모리-누수-해결하기&quot;&gt;채팅 서버 메모리 누수 해결하기&lt;/h1&gt;
+
+&lt;h2 id=&quot;redis-adapter-가-모든-레디스-노드에-broadcast-하는-문제&quot;&gt;Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png&quot; alt=&quot;0&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다.&lt;/p&gt;
+
+&lt;p&gt;Redis Node A, B, C, D …. Z 까지 있을 때, A 에만 전달하면 되는 이벤트를 A~Z 까지 모두 전파하게 된다.&lt;/p&gt;
+
+&lt;p&gt;이를 해결하기 위해서는 ShardedAdapter&lt;a href=&quot;https://redis.io/docs/latest/develop/interact/pubsub/#sharded-pubsub&quot;&gt;https://redis.io/docs/latest/develop/interact/pubsub/#sharded-pubsub&lt;/a&gt; 를 활용해야 하는데, SharedAdapter 는 해시함수를 활용해서 데이터를 어떤 노드에 저장해야할지 알고 있다. 따라서 ‘room123’ 으로 메세지가 들어온다면 room123 의 해시값을 계산해서 해당 레디스 샤드군에만 전파한다.&lt;/p&gt;
+
+&lt;p&gt;그래서 ioredis + sharded adapter 를 활용하려고 보니까….&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/1.png&quot; alt=&quot;1&quot; /&gt;&lt;em&gt;image.png&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://socket.io/&quot;&gt;socket.io&lt;/a&gt; 공식문서 (&lt;a href=&quot;https://socket.io/docs/v4/redis-adapter/#with-redis-sharded-pubsub&quot;&gt;https://socket.io/docs/v4/redis-adapter/#with-redis-sharded-pubsub&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;엥 …&lt;/p&gt;
+
+&lt;p&gt;현재 ioredis 와 redis cluster 를 활용한 sharded adapter 는 사용이 불가능하다고 한다.&lt;/p&gt;
+
+&lt;p&gt;실제로 sharded adapter 를 억지로 사용해보려고 하니 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[**Too many cluster redirections during Redis cluster reshard**](https://stackoverflow.com/questions/46472130/too-many-cluster-redirections-during-redis-cluster-reshard)&lt;/code&gt; 라는 오류가 난다.&lt;/p&gt;
+
+&lt;p&gt;shardedAdapter 는 기존의 subscribe 커맨드가 아닌, (SSUBSCRIBE, SPUBLISH, SUNSUBCRIBE) 같은 커맨드를 사용하는데 ioredis 에서 해당 커맨드를 지원하지 않기 때문.&lt;/p&gt;
+
+&lt;p&gt;해결책으로는&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;ioredis 를 node-redis 로 마이그레이션 + shardedAdapter 사용&lt;/li&gt;
+  &lt;li&gt;redis cluster 를 버리고 &lt;a href=&quot;http://nats.io/&quot;&gt;Nats.io&lt;/a&gt; 로 마이그레이션&lt;/li&gt;
+  &lt;li&gt;파티셔닝을 통해서 모든 redis 를 redis cluster 로 묶는 것이 아니라, 실제로 필요한 redis 에만 publish 되도록 하기&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;우선 1번의 경우 ioredis 를 사용하던 부분을 전부 node-redis 로 바꾸어야한다는 단점이 있다. 하지만 현재 ioredis 라이브러리 상태를 봤을 때 추가적인 업데이트도 없고 node-redis 의 경우에는 꾸준히 업데이트 되고 있다는 점에서 바꾸는 것도 좋을 것 같다라는 생각이 들었다.&lt;/p&gt;
+
+&lt;p&gt;2번의 경우에는&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://channel.io/ko/blog/articles/228efe0c&quot;&gt;https://channel.io/ko/blog/articles/228efe0c&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;채널톡의 블로그에서 아주 잘 설명해주고 있다. &lt;a href=&quot;http://nats.io/&quot;&gt;Nats.io&lt;/a&gt; 은 완전 메시 형태로, 처리량은 redis 에 비해 월등히 좋은 수준을 보이지만 subject 가 생길 때 모든 &lt;a href=&quot;http://nats.io/&quot;&gt;nats.io&lt;/a&gt; 의 인스턴스에 pubsub 을 전파해주어야하는데 이 부분에서 오버헤드가 상당히 크게 작용한다.&lt;/p&gt;
+
+&lt;p&gt;3번의 경우&lt;/p&gt;
+
+&lt;p&gt;레디스 클러스터의 문제점이 연관없는(굳이 publish 안보내도 되는) 노드에 publish 를 보낸다는 것이다. 그렇기 때문에 레디스와 채팅서버를 하나의 cluster 로 묶고, 이 클러스터 단위로 도커 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;서비스&lt;/code&gt;를 생성한다. 하나의 거대한 집합이었던 채팅서버 + Redis Cluster 를 조금 더 작은 여러개의 논리적 구조로 쪼개보는 것이다. 그리고 room ID 를 기반으로 이 서비스에 로드밸런싱 되도록 NGINX 를 만든다.&lt;/p&gt;
+
+&lt;p&gt;수평 확장도 가능하다. 예를 들어 모든 서비스의 CPU 사용률이 60퍼센트를 넘긴다면 새로운 서비스를 만드는 방식이 가능할 것 같다.&lt;/p&gt;
+
+&lt;p&gt;또한 서비스 내부에서의 수평 확장도 고려해볼 수 있다. 시청자가 특정 방에만 꾸준히, 아주 많이 몰린다면 특정 샤드군에만 소켓 연결 + 메세지 publish 가 많이 생길 것이다. 이때 해당 서비스 내부의 채팅 서버를 수평확장한다던가, redis cluster 에 redis 노드를 추가하는 등의 방법으로도 대처할 수 있을 것 같다.&lt;/p&gt;
+
+&lt;p&gt;하지만 문제를 완벽하게 해결하지는 못한다. 서비스가 3개가 되면 기존 문제가 매우 이상적인 환경에서 이론적으로 1/3 수준으로 감소하긴 하겠으나 결국 하나의 서비스 내부에서 필요없는 publish 를 보내는걸 완벽하게 해결할 순 없다.&lt;/p&gt;
+
+&lt;p&gt;그래도 평균적으로는 꽤나 괜찮은 성능 개선이 있지 않을까&lt;/p&gt;
+
+&lt;p&gt;우선 3번 → 1번 순으로 성능 테스트를 한 번 진행해보자. (진행중)&lt;/p&gt;
+
+&lt;p&gt;현재 채팅 서비스의 최대 글자 제한 수는 150자이다.&lt;/p&gt;
+
+&lt;p&gt;150자가 전부 다 한글이라고 가정하면 최대 300byte 를 사용하게 된다.&lt;/p&gt;
+
+&lt;p&gt;최대한 러프하게 잡아서 1명당 300byte 정도의 채팅을 보내게 된다고 가정하자.&lt;/p&gt;
+
+&lt;p&gt;라이부 서비스는 최대 300명이 동시에 라이브로 채팅할 수 있는 것을 목표로 잡았기 때문에 300byte * 300 이 동시에 처리 가능해야 한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;default-room-을-나가면-socketio-의-broadcast-로직이-바뀌는-문제&quot;&gt;Default Room 을 나가면 &lt;a href=&quot;http://socket.io/&quot;&gt;socket.io&lt;/a&gt; 의 Broadcast 로직이 바뀌는 문제&lt;/h1&gt;
+
+&lt;h1 id=&quot;redis-pattern-matching&quot;&gt;Redis Pattern Matching&lt;/h1&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>[&quot;hoeeeeeh&quot;]</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="chatting" />
+      
+
+      
+        <summary type="html">채팅 서버 메모리 누수 해결하기</summary>
+      
+
+      
+      
+    </entry>
+  
+</feed>

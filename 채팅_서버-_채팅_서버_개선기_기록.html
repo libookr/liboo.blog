@@ -11,7 +11,7 @@
 
 
 
-    <title>[React-Query] useQuery속성 : onError</title>
+    <title>[채팅 서버] 채팅 서버 개선기 기록</title>
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Styles'n'Scripts -->
@@ -36,30 +36,30 @@
     <!-- This tag outputs SEO meta+structured data and other important settings -->
     <meta name="description" content="라이부 개발 블로그" />
 <link rel="shortcut icon" href="https://blog.liboo.kr//assets/images/favicon.png" type="image/png" />
-<link rel="canonical" href="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError" />
+<link rel="canonical" href="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
 
      <!--title below is coming from _includes/dynamic_title-->
     <meta property="og:site_name" content="Liboo.blog" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="[React-Query] useQuery속성 : onError" />
-    <meta property="og:description" content="🚨 문제 상황 잘못된 Id값으로 페이지를 접근하는 경우 채팅창을 포함한 모든 컴포넌트를 가려야 하는 상황 🏃 해결 과정 이를 해결하기 위해 useQuery에서 Error 핸들링을 하기로 결정 일단, ErrorBoundary를 활용하여 Error시 보여줘야할 컴포넌트 선정 1차 해결 과정 onError는 더이상 사용할 수 없는 속성 throwOnError 사용 typescript export const useClientLive = ({ liveId }:" />
-    <meta property="og:url" content="https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError" />
-    <meta property="og:image" content="https://blog.liboo.kr/assets/images/writing.jpg" />
+    <meta property="og:title" content="[채팅 서버] 채팅 서버 개선기 기록" />
+    <meta property="og:description" content="채팅 서버 메모리 누수 해결하기 Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B," />
+    <meta property="og:url" content="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D" />
+    <meta property="og:image" content="https://blog.liboo.kr/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png" />
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta property="article:author" content="https://www.facebook.com/ghost" />
-    <meta property="article:published_time" content="2024-12-01T04:08:00+00:00" />
-    <meta property="article:modified_time" content="2024-12-01T04:08:00+00:00" />
-    <meta property="article:tag" content="React-query" />
+    <meta property="article:published_time" content="2024-11-23T04:14:00+00:00" />
+    <meta property="article:modified_time" content="2024-11-23T04:14:00+00:00" />
+    <meta property="article:tag" content="Chatting" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="[React-Query] useQuery속성 : onError" />
-    <meta name="twitter:description" content="🚨 문제 상황 잘못된 Id값으로 페이지를 접근하는 경우 채팅창을 포함한 모든 컴포넌트를 가려야 하는 상황 🏃 해결 과정 이를 해결하기 위해 useQuery에서 Error 핸들링을 하기로 결정 일단, ErrorBoundary를 활용하여 Error시 보여줘야할 컴포넌트 선정 1차 해결 과정 onError는 더이상 사용할 수 없는 속성 throwOnError 사용 typescript export const useClientLive = ({ liveId }:" />
+    <meta name="twitter:title" content="[채팅 서버] 채팅 서버 개선기 기록" />
+    <meta name="twitter:description" content="채팅 서버 메모리 누수 해결하기 Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B," />
     <meta name="twitter:url" content="https://blog.liboo.kr/" />
-    <meta name="twitter:image" content="https://blog.liboo.kr/assets/images/writing.jpg" />
+    <meta name="twitter:image" content="https://blog.liboo.kr/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="Liboo.blog" />
     <meta name="twitter:label2" content="Filed under" />
-    <meta name="twitter:data2" content="React-query" />
+    <meta name="twitter:data2" content="Chatting" />
     <meta name="twitter:site" content="@tryghost" />
     <meta name="twitter:creator" content="@tryghost" />
     <meta property="og:image:width" content="1400" />
@@ -74,18 +74,18 @@
         "name": "Liboo.blog",
         "logo": "https://blog.liboo.kr/assets/images/blog-icon.png"
     },
-    "url": "https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError",
+    "url": "https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D",
     "image": {
         "@type": "ImageObject",
-        "url": "https://blog.liboo.kr/assets/images/writing.jpg",
+        "url": "https://blog.liboo.kr/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png",
         "width": 2000,
         "height": 666
     },
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://blog.liboo.kr/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError"
+        "@id": "https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D"
     },
-    "description": "🚨 문제 상황 잘못된 Id값으로 페이지를 접근하는 경우 채팅창을 포함한 모든 컴포넌트를 가려야 하는 상황 🏃 해결 과정 이를 해결하기 위해 useQuery에서 Error 핸들링을 하기로 결정 일단, ErrorBoundary를 활용하여 Error시 보여줘야할 컴포넌트 선정 1차 해결 과정 onError는 더이상 사용할 수 없는 속성 throwOnError 사용 typescript export const useClientLive = ({ liveId }:"
+    "description": "채팅 서버 메모리 누수 해결하기 Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B,"
 }
     </script>
 
@@ -98,7 +98,7 @@
     </script> -->
 
     <meta name="generator" content="Jekyll 3.6.2" />
-    <link rel="alternate" type="application/rss+xml" title="[React-Query] useQuery속성 : onError" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="[채팅 서버] 채팅 서버 개선기 기록" href="/feed.xml" />
 
 
 </head>
@@ -146,158 +146,97 @@ into the {body} of the default.hbs template -->
 <main id="site-main" class="site-main outer" role="main">
     <div class="inner">
 
-        <article class="post-full  tag-react-query post ">
+        <article class="post-full  tag-chatting post ">
 
             <header class="post-full-header">
                 <section class="post-full-meta">
-                    <time class="post-full-meta-date" datetime=" 1 December 2024"> 1 December 2024</time>
+                    <time class="post-full-meta-date" datetime="23 November 2024">23 November 2024</time>
                     
                         <span class="date-divider">/</span>
                         
                             
-                               <a href='/tag/react-query/'>REACT-QUERY</a>
+                               <a href='/tag/chatting/'>CHATTING</a>
                             
                         
                     
                 </section>
-                <h1 class="post-full-title">[React-Query] useQuery속성 : onError</h1>
+                <h1 class="post-full-title">[채팅 서버] 채팅 서버 개선기 기록</h1>
             </header>
 
             
-            <figure class="post-full-image" style="background-image: url(/assets/images/writing.jpg)">
+            <figure class="post-full-image" style="background-image: url(/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png)">
             </figure>
             
 
             <section class="post-full-content">
                 <div class="kg-card-markdown">
-                    <h2 id="문제-상황">🚨 문제 상황</h2>
+                    <h1 id="채팅-서버-메모리-누수-해결하기">채팅 서버 메모리 누수 해결하기</h1>
 
-<h3 id="잘못된-id값으로-페이지를-접근하는-경우-채팅창을-포함한-모든-컴포넌트를-가려야-하는-상황">잘못된 Id값으로 페이지를 접근하는 경우 채팅창을 포함한 모든 컴포넌트를 가려야 하는 상황</h3>
+<h2 id="redis-adapter-가-모든-레디스-노드에-broadcast-하는-문제">Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제</h2>
 
-<h2 id="해결-과정">🏃 해결 과정</h2>
+<p><img src="/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png" alt="0" /><em>image.png</em></p>
 
-<p>이를 해결하기 위해 <code class="language-plaintext highlighter-rouge">useQuery</code>에서 Error 핸들링을 하기로 결정</p>
+<p>레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다.</p>
 
-<p>일단, ErrorBoundary를 활용하여 Error시 보여줘야할 컴포넌트 선정</p>
+<p>Redis Node A, B, C, D …. Z 까지 있을 때, A 에만 전달하면 되는 이벤트를 A~Z 까지 모두 전파하게 된다.</p>
 
-<h3 id="1차-해결-과정">1차 해결 과정</h3>
+<p>이를 해결하기 위해서는 ShardedAdapter<a href="https://redis.io/docs/latest/develop/interact/pubsub/#sharded-pubsub">https://redis.io/docs/latest/develop/interact/pubsub/#sharded-pubsub</a> 를 활용해야 하는데, SharedAdapter 는 해시함수를 활용해서 데이터를 어떤 노드에 저장해야할지 알고 있다. 따라서 ‘room123’ 으로 메세지가 들어온다면 room123 의 해시값을 계산해서 해당 레디스 샤드군에만 전파한다.</p>
 
-<p><code class="language-plaintext highlighter-rouge">onError</code>는 더이상 사용할 수 없는 속성</p>
+<p>그래서 ioredis + sharded adapter 를 활용하려고 보니까….</p>
 
-<ul>
-  <li><strong><code class="language-plaintext highlighter-rouge">throwOnError</code></strong> 사용</li>
-</ul>
+<p><img src="/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/1.png" alt="1" /><em>image.png</em></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
-export const useClientLive = ({ liveId }: { liveId: string }) =&gt; {
-  return useQuery&lt;ClientLiveResponse, Error&gt;({
-    queryKey: ['clientLive'],
-    queryFn: () =&gt; fetchLive({ liveId }),
-    refetchOnWindowFocus: false,
-    initialData: { info: {} as ClientLive },
-    // onError는 더이상 제공하지 않음
-    onError: (error: Error) =&gt; {
-      // 에러코드
-    },
-    throwOnError: true,
-  });
-};
+<p><a href="http://socket.io/">socket.io</a> 공식문서 (<a href="https://socket.io/docs/v4/redis-adapter/#with-redis-sharded-pubsub">https://socket.io/docs/v4/redis-adapter/#with-redis-sharded-pubsub</a>)</p>
 
-</code></pre></div></div>
+<p>엥 …</p>
 
-<p>다시 생각해보니 <code class="language-plaintext highlighter-rouge">ClientView</code>에서 에러처리를 하는 것이 아닌 <code class="language-plaintext highlighter-rouge">ClientPage</code>에 접근하자마자 주소창의 <code class="language-plaintext highlighter-rouge">id</code>를 보고 유효한 <code class="language-plaintext highlighter-rouge">id</code>인지 판단하는 것이 옳은 것임을 판단</p>
+<p>현재 ioredis 와 redis cluster 를 활용한 sharded adapter 는 사용이 불가능하다고 한다.</p>
 
-<p>→ 기존의 <code class="language-plaintext highlighter-rouge">ErrorBoundary</code>를 삭제하고 <code class="language-plaintext highlighter-rouge">ErrorPage</code>로 라우팅 하도록 수정</p>
+<p>실제로 sharded adapter 를 억지로 사용해보려고 하니 <code class="language-plaintext highlighter-rouge">[**Too many cluster redirections during Redis cluster reshard**](https://stackoverflow.com/questions/46472130/too-many-cluster-redirections-during-redis-cluster-reshard)</code> 라는 오류가 난다.</p>
 
-<h3 id="2차-해결-과정">2차 해결 과정</h3>
+<p>shardedAdapter 는 기존의 subscribe 커맨드가 아닌, (SSUBSCRIBE, SPUBLISH, SUNSUBCRIBE) 같은 커맨드를 사용하는데 ioredis 에서 해당 커맨드를 지원하지 않기 때문.</p>
 
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">liveId</code> 값이 옳지 않은 값의 경우 에러</li>
-</ul>
+<p>해결책으로는</p>
 
-<p><a href="https://prod-files-secure.s3.us-west-2.amazonaws.com/ccf16174-2ad8-4e34-8ea6-9046cc60f199/605ffe33-fd6e-4ec4-9622-58401e9e6cab/20241201-1644-35.2177938.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45FSPPWI6X%2F20241231%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20241231T091941Z&amp;X-Amz-Expires=3600&amp;X-Amz-Signature=16493c115feb00c94581261f7040dc0613b6d3dc206c08de6f1f6b734ef59c98&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject">20241201-1644-35.2177938.mp4</a></p>
+<ol>
+  <li>ioredis 를 node-redis 로 마이그레이션 + shardedAdapter 사용</li>
+  <li>redis cluster 를 버리고 <a href="http://nats.io/">Nats.io</a> 로 마이그레이션</li>
+  <li>파티셔닝을 통해서 모든 redis 를 redis cluster 로 묶는 것이 아니라, 실제로 필요한 redis 에만 publish 되도록 하기</li>
+</ol>
 
-<p>영상에는 길게 담기지 않았지만, 결과를 받아오는데 까지 오랜 시간이 걸림</p>
+<p>우선 1번의 경우 ioredis 를 사용하던 부분을 전부 node-redis 로 바꾸어야한다는 단점이 있다. 하지만 현재 ioredis 라이브러리 상태를 봤을 때 추가적인 업데이트도 없고 node-redis 의 경우에는 꾸준히 업데이트 되고 있다는 점에서 바꾸는 것도 좋을 것 같다라는 생각이 들었다.</p>
 
-<h3 id="query기본값-설정이-retry가-3">query기본값 설정이 retry가 3</h3>
+<p>2번의 경우에는</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
-const defaultOptions: DefaultOptions = {
-  queries: {
-    retry: 3,
-    refetchOnMount: true,
-    refetchOnReconnect: true,
-    refetchOnWindowFocus: true
-  }
-};
+<p><a href="https://channel.io/ko/blog/articles/228efe0c">https://channel.io/ko/blog/articles/228efe0c</a></p>
 
-</code></pre></div></div>
+<p>채널톡의 블로그에서 아주 잘 설명해주고 있다. <a href="http://nats.io/">Nats.io</a> 은 완전 메시 형태로, 처리량은 redis 에 비해 월등히 좋은 수준을 보이지만 subject 가 생길 때 모든 <a href="http://nats.io/">nats.io</a> 의 인스턴스에 pubsub 을 전파해주어야하는데 이 부분에서 오버헤드가 상당히 크게 작용한다.</p>
 
-<ul>
-  <li>retry값을 0으로 수정</li>
-</ul>
+<p>3번의 경우</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
-export const useClientLive = ({ liveId }: { liveId: string }) =&gt; {
-  return useQuery&lt;ClientLiveResponse, Error&gt;({
-    queryKey: ['clientLive'],
-    queryFn: () =&gt; fetchLive({ liveId }),
-    refetchOnWindowFocus: false,
-    initialData: { info: {} as ClientLive },
-    throwonError: true,
-    retry: 0,
-  });
-};
+<p>레디스 클러스터의 문제점이 연관없는(굳이 publish 안보내도 되는) 노드에 publish 를 보낸다는 것이다. 그렇기 때문에 레디스와 채팅서버를 하나의 cluster 로 묶고, 이 클러스터 단위로 도커 <code class="language-plaintext highlighter-rouge">서비스</code>를 생성한다. 하나의 거대한 집합이었던 채팅서버 + Redis Cluster 를 조금 더 작은 여러개의 논리적 구조로 쪼개보는 것이다. 그리고 room ID 를 기반으로 이 서비스에 로드밸런싱 되도록 NGINX 를 만든다.</p>
 
-</code></pre></div></div>
+<p>수평 확장도 가능하다. 예를 들어 모든 서비스의 CPU 사용률이 60퍼센트를 넘긴다면 새로운 서비스를 만드는 방식이 가능할 것 같다.</p>
 
-<h2 id="문제-해결">✅ 문제 해결</h2>
+<p>또한 서비스 내부에서의 수평 확장도 고려해볼 수 있다. 시청자가 특정 방에만 꾸준히, 아주 많이 몰린다면 특정 샤드군에만 소켓 연결 + 메세지 publish 가 많이 생길 것이다. 이때 해당 서비스 내부의 채팅 서버를 수평확장한다던가, redis cluster 에 redis 노드를 추가하는 등의 방법으로도 대처할 수 있을 것 같다.</p>
 
-<ul>
-  <li>고차함수를 사용해서 ClientPage를 감싸고 유효하지 않은 id를 기입 시에 errorPage로 이동</li>
-</ul>
+<p>하지만 문제를 완벽하게 해결하지는 못한다. 서비스가 3개가 되면 기존 문제가 매우 이상적인 환경에서 이론적으로 1/3 수준으로 감소하긴 하겠으나 결국 하나의 서비스 내부에서 필요없는 publish 를 보내는걸 완벽하게 해결할 순 없다.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
-function ClientPageComponent() {
-  return (
-    &lt;&gt;
-      &lt;Header /&gt;
-      &lt;ClientContainer&gt;
-        &lt;AsyncBoundary pendingFallback={&lt;&gt;&lt;/&gt;} rejectedFallback={() =&gt; &lt;PlayerStreamError /&gt;}&gt;
-          &lt;ClientView /&gt;
-          &lt;ClientChatRoom /&gt;
-        &lt;/AsyncBoundary&gt;
-      &lt;/ClientContainer&gt;
-    &lt;/&gt;
-  );
-}
+<p>그래도 평균적으로는 꽤나 괜찮은 성능 개선이 있지 않을까</p>
 
-const ClientPage = withLiveExistCheck(ClientPageComponent);
+<p>우선 3번 → 1번 순으로 성능 테스트를 한 번 진행해보자. (진행중)</p>
 
-export default ClientPage;
+<p>현재 채팅 서비스의 최대 글자 제한 수는 150자이다.</p>
 
-</code></pre></div></div>
+<p>150자가 전부 다 한글이라고 가정하면 최대 300byte 를 사용하게 된다.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typescript
-export default function withLiveExistCheck&lt;P extends object&gt;(WrappedComponent: ComponentType&lt;P&gt;) {
-  return function WithLiveExistCheckComponent(props: P) {
-    const { id: liveId } = useParams();
-    const navigate = useNavigate();
+<p>최대한 러프하게 잡아서 1명당 300byte 정도의 채팅을 보내게 된다고 가정하자.</p>
 
-    const { data: isLiveExistData } = useCheckLiveExist({ liveId: liveId as string });
-    const isLiveExist = isLiveExistData?.existed;
+<p>라이부 서비스는 최대 300명이 동시에 라이브로 채팅할 수 있는 것을 목표로 잡았기 때문에 300byte * 300 이 동시에 처리 가능해야 한다.</p>
 
-    useEffect(() =&gt; {
-      if (!isLiveExist) {
-        navigate('/error');
-      }
-    }, [isLiveExistData]);
+<h1 id="default-room-을-나가면-socketio-의-broadcast-로직이-바뀌는-문제">Default Room 을 나가면 <a href="http://socket.io/">socket.io</a> 의 Broadcast 로직이 바뀌는 문제</h1>
 
-    return &lt;WrappedComponent {...props} /&gt;;
-  };
-}
-
-</code></pre></div></div>
+<h1 id="redis-pattern-matching">Redis Pattern Matching</h1>
 
 
                 </div>
@@ -357,124 +296,6 @@ export default function withLiveExistCheck&lt;P extends object&gt;(WrappedCompon
                 
                 
                 
-                    <article class="read-next-card"
-                        
-                            style="background-image: url(/assets/images/blog-cover.jpg)"
-                        
-                    >
-                        <header class="read-next-card-header">
-                            <small class="read-next-card-header-sitetitle">&mdash; Liboo.blog &mdash;</small>
-                            
-                                <h3 class="read-next-card-header-title"><a href="/tag/react-query/">React-query</a></h3>
-                            
-                        </header>
-                        <div class="read-next-divider"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/></svg>
-</div>
-                        <div class="read-next-card-content">
-                            <ul>
-                                
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                    
-                                        
-                                        
-                                            <li><a href="/React-Query%EB%A1%9C_%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8_%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D%EC%9D%84_%EC%9C%84%ED%95%9C_%EB%A1%9C%EB%94%A9_%EB%B0%8F_%EC%97%90%EB%9F%AC_%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0">React-Query로 안정적인 스트리밍을 위한 로딩 및 에러 관리하기</a></li>
-                                        
-                                    
-                                  
-                                
-                                  
-                                    
-                                        
-                                        
-                                            <li><a href="/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense">[React-Query] useQuery속성 : Suspense</a></li>
-                                        
-                                    
-                                  
-                                
-                                  
-                                    
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                                  
-                                
-                            </ul>
-                        </div>
-                        <footer class="read-next-card-footer">
-                            <a href="/tag/react-query/">
-                                
-                                    See all 2 posts  →
-                                
-                            </a>
-                        </footer>
-                    </article>
-                
             
 
             <!-- If there's a next post, display it using the same markup included from - partials/post-card.hbs -->
@@ -483,26 +304,20 @@ export default function withLiveExistCheck&lt;P extends object&gt;(WrappedCompon
 
     <article class="post-card post-template">
         
-            <a class="post-card-image-link" href="/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense">
-                <div class="post-card-image" style="background-image: url(/upload/2024-12-01-[React-Query]_useQuery속성_:_Suspense.md/0.png)"></div>
+            <a class="post-card-image-link" href="/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C">
+                <div class="post-card-image" style="background-image: url(/upload/2024-11-23-다중_탭에서_하나의_소켓을_공유할_수_있을까.md/0.png)"></div>
             </a>
         
         <div class="post-card-content">
-            <a class="post-card-content-link" href="/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_Suspense">
+            <a class="post-card-content-link" href="/%EB%8B%A4%EC%A4%91_%ED%83%AD%EC%97%90%EC%84%9C_%ED%95%98%EB%82%98%EC%9D%98_%EC%86%8C%EC%BC%93%EC%9D%84_%EA%B3%B5%EC%9C%A0%ED%95%A0_%EC%88%98_%EC%9E%88%EC%9D%84%EA%B9%8C">
                 <header class="post-card-header">
                     
-                        
-                            
-                                <span class="post-card-tags">React-query</span>
-                            
-                        
-                    
 
-                    <h2 class="post-card-title">[React-Query] useQuery속성 : Suspense</h2>
+                    <h2 class="post-card-title">다중 탭에서 하나의 소켓을 공유할 수 있을까</h2>
                 </header>
                 <section class="post-card-excerpt">
                     
-                        <p>🚨 문제 상황
+                        <p>Why?
 
 </p>
                     
@@ -523,7 +338,7 @@ export default function withLiveExistCheck&lt;P extends object&gt;(WrappedCompon
                 <span class="reading-time">
                     
                     
-                      1 min read
+                      5 min read
                     
                 </span>
             </footer>
@@ -538,20 +353,20 @@ export default function withLiveExistCheck&lt;P extends object&gt;(WrappedCompon
 
     <article class="post-card post-template">
         
-            <a class="post-card-image-link" href="/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC">
-                <div class="post-card-image" style="background-image: url(/upload/2024-11-28-4.5.1_버전에서_ts,_yarn.lock_에러.md/0.png)"></div>
+            <a class="post-card-image-link" href="/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84">
+                <div class="post-card-image" style="background-image: url(/upload/2024-11-23-NestJS를_통한_일관적인_시스템_설계.md/0.png)"></div>
             </a>
         
         <div class="post-card-content">
-            <a class="post-card-content-link" href="/4.5.1_%EB%B2%84%EC%A0%84%EC%97%90%EC%84%9C_ts,_yarn.lock_%EC%97%90%EB%9F%AC">
+            <a class="post-card-content-link" href="/NestJS%EB%A5%BC_%ED%86%B5%ED%95%9C_%EC%9D%BC%EA%B4%80%EC%A0%81%EC%9D%B8_%EC%8B%9C%EC%8A%A4%ED%85%9C_%EC%84%A4%EA%B3%84">
                 <header class="post-card-header">
                     
 
-                    <h2 class="post-card-title">4.5.1 버전에서 ts, yarn.lock 에러</h2>
+                    <h2 class="post-card-title">NestJS를 통한 일관적인 시스템 설계</h2>
                 </header>
                 <section class="post-card-excerpt">
                     
-                        <p>🚨 문제 상황
+                        <p>서론
 
 </p>
                     
@@ -596,18 +411,18 @@ export default function withLiveExistCheck&lt;P extends object&gt;(WrappedCompon
         </a>
     </div>
     <span class="floating-header-divider">&mdash;</span>
-    <div class="floating-header-title">[React-Query] useQuery속성 : onError</div>
+    <div class="floating-header-title">[채팅 서버] 채팅 서버 개선기 기록</div>
     <div class="floating-header-share">
         <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
 </svg>
 </div>
-        <a class="floating-header-share-tw" href="https://twitter.com/share?text=%5BReact-Query%5D+useQuery%EC%86%8D%EC%84%B1+%3A+onError&amp;url=https://jekyllt.github.io/jasper2/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError"
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=%5B%EC%B1%84%ED%8C%85+%EC%84%9C%EB%B2%84%5D+%EC%B1%84%ED%8C%85+%EC%84%9C%EB%B2%84+%EA%B0%9C%EC%84%A0%EA%B8%B0+%EA%B8%B0%EB%A1%9D&amp;url=https://jekyllt.github.io/jasper2/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D"
             onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
 
         </a>
-        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://jekyllt.github.io/jasper2/React-Query-_useQuery%EC%86%8D%EC%84%B1_-_onError"
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://jekyllt.github.io/jasper2/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D"
             onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
 
