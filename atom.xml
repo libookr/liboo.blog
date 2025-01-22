@@ -190,7 +190,7 @@
       <item>
         <title>[채팅 서버] 채팅 서버 개선기 기록</title>
         
-          <description>&lt;h1 id=&quot;채팅-서버-메모리-누수-해결하기&quot;&gt;채팅 서버 메모리 누수 해결하기&lt;/h1&gt;
+          <description>&lt;h1 id=&quot;redis-adapter-가-모든-레디스-노드에-broadcast-하는-문제&quot;&gt;Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제&lt;/h1&gt;
 
 </description>
         

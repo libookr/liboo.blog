@@ -43,7 +43,7 @@
     <meta property="og:site_name" content="Liboo.blog" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="[채팅 서버] 채팅 서버 개선기 기록" />
-    <meta property="og:description" content="채팅 서버 메모리 누수 해결하기 Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B," />
+    <meta property="og:description" content="Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B, C, D …. Z 까지" />
     <meta property="og:url" content="https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D" />
     <meta property="og:image" content="https://blog.liboo.kr/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png" />
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
@@ -53,7 +53,7 @@
     <meta property="article:tag" content="Chatting" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="[채팅 서버] 채팅 서버 개선기 기록" />
-    <meta name="twitter:description" content="채팅 서버 메모리 누수 해결하기 Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B," />
+    <meta name="twitter:description" content="Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B, C, D …. Z 까지" />
     <meta name="twitter:url" content="https://blog.liboo.kr/" />
     <meta name="twitter:image" content="https://blog.liboo.kr/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png" />
     <meta name="twitter:label1" content="Written by" />
@@ -85,7 +85,7 @@
         "@type": "WebPage",
         "@id": "https://blog.liboo.kr/%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84-_%EC%B1%84%ED%8C%85_%EC%84%9C%EB%B2%84_%EA%B0%9C%EC%84%A0%EA%B8%B0_%EA%B8%B0%EB%A1%9D"
     },
-    "description": "채팅 서버 메모리 누수 해결하기 Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B,"
+    "description": "Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제 image.png 레디스 어댑터와 레디스를 활용하면 위와 같이 레디스 pub sub 을 통해서 이벤트를 전달하게 되는데, 문제는 여기서 redis-cluster 를 활용하게 되면 이벤트 전달을 어디에 해야할지 모르기 때문에 모든 레디스 노드에다가 전파하게 된다. Redis Node A, B, C, D …. Z 까지"
 }
     </script>
 
@@ -170,9 +170,7 @@ into the {body} of the default.hbs template -->
 
             <section class="post-full-content">
                 <div class="kg-card-markdown">
-                    <h1 id="채팅-서버-메모리-누수-해결하기">채팅 서버 메모리 누수 해결하기</h1>
-
-<h2 id="redis-adapter-가-모든-레디스-노드에-broadcast-하는-문제">Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제</h2>
+                    <h1 id="redis-adapter-가-모든-레디스-노드에-broadcast-하는-문제">Redis Adapter 가 모든 레디스 노드에 Broadcast 하는 문제</h1>
 
 <p><img src="/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/0.png" alt="0" /><em>image.png</em></p>
 
@@ -188,8 +186,6 @@ into the {body} of the default.hbs template -->
 
 <p><a href="http://socket.io/">socket.io</a> 공식문서 (<a href="https://socket.io/docs/v4/redis-adapter/#with-redis-sharded-pubsub">https://socket.io/docs/v4/redis-adapter/#with-redis-sharded-pubsub</a>)</p>
 
-<p>엥 …</p>
-
 <p>현재 ioredis 와 redis cluster 를 활용한 sharded adapter 는 사용이 불가능하다고 한다.</p>
 
 <p>실제로 sharded adapter 를 억지로 사용해보려고 하니 <code class="language-plaintext highlighter-rouge">[**Too many cluster redirections during Redis cluster reshard**](https://stackoverflow.com/questions/46472130/too-many-cluster-redirections-during-redis-cluster-reshard)</code> 라는 오류가 난다.</p>
@@ -204,7 +200,11 @@ into the {body} of the default.hbs template -->
   <li>파티셔닝을 통해서 모든 redis 를 redis cluster 로 묶는 것이 아니라, 실제로 필요한 redis 에만 publish 되도록 하기</li>
 </ol>
 
+<h2 id="ioredis-를-node-redis-로-마이그레이션--shardedadapter-사용">ioredis 를 node-redis 로 마이그레이션 + shardedAdapter 사용</h2>
+
 <p>우선 1번의 경우 ioredis 를 사용하던 부분을 전부 node-redis 로 바꾸어야한다는 단점이 있다. 하지만 현재 ioredis 라이브러리 상태를 봤을 때 추가적인 업데이트도 없고 node-redis 의 경우에는 sharded adapter 도 업데이트를 해놓은걸 보면 바꾸는 것도 좋을 것 같다라는 생각이 들었다.</p>
+
+<h2 id="redis-cluster-를-버리고-natsio-로-마이그레이션">redis cluster 를 버리고 <a href="http://nats.io/">Nats.io</a> 로 마이그레이션</h2>
 
 <p>2번의 경우에는</p>
 
@@ -212,32 +212,238 @@ into the {body} of the default.hbs template -->
 
 <p>채널톡의 블로그에서 아주 잘 설명해주고 있다. <a href="http://nats.io/">Nats.io</a> 은 완전 메시 형태로, 처리량은 redis 에 비해 월등히 좋은 수준을 보이지만 subject 가 생길 때 모든 <a href="http://nats.io/">nats.io</a> 의 인스턴스에 pubsub 을 전파해주어야하는데 이 부분에서 오버헤드가 상당히 크게 작용한다.</p>
 
-<p>3번의 경우</p>
+<h2 id="파티셔닝을-통해서-모든-redis-를-redis-cluster-로-묶는-것이-아니라-실제로-필요한-redis-에만-publish-되도록-하기">파티셔닝을 통해서 모든 redis 를 redis cluster 로 묶는 것이 아니라, 실제로 필요한 redis 에만 publish 되도록 하기</h2>
+
+<p>3번의 경우도 채널톡에서 이미 진행했던 방식인데,</p>
+
+<p><a href="https://channel.io/ko/blog/articles/4ab1f0c2">https://channel.io/ko/blog/articles/4ab1f0c2</a></p>
 
 <p>레디스 클러스터의 문제점이 연관없는(굳이 publish 안보내도 되는) 노드에 publish 를 보낸다는 것이다. 그렇기 때문에 레디스와 채팅서버를 하나의 cluster 로 묶고, 이 클러스터 단위로 도커 <code class="language-plaintext highlighter-rouge">서비스</code>를 생성한다. 하나의 거대한 집합이었던 채팅서버 + Redis Cluster 를 조금 더 작은 여러개의 논리적 구조로 쪼개보는 것이다. 그리고 room ID 를 기반으로 이 서비스에 로드밸런싱 되도록 NGINX 를 만든다.</p>
 
-<p>기본적으로 A 라는 채팅방은 다른 채팅방에 있는 채팅들에 대한 정보가 필요없기 때문에 논리적으로 쪼개도 괜찮다.</p>
+<p>하지만 채널톡 서비스와는 다르게 LiBoo 서비스에서는 SharedWorker 를 활용해서 클라이언트는 1개의 소켓만 생성하게 된다. 하나의 소켓으로 여러 개의 room 에 join 할 수 있다는 뜻인데, 3번처럼 파티셔닝을 하게 될 경우 소켓을 1개로 만든 이유가 사라지게 된다.</p>
 
-<p>도커 서비스에 들어갈 Redis 는 단일 Redis 노드 + Replica 1개면 충분할까..?</p>
+<p>A 라는 채팅서버에 WebSocket 연결을 맺었는데 , 채팅 서버 B 에 있는 room 에 접근하려면 새로운 소켓을 생성해서 채팅 서버 B 에 연결해야하기 때문이다.</p>
 
-<p>수평 확장도 가능하다. 예를 들어 모든 서비스의 CPU 사용률이 60퍼센트를 넘긴다면 새로운 서비스를 만드는 방식이 가능할 것 같다.</p>
+<p>그나마 파티셔닝을 하려면 레디스 클러스터만 파티셔닝을 하면 괜찮을 것 같은데,</p>
 
-<p>특정 채팅방에만 채팅이 매우 많이 몰리는 상황이 와도 괜찮은 성능을 보일지 궁금하긴 한데, 평균적으로는 꽤나 괜찮은 성능 개선이 있지 않을까</p>
+<p>예를 들어 Redis cluster 에 9개의 마스터가 있었다고 하면, 3 / 3 / 3 개로 파티셔닝을 하고 채팅서버마다 3개의 레디스 connection 을 유지하는 방식일 것이다.</p>
 
-<p>우선 3번 → 1번 순으로 성능 테스트를 한 번 진행해보자. (진행중)</p>
+<p>이 방법은 publish 가 9번 될 것이 3번이 된다는 장점이 있겠으나 레디스 커넥션을 1개 → 3개를 유지해야한다는 단점이 생긴다. 따라서 성능 개선이 있을지는 테스트를 직접 해봐야 알 것 같다.</p>
 
-<p>현재 채팅 서비스의 최대 글자 제한 수는 150자이다.</p>
+<h2 id="번외">번외</h2>
 
-<p>150자가 전부 다 한글이라고 가정하면 최대 300byte 를 사용하게 된다.</p>
+<p>채널톡 서비스처럼 만약 우리 서비스도 1개의 소켓이 1개의 room 에만 join 되는 것 처럼, 완벽하게 논리적으로 구조를 나눌 수 있었다면 어땠을지 테스트를 해보았다.</p>
 
-<p>라이부 서비스는 최대 300명이 동시에 라이브로 채팅할 수 있는 것을 목표로 잡았기 때문에 300byte * 300 이 동시에 처리 가능해야 한다.</p>
+<p>테스트 환경은 macos 에서 도커 컨테이너를 활용했다.</p>
 
-<p>pubsub 용 redis 는 메모리를 비교적 작게 유지해서 도커 컨테이너로 테스트를 해보자.</p>
+<h3 id="기존-환경">기존 환경</h3>
+
+<p>기존의 환경은 채팅서버 3대를 컨테이너로, 6대의 레디스 노드를 하나의 클러스터로 만든 레디스 클러스터를 컨테이너로 만들었다. 모두 각각의 docker bridge 네트워크를 공유하고 있다.</p>
+
+<p>아래는 pubsub cluster 를 만들기 위해 사용한 docker-compose.yaml 과 config 파일이다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yaml
+version: "3"
+services:
+  redis-pubsub-master-1:
+    platform: linux/x86_64 # m1 MacOS의 경우
+    image: redis:6.2
+    container_name: redis-pubsub-m1
+    networks:
+      redis-pubsub-network:
+        ipv4_address: 192.168.101.2
+    volumes: # 작성한 설정 파일을 볼륨을 통해 컨테이너에 공유
+      - ./redis-pubsub-master-7001.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 7001:7001
+  redis-pubsub-master-2:
+    networks:
+      redis-pubsub-network:
+        ipv4_address: 192.168.101.3
+    platform: linux/x86_64
+    image: redis:6.2
+    container_name: redis-pubsub-m2
+    volumes:
+      - ./redis-pubsub-master-7002.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 7002:7002
+
+  redis-pubsub-master-3:
+    networks:
+      redis-pubsub-network:
+        ipv4_address: 192.168.101.4
+    platform: linux/x86_64
+    image: redis:6.2
+    container_name: redis-pubsub-m3
+    volumes:
+      - ./redis-pubsub-master-7003.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 7003:7003
+
+  redis-pubsub-master-4:
+    platform: linux/x86_64 # m1 MacOS의 경우
+    image: redis:6.2
+    container_name: redis-pubsub-m4
+    networks:
+      redis-pubsub-network:
+        ipv4_address: 192.168.101.5
+    volumes: # 작성한 설정 파일을 볼륨을 통해 컨테이너에 공유
+      - ./redis-pubsub-master-7004.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 7004:7004
+  redis-pubsub-master-5:
+    networks:
+      redis-pubsub-network:
+        ipv4_address: 192.168.101.6
+    platform: linux/x86_64
+    image: redis:6.2
+    container_name: redis-pubsub-m5
+    volumes:
+      - ./redis-pubsub-master-7005.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 7005:7005
+
+  redis-pubsub-master-6:
+    networks:
+      redis-pubsub-network:
+        ipv4_address: 192.168.101.7
+    platform: linux/x86_64
+    image: redis:6.2
+    container_name: redis-pubsub-m6
+    volumes:
+      - ./redis-pubsub-master-7006.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 7006:7006
+
+networks:
+  redis-pubsub-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.101.0/24 # 사용자 정의 서브넷
+
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yaml
+port 7001 
+# port : 7001 ~ 7006
+maxmemory 256mb
+maxmemory-policy volatile-lru
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 5000
+appendonly yes
+bind 0.0.0.0
+
+
+</code></pre></div></div>
+
+<h3 id="파티셔닝-환경">파티셔닝 환경</h3>
+
+<p>파티셔닝 환경은 채팅 서버 3대, 레디스 노드 1대를 묶어서 docker stack 으로 만들었고 docker overlay 네트워크를 공유하고 있다.</p>
+
+<p>아래는 파티셔닝 환경을 만들기 위해 작성한 docker-compose.yaml 이다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yaml
+version: '3.8'
+
+services:
+  redis-master:
+    image: redis:6.2
+    command: ["redis-server", "/etc/redis/redis.conf"]
+    networks:
+      - shared-network
+    volumes:
+      - ./redis/master.conf:/etc/redis/redis.conf
+    deploy:
+      replicas: 1
+
+  chat-server:
+    image: chattest:latest
+    environment:
+      LOCAL_REDIS_CONFIG: '[{"host":"host.docker.internal","port":9001},{"host":"host.docker.internal","port":9002},{"host":"host.docker.internal","port":9003}]'
+      REDIS_PUBSUB_CONFIG: '{"host":"redis-master","port":6379}'
+    networks:
+      - shared-network
+    deploy:
+      replicas: 3  # 3개의 복제본을 생성합니다.
+      update_config:
+        parallelism: 1  # 한 번에 하나의 컨테이너만 업데이트하도록 설정
+
+networks:
+  shared-network:
+    external: true
+    driver: overlay
+
+
+</code></pre></div></div>
+
+<p>LOCAL_REDIS_CONFIG 는 캐시용 레디스이므로 지금 진행중인 테스트랑은 무관하다.</p>
+
+<h3 id="결과">결과</h3>
+
+<ul>
+  <li>기존 환경(채팅서버 3대와 redis cluster), 파티셔닝 X</li>
+</ul>
+
+<p><img src="/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/2.png" alt="2" /><em>image.png</em></p>
+
+<p><img src="/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/3.png" alt="3" /><em>image.png</em></p>
+
+<p>(그래프의 20:38 ~ 20:41)</p>
+
+<p>채팅 서버에 150명의 유저가 3번의 채팅(일반채팅 2번 + 질문채팅 1번, ‘hello’ 라는 내용으로)을 보냈을 때, 각각의 PubSub 컨테이너는 송수신에 5MB 정도씩의 네트워크 사용률을 보였다. (총 30MB 정도)</p>
+
+<ul>
+  <li>채팅서버 1대 + 레디스 1대로 파티셔닝하여 여러 개의 서비스로 분리</li>
+</ul>
+
+<p><img src="/upload/2024-11-23-[채팅_서버]_채팅_서버_개선기_기록.md/4.png" alt="4" /><em>image.png</em></p>
+
+<p>아무래도 이벤트 자체를 다른 레디스 노드에 publish 하지 않다보니 네트워크 사용량이 많이 줄었다.</p>
+
+<p>보내는 데이터가 1.6MB, 받는 데이터는 0.6MB 정도 되는 것 같다.</p>
+
+<p>다만 파티셔닝 환경은 파티셔닝된 구조에 ‘골고루’ 데이터가 들어온다는 전제로 진행했다보니 당연히 안정적으로 보인다.</p>
+
+<p>아무래도 하나의 (채팅서버 + 레디스) 에 트래픽이 몰린다면 이 구조도 추가 확장이 필요해보인다.</p>
 
 <h1 id="default-room-을-나가면-socketio-의-broadcast-로직이-바뀌는-문제">Default Room 을 나가면 <a href="http://socket.io/">socket.io</a> 의 Broadcast 로직이 바뀌는 문제</h1>
 
-<h1 id="redis-pattern-matching">Redis Pattern Matching</h1>
+<p><a href="http://socket.io/">socket.io</a> 의 Default Room 을 나가면 Sender 를 포함해서 Broadcast 되는 현상</p>
 
+<ul>
+  <li><a href="http://socket.io/">socket.io</a> 는 채팅을 하기 위해 <code class="language-plaintext highlighter-rouge">room</code> 에 join 하게 됩니다. 같은 room 에 있는 클라이언트는 같은 채팅방에 있는 시스템입니다.</li>
+  <li><a href="http://socket.io/">socket.io</a> 는 유저의 소켓 연결을 할 때, <a href="http://socket.id/">socket.id</a> 와 동일한 이름의 room (Default Room) 에 자동으로 join 하게 됩니다. 이는 1:1 채팅이나 서버에서 개인에게 공지를 보내는 등의 용도로 사용하게 됩니다.</li>
+  <li>그러나 저희 서비스는 위와 같은 1:1 채팅이 없는 실시간 라이브 방송의 채팅이므로 이러한 Default Room 은 사용되지 않은 채 서버의 메모리를 낭비할 여지가 있습니다.</li>
+  <li>따라서 소켓 연결을 할 때 Default Room 에 join 하지 않도록 로직을 수정했는데 연관이 없다고 생각했던 broadcast 로직이 바뀌는 현상이 발생했습니다.</li>
+  <li>broadcast 는 기본적으로 sender 를 <code class="language-plaintext highlighter-rouge">제외</code> 하고 다른 사람들에게 이벤트를 보내는 로직인데, Default Room 에서 나간 채로 broadcast 를 하게 되면 Sender 를 <code class="language-plaintext highlighter-rouge">포함</code>해서 이벤트를 보내는 로직으로 바뀌는 문제가 발생했습니다. (<a href="https://github.com/socketio/socket.io/issues/4524">관련 이슈 🔗</a>)</li>
+</ul>
+
+<p>문제를 해결하기 위해 3가지 정도의 방법을 생각해보았습니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- [socket.io](http://socket.io/) 대신 WebSocket 을 사용하면서 room + broadcast 개념을 직접 구현
+- [socket.io](http://socket.io/) 의 room 개념을 그대로 유지한 채로 broadcast 로직을 새롭게 구현
+- [socket.io](http://socket.io/) 의 broadcast 로직을 직접 수정
+
+이 중에서 broadcast 로직을 직접 수정하는 것이 근본적인 문제를 해결할 수 있는 가장 좋은 방법이라 생각했습니다. 그래서 첫 번째로 프로젝트에서 Default Room 을 수정했을 때 Broadcast 로직이 수정되었으므로 room 에서 나가는 로직과 broadcast 간의 관계에 대해 학습했습니다. broadcast 의 로직을 직접 보기 전까지는 sender 를 제외시키는 과정이 sender 의 [socket.id](http://socket.id/) 를 제외하는 방식일거라 생각했는데 실제로 확인해본 결과 [socket.id](http://socket.id/) 와 같은 room (default room)을 제외시키는 방식이었습니다. default room 을 나가게 되면 해당 room 자체가 사라져버리므로 sender 를 제외시킬 수 없는 문제였습니다.
+
+
+따라서 만약 room 이 존재하지 않는다면 연결되어 있는 [socket.id](http://socket.id/) 에서 default room 과 같은 [socket.id](http://socket.id/) 가 존재하는지의 여부에 따라 제외할 수 있도록 로직을 추가했습니다.
+</code></pre></div></div>
+
+<ul>
+  <li>사용하지 않는 Default Room 을 메모리에서 제거 함으로써, 클라이언트 한 명이 연결될때마다 생기던 메모리 낭비를 해결</li>
+  <li>sender 를 포함하여 broadcast 되던 로직을 수정하면서 직접 sender 를 제외시켜야 하는 코드를 없애면서 코드 가독성 증가</li>
+  <li><a href="http://socket.io/">socket.io</a> 의 이슈에 코멘트 등록 및 컨트리뷰션 가이드라인에 맞게 <a href="https://github.com/socketio/socket.io/pull/5266">PR 🔗</a>을 작성했습니다.</li>
+</ul>
 
                 </div>
             </section>
