@@ -218,17 +218,11 @@ into the {body} of the default.hbs template -->
 
 <p><a href="https://channel.io/ko/blog/articles/4ab1f0c2">https://channel.io/ko/blog/articles/4ab1f0c2</a></p>
 
-<p>레디스 클러스터의 문제점이 연관없는(굳이 publish 안보내도 되는) 노드에 publish 를 보낸다는 것이다. 그렇기 때문에 레디스와 채팅서버를 하나의 cluster 로 묶고, 이 클러스터 단위로 도커 <code class="language-plaintext highlighter-rouge">서비스</code>를 생성한다. 하나의 거대한 집합이었던 채팅서버 + Redis Cluster 를 조금 더 작은 여러개의 논리적 구조로 쪼개보는 것이다. 그리고 room ID 를 기반으로 이 서비스에 로드밸런싱 되도록 NGINX 를 만든다.</p>
+<p>레디스 클러스터의 문제점이 연관없는(굳이 publish 안보내도 되는) 노드에 publish 를 보낸다는 것이다. 그렇기 때문에 레디스와 채팅서버를 하나의 cluster 로 묶고, 이 클러스터 단위로 여러 개를 수평 확장해서 생성한다. 하나의 거대한 집합이었던 채팅서버 + Redis Cluster 를 조금 더 작은 여러개의 논리적 구조로 쪼개보는 것이다. 그리고 room ID 를 기반으로 이 서비스에 로드밸런싱 되도록 하는 구조이다.</p>
 
 <p>하지만 채널톡 서비스와는 다르게 LiBoo 서비스에서는 SharedWorker 를 활용해서 클라이언트는 1개의 소켓만 생성하게 된다. 하나의 소켓으로 여러 개의 room 에 join 할 수 있다는 뜻인데, 3번처럼 파티셔닝을 하게 될 경우 소켓을 1개로 만든 이유가 사라지게 된다.</p>
 
 <p>A 라는 채팅서버에 WebSocket 연결을 맺었는데 , 채팅 서버 B 에 있는 room 에 접근하려면 새로운 소켓을 생성해서 채팅 서버 B 에 연결해야하기 때문이다.</p>
-
-<p>그나마 파티셔닝을 하려면 레디스 클러스터만 파티셔닝을 하면 괜찮을 것 같은데,</p>
-
-<p>예를 들어 Redis cluster 에 9개의 마스터가 있었다고 하면, 3 / 3 / 3 개로 파티셔닝을 하고 채팅서버마다 3개의 레디스 connection 을 유지하는 방식일 것이다.</p>
-
-<p>이 방법은 publish 가 9번 될 것이 3번이 된다는 장점이 있겠으나 레디스 커넥션을 1개 → 3개를 유지해야한다는 단점이 생긴다. 따라서 성능 개선이 있을지는 테스트를 직접 해봐야 알 것 같다.</p>
 
 <h2 id="번외">번외</h2>
 
