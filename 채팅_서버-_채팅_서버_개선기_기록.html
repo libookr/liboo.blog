@@ -198,6 +198,7 @@ into the {body} of the default.hbs template -->
   <li>ioredis 를 node-redis 로 마이그레이션 + shardedAdapter 사용</li>
   <li>redis cluster 를 버리고 <a href="http://nats.io/">Nats.io</a> 로 마이그레이션</li>
   <li>파티셔닝을 통해서 모든 redis 를 redis cluster 로 묶는 것이 아니라, 실제로 필요한 redis 에만 publish 되도록 하기</li>
+  <li>Hash Ring 과 가상 노드를 활용한 부하 분산? (공부중)</li>
 </ol>
 
 <h2 id="ioredis-를-node-redis-로-마이그레이션--shardedadapter-사용">ioredis 를 node-redis 로 마이그레이션 + shardedAdapter 사용</h2>
@@ -212,21 +213,19 @@ into the {body} of the default.hbs template -->
 
 <p>채널톡의 블로그에서 아주 잘 설명해주고 있다. <a href="http://nats.io/">Nats.io</a> 은 완전 메시 형태로, 처리량은 redis 에 비해 월등히 좋은 수준을 보이지만 subject 가 생길 때 모든 <a href="http://nats.io/">nats.io</a> 의 인스턴스에 pubsub 을 전파해주어야하는데 이 부분에서 오버헤드가 상당히 크게 작용한다.</p>
 
+<p>LiBoo 서비스의 경우 subject 라고 하면, 새로운 방송의 시작으로 인한 새로운 채팅 방이 될 것이다. 따라서 채팅 방이 생성될 때마다 <a href="http://nats.io/">nats.io</a> 의 모든 인스턴스에</p>
+
 <h2 id="파티셔닝을-통해서-모든-redis-를-redis-cluster-로-묶는-것이-아니라-실제로-필요한-redis-에만-publish-되도록-하기">파티셔닝을 통해서 모든 redis 를 redis cluster 로 묶는 것이 아니라, 실제로 필요한 redis 에만 publish 되도록 하기</h2>
 
-<p>3번의 경우도 채널톡에서 이미 진행했던 방식인데,</p>
+<p>레디스 클러스터의 문제점이 연관없는(굳이 publish 안보내도 되는) 노드에 publish 를 보내는 방법이다. 그렇기 때문에 레디스와 채팅서버를 하나의 서비스로 묶고, 이 서비스 단위로 여러 개를 수평 확장해서 생성한다. 하나의 거대한 집합이었던 채팅서버 + Redis Cluster 를 조금 더 작은 여러개의 논리적 구조로 쪼개보는 것이다. 그리고 room ID 를 기반으로 이 서비스에 로드밸런싱 되도록 하는 구조이다.</p>
 
-<p><a href="https://channel.io/ko/blog/articles/4ab1f0c2">https://channel.io/ko/blog/articles/4ab1f0c2</a></p>
-
-<p>레디스 클러스터의 문제점이 연관없는(굳이 publish 안보내도 되는) 노드에 publish 를 보낸다는 것이다. 그렇기 때문에 레디스와 채팅서버를 하나의 cluster 로 묶고, 이 클러스터 단위로 여러 개를 수평 확장해서 생성한다. 하나의 거대한 집합이었던 채팅서버 + Redis Cluster 를 조금 더 작은 여러개의 논리적 구조로 쪼개보는 것이다. 그리고 room ID 를 기반으로 이 서비스에 로드밸런싱 되도록 하는 구조이다.</p>
-
-<p>하지만 채널톡 서비스와는 다르게 LiBoo 서비스에서는 SharedWorker 를 활용해서 클라이언트는 1개의 소켓만 생성하게 된다. 하나의 소켓으로 여러 개의 room 에 join 할 수 있다는 뜻인데, 3번처럼 파티셔닝을 하게 될 경우 소켓을 1개로 만든 이유가 사라지게 된다.</p>
+<p>하지만 LiBoo 서비스에서는 SharedWorker 를 활용해서 클라이언트는 1개의 소켓만 생성하게 된다. 하나의 소켓으로 여러 개의 room 에 join 할 수 있다는 뜻인데, 3번처럼 파티셔닝을 하게 될 경우 소켓을 1개로 만든 이유가 사라지게 된다.</p>
 
 <p>A 라는 채팅서버에 WebSocket 연결을 맺었는데 , 채팅 서버 B 에 있는 room 에 접근하려면 새로운 소켓을 생성해서 채팅 서버 B 에 연결해야하기 때문이다.</p>
 
-<h2 id="번외">번외</h2>
+<h2 id="그럼에도-실험해보기">그럼에도 실험해보기</h2>
 
-<p>채널톡 서비스처럼 만약 우리 서비스도 1개의 소켓이 1개의 room 에만 join 되는 것 처럼, 완벽하게 논리적으로 구조를 나눌 수 있었다면 어땠을지 테스트를 해보았다.</p>
+<p>만약 우리 서비스도 1개의 소켓이 1개의 room 에만 join 되는 것 처럼, 완벽하게 논리적으로 구조를 나눌 수 있었다면 어땠을지 테스트를 해보았다.</p>
 
 <p>테스트 환경은 macos 에서 도커 컨테이너를 활용했다.</p>
 
@@ -408,6 +407,12 @@ networks:
 <p>다만 파티셔닝 환경은 파티셔닝된 구조에 ‘골고루’ 데이터가 들어온다는 전제로 진행했다보니 당연히 안정적으로 보인다.</p>
 
 <p>아무래도 하나의 (채팅서버 + 레디스) 에 트래픽이 몰린다면 이 구조도 추가 확장이 필요해보인다.</p>
+
+<h2 id="hash-ring-과-가상-노드를-활용한-부하-분산">Hash Ring 과 가상 노드를 활용한 부하 분산</h2>
+
+<p>이 방법은 ‘가상 면접 사례로 배우는 대규모 시스템 설계 기초’ 라는 책을 읽으면서 우리 서비스에 적용해볼 수 있지 않을까? 라고 생각이 들었던 방식이다.</p>
+
+<p>redis pubsub 을 쓰는 이유는</p>
 
 <h1 id="default-room-을-나가면-socketio-의-broadcast-로직이-바뀌는-문제">Default Room 을 나가면 <a href="http://socket.io/">socket.io</a> 의 Broadcast 로직이 바뀌는 문제</h1>
 
